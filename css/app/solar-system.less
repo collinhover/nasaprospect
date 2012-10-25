@@ -1,0 +1,65 @@
+/* solar-system
+-------------------------------------------------------------------------------*/
+
+#solar-system {
+    .fullMinHack;
+    background-image: url( "../../img/stars.png" );
+    
+    section {
+        overflow: visible;
+    }
+    
+}
+
+.foreground, .middleground, .background {
+    .fullMin;
+    position: absolute;
+}
+
+/* space
+-------------------------------------------------------------------------------*/
+
+.space {
+    
+}
+
+.planet {
+    position: absolute;
+    background-color: rgba( 255, 255, 255, 0.9 );
+    width: 512px;
+    height: 512px;
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    margin-left: -256px;
+    margin-top: -256px;
+    text-align: center;
+}
+
+.planet .skewed {
+    position: absolute;
+    width: 125%;
+    top: 50%;
+    margin-left: -12.5%;
+    margin-top: -34px;
+}
+
+/* landing
+-------------------------------------------------------------------------------*/
+
+.landing {
+    display: none;
+}
+
+/* exploring
+-------------------------------------------------------------------------------*/
+
+.exploring {
+    display: none;   
+}
+
+/* planets
+-------------------------------------------------------------------------------*/
+
+@import "planets/earth.less";
+@import "planets/mars.less";
