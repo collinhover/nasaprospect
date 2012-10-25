@@ -13,7 +13,7 @@ require( [
     "jquery.superscrollorama"
 ],
 function () {
-    
+	
     var controller = $.superscrollorama();
     var $window = $( window );
     
@@ -44,9 +44,19 @@ function () {
         var w = $window.width();
         var h = $window.height();
         
-        $( "#system" ).find( "section" ).css( {
-            "min-width": w,
+		$( ".orbiting" ).css( {
+            "width": w,
+            "height": h
+        } );
+		
+        $( ".landing" ).css( {
+            "width": w,
             "min-height": h
+        } );
+		
+		$( ".exploring" ).css( {
+            "min-width": w,
+            "height": h
         } );
         
     }
