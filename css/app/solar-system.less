@@ -4,12 +4,11 @@
 #solar-system {
     .fillMinHack;
     background-image: url( "../../img/stars.png" );
-    
-    section {
-		.fillMinHack;
-		overflow: hidden;
-    }
-    
+}
+
+section {
+	.fillMinHack;
+	overflow: hidden;
 }
 
 .foreground, .middleground, .background {
@@ -18,10 +17,14 @@
 	overflow: visible;
 }
 
-/* orbiting
+section, .orbit, .land, .explore, .foreground, .middleground, .background {
+	.ignore-pointer;
+}
+
+/* orbit
 -------------------------------------------------------------------------------*/
 
-.orbiting {
+.orbit {
     .fillContainer;
 }
 
@@ -46,22 +49,22 @@
     margin-top: -34px;
 }
 
-/* landing
+/* land
 -------------------------------------------------------------------------------*/
 
-.landing {
+.land {
 	.fillWidth;
 	.fillHeightMin;
-    //display: none;
+    display: none;
 }
 
-/* exploring
+/* explore
 -------------------------------------------------------------------------------*/
 
-.exploring {
+.explore {
 	.fillWidthMin;
 	.fillHeight;
-    //display: none;   
+    display: none;   
 }
 
 /* planets

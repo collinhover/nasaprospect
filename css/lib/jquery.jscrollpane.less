@@ -1,0 +1,173 @@
+/*
+ * CSS Styles that are needed by jScrollPane for it to operate correctly.
+ *
+ * Include this stylesheet in your site or copy and paste the styles below into your stylesheet - jScrollPane
+ * may not operate correctly without them.
+ */
+ 
+ @scrollbarSpacing: 5px;
+ @scrollbarSize: 10px;
+ @scrollbarWidth: @scrollbarSize + @scrollbarSpacing * 2;
+ @scrollbarHeight: @scrollbarSize + @scrollbarSpacing * 2;
+ @scrollbarRadius: 7px;
+
+.jspContainer
+{
+	overflow: hidden;
+	position: relative;
+}
+
+.jspPane
+{
+	position: absolute;
+}
+
+.jspVerticalBar
+{
+	position: absolute;
+	top: 0;
+	right: 0;
+	width:  @scrollbarWidth;
+	height: 100%;
+}
+
+.jspHorizontalBar
+{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height:  @scrollbarHeight;
+}
+
+.jspVerticalBar *,
+.jspHorizontalBar *
+{
+	margin: 0;
+	padding: 0;
+}
+
+.jspCap
+{
+	display: none;
+}
+
+.jspHorizontalBar .jspCap
+{
+	float: left;
+}
+
+.jspTrack
+{
+	background: #dde;
+	position: relative;
+}
+
+.jspDrag
+{
+	background: #bbd;
+	position: relative;
+	top: 0;
+	left: 0;
+	cursor: pointer;
+}
+
+.jspHorizontalBar .jspTrack,
+.jspHorizontalBar .jspDrag
+{
+	float: left;
+	height: 100%;
+}
+
+.jspArrow
+{
+	background: #50506d;
+	text-indent: -20000px;
+	display: block;
+	cursor: pointer;
+}
+
+.jspArrow.jspDisabled
+{
+	cursor: default;
+	background: #80808d;
+}
+
+.jspVerticalBar .jspArrow
+{
+	height: @scrollbarHeight;
+}
+
+.jspHorizontalBar .jspArrow
+{
+	width: @scrollbarWidth;
+	float: left;
+	height: 100%;
+}
+
+.jspVerticalBar .jspArrow:focus
+{
+	outline: none;
+}
+
+.jspCorner
+{
+	background: #eeeef4;
+	float: left;
+	height: 100%;
+}
+
+/* Yuk! CSS Hack for IE6 3 pixel bug :( */
+* html .jspCorner
+{
+	margin: 0 -3px 0 0;
+}
+
+/* pill shape drag */
+
+.jspDrag
+{
+	background: gray;
+	background: rgba( 0, 0, 0, 0.5 );
+	.border-radius( @scrollbarRadius );
+	.box-shadow( 0 0 1px rgba( 0, 0, 0, 0.25 ) );
+	//.opacity( 1 );
+	//.transition(opacity 0.3s linear);
+}
+
+
+.jspHorizontalBar,
+.jspVerticalBar,
+.jspTrack
+{
+	background-color: transparent;
+}
+
+.jspVerticalBar {
+	
+	.jspDrag {
+		width: @scrollbarSize;
+		left: @scrollbarSpacing;
+	}
+	
+}
+
+.jspHorizontalBar {
+	
+	.jspDrag {
+		height: @scrollbarSize;
+		top: @scrollbarSpacing;
+	}
+	
+}
+
+
+
+/*
+.jspTrack .jspActive,
+.jspTrack .jspHover,
+.jspTrack:hover {
+	.jspDrag {
+		.opacity( 1 );
+	}
+}*/

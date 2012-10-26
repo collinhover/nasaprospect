@@ -1,64 +1,46 @@
 requirejs.config({
-    //By default load any module IDs from js/lib
+    // by default load any module IDs from js/lib
     baseUrl: 'js/lib',
-    //except, if the module ID starts with "app",
-    //load it from the js/app directory. paths
+    // exceptions
     paths: {
         app: '../app'
     }
 });
 
-require( [
+require(
+[
+	"jquery",
+	"app/shared",
+	"app/ui",
     "greensock/TweenMax",
-    "jquery.superscrollorama"
+    "jquery.superscrollorama.custom"
 ],
-function () {
+function ( $, _s ) {
 	
-    var controller = $.superscrollorama();
-    var $window = $( window );
+	var _de = _s.domElements;
+	
+	/*===================================================
+	
+	parallax
+	
+	=====================================================*/
     
-    controller.addTween(
+	_de.$body.superscrollorama( "addTween", 
     	'#earth',
 		(new TimelineLite())
 			.append([
 				TweenMax.fromTo($('#earth .background'), 1, 
-    				{css:{top: "10%"}, immediateRender:true}, 
+    				{css:{top: "0%"}, immediateRender:true}, 
 					{css:{top: "-10%"}}),
     			TweenMax.fromTo($('#earth .middleground'), 1,
-    				{css:{top: "25%"}, immediateRender:true}, 
-					{css:{top: "-25%"}}),
+    				{css:{top: "0%"}, immediateRender:true}, 
+					{css:{top: "-30%"}}),
 				TweenMax.fromTo($('#earth .foreground'), 1,
-    				{css:{top: "100%"}, immediateRender:true}, 
-					{css:{top: "-60%"}})
+    				{css:{top: "0%"}, immediateRender:true}, 
+					{css:{top: "-100%"}})
 			]),
-		1000 // scroll duration of tween
+		"100%",
+		"50%"
 	);
-    
-    $window.trigger( 'scroll' );
-    
-    $window.on( 'resize', OnWindowResize );
-    OnWindowResize();
-    
-    function OnWindowResize () {
-        
-        var w = $window.width();
-        var h = $window.height();
-        
-		$( ".orbiting" ).css( {
-            "width": w,
-            "height": h
-        } );
-		
-        $( ".landing" ).css( {
-            "width": w,
-            "min-height": h
-        } );
-		
-		$( ".exploring" ).css( {
-            "min-width": w,
-            "height": h
-        } );
-        
-    }
     
 } );
