@@ -20,6 +20,11 @@
 .jspPane
 {
 	position: absolute;
+	z-index: 0;
+}
+
+.jspVerticalBar, .jspHorizontalBar {
+	z-index: 9999;
 }
 
 .jspVerticalBar
@@ -112,7 +117,7 @@
 
 .jspCorner
 {
-	background: #eeeef4;
+	background: transparent;
 	float: left;
 	height: 100%;
 }
@@ -130,11 +135,7 @@
 	background: gray;
 	background: rgba( 0, 0, 0, 0.5 );
 	.border-radius( @scrollbarRadius );
-	.box-shadow( 0 0 1px rgba( 0, 0, 0, 0.25 ) );
-	//.opacity( 1 );
-	//.transition(opacity 0.3s linear);
 }
-
 
 .jspHorizontalBar,
 .jspVerticalBar,
@@ -148,6 +149,7 @@
 	.jspDrag {
 		width: @scrollbarSize;
 		left: @scrollbarSpacing;
+		.box-shadow( -1px 1px 0px 1px rgba(255, 255, 255, 0.25) );
 	}
 	
 }
@@ -157,17 +159,7 @@
 	.jspDrag {
 		height: @scrollbarSize;
 		top: @scrollbarSpacing;
+		.box-shadow( 1px -1px 0px 1px rgba(255, 255, 255, 0.25) );
 	}
 	
 }
-
-
-
-/*
-.jspTrack .jspActive,
-.jspTrack .jspHover,
-.jspTrack:hover {
-	.jspDrag {
-		.opacity( 1 );
-	}
-}*/

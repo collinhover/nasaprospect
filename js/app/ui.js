@@ -1,7 +1,6 @@
 define( [ 
 	"jquery",
 	"app/shared",
-	"jquery.easing",
 	"jquery.throttle-debounce.custom",
 	"hammer.custom",
 	"mwheelIntent",
@@ -25,7 +24,6 @@ function ( $, _s ) {
 		var $planet = $element.data( '$planet' );
 		
 		$planet.on( 'tap', function () {
-			console.log( 'planet tap' );
 			
 			var $land = $element.data( '$land' );
 			
@@ -33,16 +31,27 @@ function ( $, _s ) {
 			
 			if ( $land.is( ':visible' ) ) {
 				
-				_de.$body.data( 'jsp' ).scrollToElement( $element.data( '$orbit' ), true, true );
+				_de.$body.data( 'jsp' ).scrollToElement( $element.data( '$orbit' ), true, true, {
+					ease: Cubic.easeOut,
+					onComplete: function () {
+						
+						$land.hide();
+						
+						OnContentChanged();
+						
+					}
+				});
 				
 			}
 			else {
 				
 				$land.show();
 				
+				OnContentChanged();
+				
+				// TODO: if user reaches orbit again, close planet
+				
 			}
-			
-			OnContentChanged();
 			
 		} );
 		
@@ -59,10 +68,7 @@ function ( $, _s ) {
 	
 	var scrollSettings = {
 		verticalGutter : -scrollbarV.width(),
-		horizontalGutter: -scrollbarH.height(),
-		// TODO: move animation settings into a object with complete callback, passed to scrollToElement
-		animateEase: "easeOutCubic",
-		animateDuration: 500
+		horizontalGutter: -scrollbarH.height()
 	};
 	
 	scrollbarV.remove();

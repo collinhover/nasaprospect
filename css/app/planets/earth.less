@@ -9,18 +9,31 @@
             background-color: rgba( 72, 195, 232, 1 );
         }
         
-        [id^="cloud"] {
+    }
+	
+	.land {
+		
+		[id^="cloud"] {
             position: absolute;
             opacity: 0.9;
         }
+		
+		.middleground [id^="cloud"] {
+            opacity: 0.65;
+            -webkit-transform: scale(0.65);
+               -moz-transform: scale(0.65);
+                -ms-transform: scale(0.65);
+                 -o-transform: scale(0.65);
+                    transform: scale(0.65);
+        }
         
         .background [id^="cloud"] {
-            opacity: 0.5;
-            -webkit-transform: scale(0.5);
-               -moz-transform: scale(0.5);
-                -ms-transform: scale(0.5);
-                 -o-transform: scale(0.5);
-                    transform: scale(0.5);
+            opacity: 0.25;
+            -webkit-transform: scale(0.25);
+               -moz-transform: scale(0.25);
+                -ms-transform: scale(0.25);
+                 -o-transform: scale(0.25);
+                    transform: scale(0.25);
         }
         
         #cloud1 {
@@ -42,47 +55,77 @@
             bottom: 15%;
             right: 25%;
         }
+		
+		#cloud5 {
+            top: 0%;
+            left: 25%;
+        }
         
-        #cloud5 {
+        #cloud6 {
+            top: 5%;
+            right: 40%;
+        }
+        
+        #cloud7 {
+            bottom: 10%;
+            left: 14%;
+        }
+        
+        #cloud8 {
+            bottom: 35%;
+            right: 45%;
+        }
+		
+		#cloud9 {
+            top: 10%;
+            left: -2%;
+        }
+        
+        #cloud10 {
+            bottom: 15%;
+            right: -2%;
+        }
+        
+        #cloud11 {
             bottom: -35%;
             right: 20%;
         }
         
-        #cloud6 {
-            top: -15%;
+        #cloud12 {
+            bottom: -15%;
             right: 30%;
         }
         
-        #cloud7 {
-            top: -5%;
-            left: 0%;
+        #cloud13 {
+            top: 0%;
+            left: 45%;
         }
         
-        #cloud8 {
+        #cloud14 {
             top: 10%;
             left: 10%;
         }
         
-        #cloud9 {
-            top: 0%;
+        #cloud15 {
+            top: 10%;
             right: 15%;
         }
         
-        #cloud10 {
+        #cloud16 {
             bottom: 20%;
             left: -5%;
         }
         
-        #cloud11 {
+        #cloud17 {
             bottom: -25%;
             left: 30%;
         }
         
-        #cloud12 {
+        #cloud18 {
             bottom: -5%;
             right: -5%;
         }
-        
-    }
+		
+	}
     
 }

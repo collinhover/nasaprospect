@@ -12,7 +12,6 @@ require(
 	"jquery",
 	"app/shared",
 	"app/ui",
-    "greensock/TweenMax",
     "jquery.superscrollorama.custom"
 ],
 function ( $, _s ) {
@@ -29,17 +28,35 @@ function ( $, _s ) {
     	'#earth',
 		(new TimelineLite())
 			.append([
-				TweenMax.fromTo($('#earth .background'), 1, 
+				TweenMax.fromTo($('#earth .orbit .background'), 1, 
     				{css:{top: "0%"}, immediateRender:true}, 
 					{css:{top: "-10%"}}),
-    			TweenMax.fromTo($('#earth .middleground'), 1,
+    			TweenMax.fromTo($('#earth .orbit .middleground'), 1,
     				{css:{top: "0%"}, immediateRender:true}, 
 					{css:{top: "-30%"}}),
-				TweenMax.fromTo($('#earth .foreground'), 1,
+				TweenMax.fromTo($('#earth .orbit .foreground'), 1,
     				{css:{top: "0%"}, immediateRender:true}, 
 					{css:{top: "-100%"}})
 			]),
 		"100%",
+		"50%"
+	);
+	
+	_de.$body.superscrollorama( "addTween", 
+    	'#earth',
+		(new TimelineLite())
+			.append([
+				TweenMax.fromTo($('#earth .land .background'), 1, 
+    				{css:{top: "0%"}, immediateRender:true}, 
+					{css:{top: "-10%"}}),
+    			TweenMax.fromTo($('#earth .land .middleground'), 1,
+    				{css:{top: "0%"}, immediateRender:true}, 
+					{css:{top: "-25%"}}),
+				TweenMax.fromTo($('#earth .land .foreground'), 1,
+    				{css:{top: "0%"}, immediateRender:true}, 
+					{css:{top: "-100%"}})
+			]),
+		"150%",
 		"50%"
 	);
     

@@ -15,8 +15,11 @@
 	+ init / stop on command
 	+ duration / offset as a percentage of element
 */
-
-(function($) {
+define( [
+	'jquery',
+    "TweenMax"
+],
+function($) {
 	
 	function SuperScrollorama ( element, options ) {
 		
@@ -335,8 +338,6 @@
 				
 			}
 			
-			// loop calls itself and runs, then waits 100 miliseconds and runs again
-			
 			this._updateTimeoutId = setTimeout( $.proxy( this.update, this ), this.options.timeDelta );
 			
 			return this;
@@ -378,4 +379,4 @@
 		isVertical:true
 	};
      
-})(jQuery);
+} );

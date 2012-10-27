@@ -17,6 +17,18 @@ section {
 	overflow: visible;
 }
 
+.background {
+	z-index: 1;
+}
+
+.middleground {
+	z-index: 2;
+}
+
+.foreground {
+	z-index: 3;
+}
+
 section, .orbit, .land, .explore, .foreground, .middleground, .background {
 	.ignore-pointer;
 }
@@ -29,6 +41,7 @@ section, .orbit, .land, .explore, .foreground, .middleground, .background {
 }
 
 .planet {
+	cursor: pointer;
     position: absolute;
     background-color: rgba( 255, 255, 255, 0.9 );
     width: 512px;
@@ -45,6 +58,7 @@ section, .orbit, .land, .explore, .foreground, .middleground, .background {
     position: absolute;
     width: 125%;
     top: 50%;
+	left: 0;
     margin-left: -12.5%;
     margin-top: -34px;
 }
@@ -56,6 +70,7 @@ section, .orbit, .land, .explore, .foreground, .middleground, .background {
 	.fillWidth;
 	.fillHeightMin;
     display: none;
+	#gradient-transparent > .vertical-three-colors( rgba( 51, 51, 51, 0 ), rgba( 51, 51, 51, 1 ), 50%, rgba( 51, 51, 51, 1 ) );
 }
 
 /* explore
