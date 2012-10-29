@@ -53,19 +53,6 @@ function ( $ ) {
 	_de.$exploreMiddleground = _de.$explore.find( ".middleground" );
 	_de.$exploreBackground = _de.$explore.find( ".background" );
 	
-	// for each section
-	
-	_de.$section.each( function () {
-		
-		var $element = $( this );
-		
-		$element.data( '$orbit', $element.find( ".orbit" ) );
-		$element.data( '$land', $element.find( ".land" ) );
-		$element.data( '$explore', $element.find( ".explore" ) );
-		$element.data( '$planet', $element.find( ".planet" ) );
-		
-	} );
-	
 	return _s;
 	
 } );

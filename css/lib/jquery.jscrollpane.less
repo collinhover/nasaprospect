@@ -4,12 +4,12 @@
  * Include this stylesheet in your site or copy and paste the styles below into your stylesheet - jScrollPane
  * may not operate correctly without them.
  */
- 
- @scrollbarSpacing: 5px;
- @scrollbarSize: 10px;
- @scrollbarWidth: @scrollbarSize + @scrollbarSpacing * 2;
- @scrollbarHeight: @scrollbarSize + @scrollbarSpacing * 2;
- @scrollbarRadius: 7px;
+
+@scrollbarSpacing: 5px;
+@scrollbarSize: 10px;
+@scrollbarWidth: @scrollbarSize + @scrollbarSpacing * 2;
+@scrollbarHeight: @scrollbarSize + @scrollbarSpacing * 2;
+@scrollbarRadius: 7px;
 
 .jspContainer
 {
@@ -54,12 +54,19 @@
 
 .jspCap
 {
-	display: none;
+	display: block;
+	background: transparent;
+}
+
+.jspVerticalBar .jspCap
+{
+	height: @scrollbarSpacing * 2;
 }
 
 .jspHorizontalBar .jspCap
 {
-	float: left;
+	width: @scrollbarSpacing * 2;
+	height: 100%;
 }
 
 .jspTrack
@@ -149,7 +156,7 @@
 	.jspDrag {
 		width: @scrollbarSize;
 		left: @scrollbarSpacing;
-		.box-shadow( -1px 1px 0px 1px rgba(255, 255, 255, 0.25) );
+		//.box-shadow( -1px 1px 0px 1px rgba(255, 255, 255, 0.25) );
 	}
 	
 }
@@ -159,7 +166,7 @@
 	.jspDrag {
 		height: @scrollbarSize;
 		top: @scrollbarSpacing;
-		.box-shadow( 1px -1px 0px 1px rgba(255, 255, 255, 0.25) );
+		//.box-shadow( 1px -1px 0px 1px rgba(255, 255, 255, 0.25) );
 	}
 	
 }

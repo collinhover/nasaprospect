@@ -12,9 +12,11 @@ require(
 	"jquery",
 	"app/shared",
 	"app/ui",
+	"app/solarSystem",
+	"overthrow",
     "jquery.superscrollorama.custom"
 ],
-function ( $, _s ) {
+function ( $, _s, _ui, _solarSystem ) {
 	
 	var _de = _s.domElements;
 	

@@ -14,51 +14,6 @@ function ( $, _s ) {
 	
 	/*===================================================
 	
-	sections
-	
-	=====================================================*/
-	
-	_de.$section.each( function () {
-		
-		var $element = $( this );
-		var $planet = $element.data( '$planet' );
-		
-		$planet.on( 'tap', function () {
-			
-			var $land = $element.data( '$land' );
-			
-			// if visible, scroll smoothly to orbit
-			
-			if ( $land.is( ':visible' ) ) {
-				
-				_de.$body.data( 'jsp' ).scrollToElement( $element.data( '$orbit' ), true, true, {
-					ease: Cubic.easeOut,
-					onComplete: function () {
-						
-						$land.hide();
-						
-						OnContentChanged();
-						
-					}
-				});
-				
-			}
-			else {
-				
-				$land.show();
-				
-				OnContentChanged();
-				
-				// TODO: if user reaches orbit again, close planet
-				
-			}
-			
-		} );
-		
-	} );
-	
-	/*===================================================
-	
 	scrolling
 	
 	=====================================================*/
@@ -75,6 +30,10 @@ function ( $, _s ) {
 	scrollbarH.remove();
 	
 	_de.$scrollable.jScrollPane( scrollSettings );
+	
+	// store reference to primary scrollable api
+	
+	_s.navigator = _de.$body.data( 'jsp' );
 	
 	/*===================================================
 	
@@ -119,9 +78,23 @@ function ( $, _s ) {
         
     }
 	
-	function OnContentChanged () {
+	function OnContentChanged ( changed ) {
 		
-		_de.$scrollable.each( function () {
+		var $changed = $( changed );
+		var $scrollable;
+		
+		if ( $changed.length > 0 ) {
+			
+			$scrollable = _de.$scrollable.has( $changed );
+			
+		}
+		else {
+			
+			$scrollable = _de.$scrollable;
+			
+		}
+		
+		$scrollable.each( function () {
 			
 			var $element = $( this );
 			var scrollAPI = $element.data('jsp');
