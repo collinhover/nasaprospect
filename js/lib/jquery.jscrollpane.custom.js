@@ -8,7 +8,7 @@
  * modified by Collin Hover @ collinhover.com
  */
 define( [
-	'jquery',
+    'jquery',
     "TweenMax"
 ],
 function( $ ){
@@ -34,7 +34,8 @@ function( $ ){
 				isScrollableH,
 				verticalDrag,
 				horizontalDrag,
-				scrollPositionTarget = { x: 0, y: 0 },
+				scrollPositionTargetX = { x: 0 },
+                scrollPositionTargetY = { y: 0 },
 				scrollPosition = { x: 0, y: 0 },
 				scrollPositionLast = { x: 0, y: 0 },
 				dragMax = { x: 0, y: 0 },
@@ -176,8 +177,8 @@ function( $ ){
 				if (!(isScrollableH || isScrollableV)) {
 					
 					// trigger one final reposition / scroll
-					_positionDragX( contentPositionX(), true );
-					_positionDragY( contentPositionY(), true );
+					_positionDragX( contentPosition.x, true );
+					_positionDragY( contentPosition.y, true );
 					
 					elem.removeClass('jspScrollable');
 					pane.css({
@@ -193,8 +194,8 @@ function( $ ){
 					
 					isMaintainingPositon = settings.maintainPosition && (scrollPosition.y || scrollPosition.x);
 					if (isMaintainingPositon) {
-						contentPositionLastX = contentPositionX();
-						contentPositionLastY = contentPositionY();
+						contentPositionLastX = contentPosition.x;
+						contentPositionLastY = contentPosition.y;
 					}
 					
 					initialiseVerticalScroll();
@@ -670,37 +671,38 @@ function( $ ){
 				
 				animateParameters = animateParameters || {};
 				animateParameters.y = Math.round( Math.max( 0, Math.min( dragMax.y, destY ) ) );
+				animateParameters.onUpdate = positionDragUpdateY;
 				
-				//if ( scrollPositionTarget.y !== animateParameters.y ) {
+				if ( settings.animate !== true || scrollPosition.y === animateParameters.y || duration === false ) {
 					
-					animateParameters.onUpdate = updatePositionDrag;
+					duration = 0;
 					
-					if ( settings.animate !== true || scrollPosition.y === animateParameters.y || duration === false ) {
-						
-						duration = 0;
-						
-					}
-					// ensures a smooth scroll if no duration passed
-					else if ( duration === true || isNumber( duration ) !== true ) {
-						
-						duration = settings.animateDuration;
-						
-					}
-					console.log( ' > > > positionDragY', destY, duration, scrollPositionTarget, animateParameters );
-					TweenMax.to( scrollPositionTarget, duration, animateParameters);
+				}
+				// ensures a smooth scroll if no duration passed
+				else if ( duration === true || isNumber( duration ) !== true ) {
 					
-				//}
+					duration = settings.animateDuration;
+					
+				}
+				
+				TweenMax.to( scrollPositionTargetY, duration, animateParameters);
 				
 				return this;
 				
 			}
+            
+            function positionDragUpdateY () {
+                
+                _positionDragY( scrollPositionTargetY.y );
+                
+            }
 
 			function _positionDragY( destY, force ) {
 				
 				if (destY === undefined) {
 					destY = verticalDrag.position().top;
 				}
-				console.log( ' > > > > _positionDragY init', destY );
+				
 				// find basic destination y and top
 				
 				destY = Math.round( Math.max( 0, Math.min( dragMax.y, destY ) ) );
@@ -714,7 +716,7 @@ function( $ ){
 				if ( rangeElementBounds ) {
 					
 					destTop = Math.max( rangeElementBounds.y, Math.min( rangeElementBounds.y + rangeElementBounds.heightSansPane, destTop ) );
-					
+					console.log( 'destTop', destTop, ' rangeElementBounds.y', rangeElementBounds.y, ' rangeElementBounds.height', rangeElementBounds.height, 'rangeElementBounds.heightSansPane', rangeElementBounds.heightSansPane, 'paneHeight', paneHeight );
 				}
 				
 				destTop = Math.max( rangeMin.y, Math.min( rangeMax.y, destTop ) );
@@ -725,7 +727,7 @@ function( $ ){
 					destTop = destY = 0;
 					
 				}
-				console.log( ' > > > > _positionDragY final', destY, destTop );
+				
 				if ( contentPosition.y !== destTop || force === true ) {
 					
 					container.scrollTop(0);
@@ -764,8 +766,8 @@ function( $ ){
 				}
 				
 				animateParameters = animateParameters || {};
-				animateParameters.onUpdate = updatePositionDrag;
-				animateParameters.x = Math.round( Math.max( 0, Math.min( dragMax.x, destX ) ) );
+                animateParameters.x = Math.round( Math.max( 0, Math.min( dragMax.x, destX ) ) );
+                animateParameters.onUpdate = positionDragUpdateX;
 				
 				if ( settings.animate !== true || scrollPosition.x === animateParameters.x || duration === false ) {
 					
@@ -779,11 +781,17 @@ function( $ ){
 					
 				}
 				
-				TweenMax.to( scrollPositionTarget, duration, animateParameters);
+				TweenMax.to( scrollPositionTargetX, duration, animateParameters);
 				
 				return this;
 
 			}
+            
+            function positionDragUpdateX () {
+                
+                _positionDragX( scrollPositionTargetX.x );
+                
+            }
 
 			function _positionDragX( destX, force ) {
 				
@@ -844,13 +852,6 @@ function( $ ){
 				}
 				
 			}
-			
-			function updatePositionDrag () {
-				console.log( ' > > > updatePositionDrag' );
-				_positionDragX( scrollPositionTarget.x );
-				_positionDragY( scrollPositionTarget.y );
-				
-			}
 
 			function updateVerticalArrows(isAtTop, isAtBottom) {
 				if (settings.showArrows) {
@@ -906,8 +907,8 @@ function( $ ){
 						}
 					}
 					
-					bounds.widthSansPane = bounds.width - paneWidth;
-					bounds.heightSansPane = bounds.height - paneHeight;
+					bounds.widthSansPane = bounds.width - container.width();
+					bounds.heightSansPane = bounds.height - container.height();
 					
 					return bounds;
 					
@@ -923,7 +924,7 @@ function( $ ){
 				
 				if ( bounds ) {
 
-					viewportTop = contentPositionY();
+					viewportTop = contentPosition.y;
 					maxVisibleEleTop = viewportTop + paneHeight;
 					var verticalGutter = Math.max( settings.verticalGutter, 0 );
 					if ( bounds.y < viewportTop || stickToTop) { // element is above viewport
@@ -932,7 +933,7 @@ function( $ ){
 						destY = bounds.y - paneHeight + bounds.height + verticalGutter;
 					}
 					
-					viewportLeft = contentPositionX();
+					viewportLeft = contentPosition.x;
 					maxVisibleEleLeft = viewportLeft + paneWidth;
 					var horizontalGutter = Math.max( settings.horizontalGutter, 0 );
 					if (bounds.x < viewportLeft || stickToTop) { // element is to the left of viewport
@@ -941,17 +942,18 @@ function( $ ){
 						destX = bounds.x - paneWidth + bounds.width + horizontalGutter;
 					}
 					
-					handleMultiAnimation ( destX, destY, duration, animateParameters );
+					handleMultiScroll ( destX, destY, duration, animateParameters );
 					
 				}
 				
 			}
 			
-			function handleMultiAnimation ( destX, destY, duration, animateParameters ) {
+			function handleMultiScroll ( destX, destY, duration, animateParameters ) {
 				
 				animateParameters = animateParameters || {};
 				
-				var animateParametersY = animateParametersX = animateParameters;
+                var animateParametersX = $.extend( {}, animateParameters );
+				var animateParametersY = $.extend( {}, animateParameters );
 				var onComplete = animateParameters.onComplete;
 				var waitHorizontal = isScrollableH;
 				var waitVertical = isScrollableV;
@@ -960,15 +962,13 @@ function( $ ){
 					
 					if ( waitHorizontal && waitVertical ) {
 						
-						animateParametersY = $.extend( {}, animateParameters );
-						animateParametersY.onComplete = function () {
-							waitVertical = false;
-							if ( waitVertical !== true && waitHorizontal !== true ) onComplete();
-						};
-						
-						animateParametersX = $.extend( {}, animateParameters );
 						animateParametersX.onComplete = function () {
 							waitHorizontal = false;
+							if ( waitVertical !== true && waitHorizontal !== true ) onComplete();
+						};
+                        
+                        animateParametersY.onComplete = function () {
+							waitVertical = false;
 							if ( waitVertical !== true && waitHorizontal !== true ) onComplete();
 						};
 						
@@ -980,28 +980,20 @@ function( $ ){
 					}
 					
 				}
-				console.log( ' > > handleMultiAnimation', destX, destY, duration );
+				
 				scrollToY(destY, duration, animateParametersY);
 				scrollToX(destX, duration, animateParametersX);
 				
 			}
 
-			function contentPositionX() {
-				return contentPosition.x;//-pane.position().left;
-			}
-
-			function contentPositionY() {
-				return contentPosition.y;//-pane.position().top;
-			}
-
 			function isCloseToBottom() {
 				var scrollableHeight = contentHeight - paneHeight;
-				return (scrollableHeight > 20) && (scrollableHeight - contentPositionY() < 10);
+				return (scrollableHeight > 20) && (scrollableHeight - contentPosition.y < 10);
 			}
 
 			function isCloseToRight() {
 				var scrollableWidth = contentWidth - paneWidth;
-				return (scrollableWidth > 20) && (scrollableWidth - contentPositionX() < 10);
+				return (scrollableWidth > 20) && (scrollableWidth - contentPosition.x < 10);
 			}
 			
 			function isNumber ( n ) {
@@ -1015,7 +1007,6 @@ function( $ ){
 					mwEvent,
 					function (event, delta, deltaX, deltaY) {
 						var dX = scrollPosition.x, dY = scrollPosition.y;
-						console.log( 'mwheel!', dX, dY, deltaX, deltaY, deltaX * settings.mouseWheelSpeed, -deltaY * settings.mouseWheelSpeed );
 						jsp.scrollBy(deltaX * settings.mouseWheelSpeed, -deltaY * settings.mouseWheelSpeed);
 						// return true if there was no movement so rest of screen can scroll
 						return dX == scrollPosition.x && dY == scrollPosition.y;
@@ -1265,8 +1256,8 @@ function( $ ){
 					'touchstart.jsp',
 					function(e) {
 						var touch = e.originalEvent.touches[0];
-						startX = contentPositionX();
-						startY = contentPositionY();
+						startX = contentPosition.x;
+						startY = contentPosition.y;
 						touchStartX = touch.pageX;
 						touchStartY = touch.pageY;
 						moved = false;
@@ -1492,7 +1483,7 @@ function( $ ){
 				var i, il, trigger;
 				
 				if ( isNumber( widthDeltaRatio ) && isNumber( heightDeltaRatio ) && ( widthDeltaRatio !== 1 || heightDeltaRatio !== 1 ) ) {
-					console.log( 'REPOSITION', triggers.length, 'TRIGGERS, ratios: ', widthDeltaRatio, heightDeltaRatio );
+					
 					for ( i = 0, il = triggers.length; i < il; i++ ) {
 						
 						trigger = triggers[ i ];
@@ -1520,8 +1511,8 @@ function( $ ){
 			}
 			
 			function destroy(){
-				var currentY = contentPositionY(),
-					currentX = contentPositionX();
+				var currentY = contentPosition.y,
+					currentX = contentPosition.x;
 				elem.removeClass('jspScrollable').off('.jsp');
 				elem.replaceWith(originalElement.append(pane.children()));
 				originalElement.scrollTop(currentY);
@@ -1557,7 +1548,7 @@ function( $ ){
 					// Scrolls the pane so that the specified co-ordinates within the content are at the top left
 					// of the viewport. 
 					scrollTo: function(destX, destY, duration, animateParameters) {
-						handleMultiAnimation( destX, destY, duration, animateParameters );
+						handleMultiScroll( destX, destY, duration, animateParameters );
 						return this;
 					},
 					// Scrolls the pane so that the specified co-ordinate within the content is at the left of the viewport.
@@ -1582,19 +1573,17 @@ function( $ ){
 					},
 					// Scrolls the pane by the specified amount of pixels. 
 					scrollBy: function(deltaX, deltaY, duration, animateParameters) {
-						//jsp.scrollByX(deltaX, duration, animateParameters);
-						//jsp.scrollByY(deltaY, duration, animateParameters);
+                        
+						var destX = contentPosition.x + Math[deltaX<0 ? 'floor' : 'ceil'](deltaX),
+							destY = contentPosition.y + Math[deltaY<0 ? 'floor' : 'ceil'](deltaY);
 						
-						var destX = contentPositionX() + Math[deltaX<0 ? 'floor' : 'ceil'](deltaX),
-							destY = contentPositionY() + Math[deltaY<0 ? 'floor' : 'ceil'](deltaY);
-						console.log( ' > scrollBy', deltaX, deltaY, destX, destY );
-						handleMultiAnimation( destX, destY, duration, animateParameters );
+						handleMultiScroll( destX, destY, duration, animateParameters );
 						return this;
 						
 					},
 					// Scrolls the pane by the specified amount of pixels. 
 					scrollByX: function(deltaX, duration, animateParameters) {
-						var destX = contentPositionX() + Math[deltaX<0 ? 'floor' : 'ceil'](deltaX),
+						var destX = contentPosition.x + Math[deltaX<0 ? 'floor' : 'ceil'](deltaX),
 							percentScrolled = destX / (contentWidth - paneWidth);
 						positionDragX(percentScrolled * dragMax.x, duration, animateParameters);
 						return this;
@@ -1602,7 +1591,7 @@ function( $ ){
 					},
 					// Scrolls the pane by the specified amount of pixels. 
 					scrollByY: function(deltaY, duration, animateParameters) {
-						var destY = contentPositionY() + Math[deltaY<0 ? 'floor' : 'ceil'](deltaY),
+						var destY = contentPosition.y + Math[deltaY<0 ? 'floor' : 'ceil'](deltaY),
 							percentScrolled = destY / (contentHeight - paneHeight);
 						positionDragY(percentScrolled * dragMax.y, duration, animateParameters);
 						return this;
@@ -1669,17 +1658,16 @@ function( $ ){
 						
 						$rangeElement = $( element );
 						rangeElementBounds = getElementBounds( $rangeElement );
-						console.log( 'NEW RANGE ELEMENT', $rangeElement, ' + bounds ', rangeElementBounds );
 						return this;
 						
 					},
 					// Returns the current x position of the viewport with regards to the content pane.
 					getContentPositionX: function() {
-						return contentPositionX();
+						return contentPosition.x;
 					},
 					// Returns the current y position of the viewport with regards to the content pane.
 					getContentPositionY: function() {
-						return contentPositionY();
+						return contentPosition.y;
 					},
 					// Returns the width of the content within the scroll pane.
 					getContentWidth: function() {
@@ -1691,11 +1679,11 @@ function( $ ){
 					},
 					// Returns the horizontal position of the viewport within the pane content.
 					getPercentScrolledX: function() {
-						return contentPositionX() / (contentWidth - paneWidth);
+						return contentPosition.x / (contentWidth - paneWidth);
 					},
 					// Returns the vertical position of the viewport within the pane content.
 					getPercentScrolledY: function() {
-						return contentPositionY() / (contentHeight - paneHeight);
+						return contentPosition.y / (contentHeight - paneHeight);
 					},
 					// Returns whether or not this scrollpane has a horizontal scrollbar.
 					getIsScrollableH: function() {

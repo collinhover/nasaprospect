@@ -2,13 +2,27 @@
 -------------------------------------------------------------------------------*/
 
 #solar-system {
-    .fillMinHack;
     background-image: url( "../../img/stars.png" );
 }
 
+#solar-system, section {
+    .fillMinHack;
+    .inline-block;
+}
+
+/* sections
+-------------------------------------------------------------------------------*/
+
 section {
-	.fillMinHack;
 	overflow: hidden;
+}
+
+section, .orbit, .land, .explore, .foreground, .middleground, .background {
+    .ignore-pointer;
+}
+
+.orbit, .land, .explore {
+    position: relative;
 }
 
 .foreground, .middleground, .background {
@@ -29,19 +43,11 @@ section {
 	z-index: 3;
 }
 
-.orbit, .land, .explore {
-	position: relative;
-}
-
-section, .orbit, .land, .explore, .foreground, .middleground, .background {
-	.ignore-pointer;
-}
-
 /* orbit
 -------------------------------------------------------------------------------*/
 
 .orbit {
-    .fillContainer;
+    
 }
 
 .planet {
@@ -71,8 +77,6 @@ section, .orbit, .land, .explore, .foreground, .middleground, .background {
 -------------------------------------------------------------------------------*/
 
 .land {
-	.fillWidth;
-	.fillHeightMin;
     display: none;
 	#gradient-transparent > .vertical-three-colors( rgba( 51, 51, 51, 0 ), rgba( 51, 51, 51, 1 ), 50%, rgba( 51, 51, 51, 1 ) );
 }
@@ -81,8 +85,6 @@ section, .orbit, .land, .explore, .foreground, .middleground, .background {
 -------------------------------------------------------------------------------*/
 
 .explore {
-	.fillWidthMin;
-	.fillHeight;
     display: none;   
 }
 
