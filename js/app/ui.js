@@ -5,7 +5,8 @@ define( [
 	"hammer.custom",
 	"mwheelIntent",
 	"jquery.mousewheel",
-	"jquery.jscrollpane.custom"
+	"jquery.jscrollpane.custom",
+	"jquery.stellar"
 ],
 function ( $, _s ) {
 	
@@ -31,9 +32,17 @@ function ( $, _s ) {
 	
 	_de.$scrollable.jScrollPane( scrollSettings );
 	
-	// store reference to primary scrollable api
+	/*===================================================
+	
+	parallax
+	
+	=====================================================*/
 	
 	_s.navigator = _de.$body.data( 'jsp' );
+	
+	_s.navigator.getContentPane().stellar( {
+		scrollProperty: 'position'
+	} );
 	
 	/*===================================================
 	
@@ -61,7 +70,7 @@ function ( $, _s ) {
 		// land is at least as big as user screen x1, but can expand on height
 		
         _de.$land.css( {
-            "width": w,
+            "width": w * 2,
             "min-height": h
         } );
 		
@@ -102,6 +111,8 @@ function ( $, _s ) {
 			scrollAPI.reinitialise();
 			
 		} );
+		
+		_s.navigator.getContentPane().stellar( 'refresh' );
 		
 	}
 	

@@ -13,8 +13,8 @@ require(
 	"app/shared",
 	"app/ui",
 	"app/solarSystem",
-	"overthrow",
-    "jquery.superscrollorama.custom"
+	"overthrow"
+    //"jquery.superscrollorama.custom"
 ],
 function ( $, _s, _ui, _solarSystem ) {
 	
@@ -25,7 +25,8 @@ function ( $, _s, _ui, _solarSystem ) {
 	parallax
 	
 	=====================================================*/
-    
+	
+    /*
 	_de.$body.superscrollorama( "addTween", 
     	'#earth',
 		(new TimelineLite())
@@ -61,5 +62,5 @@ function ( $, _s, _ui, _solarSystem ) {
 		"150%",
 		"50%"
 	);
-    
+    */
 } );

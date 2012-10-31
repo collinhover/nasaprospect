@@ -11,119 +11,120 @@
 @scrollbarHeight: @scrollbarSize + @scrollbarSpacing * 2;
 @scrollbarRadius: 7px;
 
-.jspContainer
-{
+.jspContainer {
 	overflow: hidden;
 	position: relative;
 }
 
-.jspPane
-{
+.jspPane {
 	position: absolute;
 	z-index: 0;
 }
 
-.jspVerticalBar, .jspHorizontalBar {
+.jspCap {
+	display: block;
+	background: transparent;
+}
+
+.jspTrack {
+	background: #dde;
+	position: relative;
+}
+
+.jspDrag {
+	position: relative;
+	top: 0;
+	left: 0;
+	cursor: pointer;
+	background: gray;
+	background: rgba( 0, 0, 0, 0.5 );
+	.border-radius( @scrollbarRadius );
+}
+
+.jspArrow {
+	background: #50506d;
+	text-indent: -20000px;
+	display: block;
+	cursor: pointer;
+	
+	&.jspDisabled {
+		cursor: default;
+		background: #80808d;
+	}
+}
+
+.jspHorizontalBar,
+.jspVerticalBar,
+.jspTrack {
+	background-color: transparent;
 	z-index: 9999;
 }
 
-.jspVerticalBar
-{
+.jspVerticalBar {
 	position: absolute;
 	top: 0;
 	right: 0;
 	width:  @scrollbarWidth;
 	height: 100%;
+	
+	.jspDrag {
+		width: @scrollbarSize;
+		left: @scrollbarSpacing;
+		//.box-shadow( -1px 1px 0px 1px rgba(255, 255, 255, 0.25) );
+	}
+	
+	.jspCap {
+		height: @scrollbarSpacing * 2;
+	}
+	
+	.jspArrow {
+		height: @scrollbarHeight;
+		
+		&:focus {
+			outline: none;
+		}
+	}
+	
 }
 
-.jspHorizontalBar
-{
+.jspHorizontalBar {
 	position: absolute;
 	bottom: 0;
 	left: 0;
 	width: 100%;
 	height:  @scrollbarHeight;
+	
+	.jspCap {
+		width: @scrollbarSpacing * 2;
+	}
+	
+	.jspTrack,
+	.jspDrag,
+	.jspCap {
+		float: left;
+		height: 100%;
+	}
+	
+	.jspDrag {
+		height: @scrollbarSize;
+		top: @scrollbarSpacing;
+		//.box-shadow( 1px -1px 0px 1px rgba(255, 255, 255, 0.25) );
+	}
+	
+	.jspArrow {
+		width: @scrollbarWidth;
+		float: left;
+		height: 100%;
+	}
 }
 
 .jspVerticalBar *,
-.jspHorizontalBar *
-{
+.jspHorizontalBar * {
 	margin: 0;
 	padding: 0;
 }
 
-.jspCap
-{
-	display: block;
-	background: transparent;
-}
-
-.jspVerticalBar .jspCap
-{
-	height: @scrollbarSpacing * 2;
-}
-
-.jspHorizontalBar .jspCap
-{
-	width: @scrollbarSpacing * 2;
-	height: 100%;
-}
-
-.jspTrack
-{
-	background: #dde;
-	position: relative;
-}
-
-.jspDrag
-{
-	background: #bbd;
-	position: relative;
-	top: 0;
-	left: 0;
-	cursor: pointer;
-}
-
-.jspHorizontalBar .jspTrack,
-.jspHorizontalBar .jspDrag
-{
-	float: left;
-	height: 100%;
-}
-
-.jspArrow
-{
-	background: #50506d;
-	text-indent: -20000px;
-	display: block;
-	cursor: pointer;
-}
-
-.jspArrow.jspDisabled
-{
-	cursor: default;
-	background: #80808d;
-}
-
-.jspVerticalBar .jspArrow
-{
-	height: @scrollbarHeight;
-}
-
-.jspHorizontalBar .jspArrow
-{
-	width: @scrollbarWidth;
-	float: left;
-	height: 100%;
-}
-
-.jspVerticalBar .jspArrow:focus
-{
-	outline: none;
-}
-
-.jspCorner
-{
+.jspCorner {
 	background: transparent;
 	float: left;
 	height: 100%;
@@ -133,40 +134,4 @@
 * html .jspCorner
 {
 	margin: 0 -3px 0 0;
-}
-
-/* pill shape drag */
-
-.jspDrag
-{
-	background: gray;
-	background: rgba( 0, 0, 0, 0.5 );
-	.border-radius( @scrollbarRadius );
-}
-
-.jspHorizontalBar,
-.jspVerticalBar,
-.jspTrack
-{
-	background-color: transparent;
-}
-
-.jspVerticalBar {
-	
-	.jspDrag {
-		width: @scrollbarSize;
-		left: @scrollbarSpacing;
-		//.box-shadow( -1px 1px 0px 1px rgba(255, 255, 255, 0.25) );
-	}
-	
-}
-
-.jspHorizontalBar {
-	
-	.jspDrag {
-		height: @scrollbarSize;
-		top: @scrollbarSpacing;
-		//.box-shadow( 1px -1px 0px 1px rgba(255, 255, 255, 0.25) );
-	}
-	
 }

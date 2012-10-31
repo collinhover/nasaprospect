@@ -143,7 +143,6 @@ function( $ ){
 					// If nothing changed since last check...
 					if (!hasContainingSpaceChanged && contentWidthLast == contentWidth && pane.outerHeight() == contentHeight) {
 						elem.width(paneWidth);
-						console.log( 'JSCROLLPANE NO NEED TO RESIZE' );
 						return;
 					}
 					
@@ -670,24 +669,27 @@ function( $ ){
 				}
 				
 				animateParameters = animateParameters || {};
-				animateParameters.onUpdate = function () {
-					_positionDragY( scrollPositionTarget.y );
-				};
 				animateParameters.y = Math.round( Math.max( 0, Math.min( dragMax.y, destY ) ) );
 				
-				if ( settings.animate !== true || scrollPosition.y === animateParameters.y || duration === false ) {
+				//if ( scrollPositionTarget.y !== animateParameters.y ) {
 					
-					duration = 0;
+					animateParameters.onUpdate = updatePositionDrag;
 					
-				}
-				// ensures a smooth scroll if no duration passed
-				else if ( duration === true || isNumber( duration ) !== true ) {
+					if ( settings.animate !== true || scrollPosition.y === animateParameters.y || duration === false ) {
+						
+						duration = 0;
+						
+					}
+					// ensures a smooth scroll if no duration passed
+					else if ( duration === true || isNumber( duration ) !== true ) {
+						
+						duration = settings.animateDuration;
+						
+					}
+					console.log( ' > > > positionDragY', destY, duration, scrollPositionTarget, animateParameters );
+					TweenMax.to( scrollPositionTarget, duration, animateParameters);
 					
-					duration = settings.animateDuration;
-					
-				}
-				
-				TweenMax.to( scrollPositionTarget, duration, animateParameters);
+				//}
 				
 				return this;
 				
@@ -698,7 +700,7 @@ function( $ ){
 				if (destY === undefined) {
 					destY = verticalDrag.position().top;
 				}
-				
+				console.log( ' > > > > _positionDragY init', destY );
 				// find basic destination y and top
 				
 				destY = Math.round( Math.max( 0, Math.min( dragMax.y, destY ) ) );
@@ -723,7 +725,7 @@ function( $ ){
 					destTop = destY = 0;
 					
 				}
-				
+				console.log( ' > > > > _positionDragY final', destY, destTop );
 				if ( contentPosition.y !== destTop || force === true ) {
 					
 					container.scrollTop(0);
@@ -732,7 +734,6 @@ function( $ ){
 					
 					contentPositionLast.y = contentPosition.y;
 					contentPosition.y = destTop;
-					console.log( 'destTop', destTop, 'destY', destY, 'scrollPositionLast.y', scrollPositionLast.y, 'scrollPosition.y', scrollPosition.y, 'contentPositionLast.y', contentPositionLast.y, ' contentPosition.y', contentPosition.y );
 					
 					var isAtTop = scrollPosition.y === 0;
 					var isAtBottom = scrollPosition.y == dragMax.y;
@@ -763,9 +764,7 @@ function( $ ){
 				}
 				
 				animateParameters = animateParameters || {};
-				animateParameters.onUpdate = function () {
-					_positionDragX( scrollPositionTarget.x );
-				};
+				animateParameters.onUpdate = updatePositionDrag;
 				animateParameters.x = Math.round( Math.max( 0, Math.min( dragMax.x, destX ) ) );
 				
 				if ( settings.animate !== true || scrollPosition.x === animateParameters.x || duration === false ) {
@@ -818,7 +817,7 @@ function( $ ){
 				
 				if ( contentPosition.x !== destLeft || force === true ) {
 					
-					container.scrollTop(0);
+					container.scrollLeft(0);
 					scrollPositionLast.x = scrollPosition.x;
 					scrollPosition.x = destX;
 					
@@ -843,6 +842,13 @@ function( $ ){
 					handleTriggers();
 					
 				}
+				
+			}
+			
+			function updatePositionDrag () {
+				console.log( ' > > > updatePositionDrag' );
+				_positionDragX( scrollPositionTarget.x );
+				_positionDragY( scrollPositionTarget.y );
 				
 			}
 
@@ -974,7 +980,7 @@ function( $ ){
 					}
 					
 				}
-				
+				console.log( ' > > handleMultiAnimation', destX, destY, duration );
 				scrollToY(destY, duration, animateParametersY);
 				scrollToX(destX, duration, animateParametersX);
 				
@@ -1009,6 +1015,7 @@ function( $ ){
 					mwEvent,
 					function (event, delta, deltaX, deltaY) {
 						var dX = scrollPosition.x, dY = scrollPosition.y;
+						console.log( 'mwheel!', dX, dY, deltaX, deltaY, deltaX * settings.mouseWheelSpeed, -deltaY * settings.mouseWheelSpeed );
 						jsp.scrollBy(deltaX * settings.mouseWheelSpeed, -deltaY * settings.mouseWheelSpeed);
 						// return true if there was no movement so rest of screen can scroll
 						return dX == scrollPosition.x && dY == scrollPosition.y;
@@ -1396,7 +1403,7 @@ function( $ ){
 					for( i = triggers.length - 1; i >= 0; i-- ) {
 						
 						trigger = triggers[ i ];
-						console.log( 'trigger ', trigger.callback, ' at ', y, ly, ' vs ', trigger.y, trigger.yMax, ' ? ', isInsideTriggerArea( x, y, lx, ly, trigger ), ' + ignore? ', trigger.ignore );
+						
 						if ( isInsideTriggerArea( x, y, lx, ly, trigger ) ) {
 							
 							if ( trigger.ignore !== true ) {
@@ -1580,7 +1587,7 @@ function( $ ){
 						
 						var destX = contentPositionX() + Math[deltaX<0 ? 'floor' : 'ceil'](deltaX),
 							destY = contentPositionY() + Math[deltaY<0 ? 'floor' : 'ceil'](deltaY);
-						
+						console.log( ' > scrollBy', deltaX, deltaY, destX, destY );
 						handleMultiAnimation( destX, destY, duration, animateParameters );
 						return this;
 						

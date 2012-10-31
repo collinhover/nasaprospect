@@ -120,10 +120,9 @@ function ( $, _s, _ui, Signal ) {
 			
 			this.$land.show();
 			
-			_s.navigator.reinitialise();
-			//_ui.OnContentChanged( this.$element );
+			_ui.OnContentChanged( this.$element );
 			
-			_s.navigator.setRangeElement( this.$element );
+			//_s.navigator.setRangeElement( this.$element );
 			
 			// when user reaches or passes orbit, close planet
 			// when user reaches land, open explore
@@ -161,10 +160,10 @@ function ( $, _s, _ui, Signal ) {
 			
 			_s.navigator
 				.removeTrigger( this.triggers.landToExplore )
-				.removeTrigger( this.triggers.landToOrbit )
-				.setRangeElement()
-				.reinitialise();
-			//_ui.OnContentChanged( this.$element );
+				.removeTrigger( this.triggers.landToOrbit );
+				//.setRangeElement();
+			
+			_ui.OnContentChanged( this.$element );
 			
 			this.landing = false;
 			
@@ -207,8 +206,7 @@ function ( $, _s, _ui, Signal ) {
 			
 			this.$explore.show();
 			
-			_s.navigator.reinitialise();
-			//_ui.OnContentChanged( this.$element );
+			_ui.OnContentChanged( this.$element );
 			
 			this.onExploringStarted.dispatch( this );
 			
@@ -224,8 +222,7 @@ function ( $, _s, _ui, Signal ) {
 			
 			this.$explore.hide();
 			
-			_s.navigator.reinitialise();
-			//_ui.OnContentChanged( this.$element );
+			_ui.OnContentChanged( this.$element );
 			
 			this.exploring = false;
 			
