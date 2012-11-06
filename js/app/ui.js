@@ -70,16 +70,19 @@ function ( $, _s ) {
 		// land is at least as big as user screen x1, but can expand on height
 		
         _de.$land.css( {
-            "width": w * 2,
+            "width": w,
             "min-height": h
         } );
 		
-		// explore is at least as big as user screen x1, but can expand in width
+		// explore is at least as big as user screen x1, but can expand
 		
 		_de.$explore.css( {
             "min-width": w,
-            "height": h
+            "min-height": h
         } );
+        
+        // also center explore horizontally
+        _de.$explore.css( "left", ( w - _de.$explore.width() ) * 0.5 );
 		
 		// refresh scroll panes
 		

@@ -41,8 +41,8 @@ function( $ ){
 				dragMax = { x: 0, y: 0 },
 				rangeMin = { x: 0, y: 0 },
 				rangeMax = { x: Number.MAX_VALUE, y: Number.MAX_VALUE },
-				$rangeElement = $(),
-				rangeElementBounds,
+				$rangeElements = $(),
+				rangeElementsBounds,
 				contentPosition = { x: 0, y: 0 },
 				contentPositionLast = { x: 0, y: 0 },
 				suppressTriggers = false,
@@ -451,7 +451,7 @@ function( $ ){
 				
 				// before repositioning scrollbars, fix range element bounds and triggers
 				
-				rangeElementBounds = getElementBounds( $rangeElement );
+				rangeElementsBounds = getBounds( $rangeElements );
 				repositionTriggers();
 
 				if (isScrollableH) {
@@ -698,7 +698,7 @@ function( $ ){
             }
 
 			function _positionDragY( destY, force ) {
-				
+                
 				if (destY === undefined) {
 					destY = verticalDrag.position().top;
 				}
@@ -709,14 +709,14 @@ function( $ ){
 				var percentScrolled = destY / dragMax.y;
 				var destTopBase = Math.round( percentScrolled * (contentHeight - paneHeight) );
 				
-				// account for range max / min and rangeElement
+				// account for range max / min and rangeElements
 				
 				var destTop = destTopBase;
-				
-				if ( rangeElementBounds ) {
-					
-					destTop = Math.max( rangeElementBounds.y, Math.min( rangeElementBounds.y + rangeElementBounds.heightSansPane, destTop ) );
-					console.log( 'destTop', destTop, ' rangeElementBounds.y', rangeElementBounds.y, ' rangeElementBounds.height', rangeElementBounds.height, 'rangeElementBounds.heightSansPane', rangeElementBounds.heightSansPane, 'paneHeight', paneHeight );
+                
+                if ( rangeElementsBounds ) {
+    				
+					destTop = Math.max( rangeElementsBounds.top, Math.min( rangeElementsBounds.bottomSansPane, destTop ) );
+					console.log( 'rangeElementsBounds.top', rangeElementsBounds.top,'rangeElementsBounds.bottomSansPane', rangeElementsBounds.bottomSansPane, 'destTop', destTop );
 				}
 				
 				destTop = Math.max( rangeMin.y, Math.min( rangeMax.y, destTop ) );
@@ -804,13 +804,13 @@ function( $ ){
 				var percentScrolled = destX / dragMax.x;
 				var destLeftBase = Math.round( percentScrolled * (contentWidth - paneWidth) );
 				
-				// account for range max / min and rangeElement
+				// account for range max / min and rangeElements
 				
 				var destLeft = destLeftBase;
 				
-				if ( rangeElementBounds ) {
+				if ( rangeElementsBounds ) {
 					
-					destLeft = Math.max( rangeElementBounds.x, Math.min( rangeElementBounds.x + rangeElementBounds.widthSansPane, destLeft ) );
+					destLeft = Math.max( rangeElementsBounds.left, Math.min( rangeElementsBounds.rightSansPane, destLeft ) );
 					
 				}
 				
@@ -877,42 +877,65 @@ function( $ ){
 				positionDragX(percentScrolled * dragMax.x, duration, animateParameters);
 			}
 			
-			function getElementBounds ( element ) {
+			function getBounds ( elements ) {
 				
-				var $element = $( element );
+				var $elements = $( elements );
+    			
+                if ( $elements.length > 0 ) {
+                    
+                    var bounds = {
+                    	$elements: $elements,
+    					left: 0,
+    					right: 0,
+        				top: 0,
+    					bottom: 0
+    				};
+                    
+                    // create total box from all elements
+                    // for simplicity, assumes all elements form a rectangle
 				
-				if ( $element.length > 0 ) {
-					
-					var bounds = {
-						$element: $element,
-						x: 0,
-						y: 0,
-						width: $element.outerWidth(),
-						height: $element.outerHeight()
-					};
-					
-					// loop through parents adding the offset top of any elements that are relatively positioned between
-					// the focused element and the jspPane so we can get the true distance from the top
-					// of the focused element to the top of the scrollpane...
-					var $elementCurrent = $element, position;
-					
-					while ( !$elementCurrent.is('.jspPane') ) {
-						position = $elementCurrent.position();
-						bounds.x += position.left;
-						bounds.y += position.top;
-						$elementCurrent = $elementCurrent.offsetParent();
-						if ( /^body|html$/i.test( $elementCurrent[0].nodeName ) ) {
-							// we ended up too high in the document structure. Quit!
-							return;
-						}
-					}
-					
-					bounds.widthSansPane = bounds.width - container.width();
-					bounds.heightSansPane = bounds.height - container.height();
-					
-					return bounds;
-					
-				}
+    				$elements.each( function () {
+                        
+                        var $element = $( this );
+                        
+                        if ( $element.length > 0 ) {
+                            
+                            var left = 0, right, top = 0, bottom;
+                            
+            				// loop through parents adding the offset top of any elements that are relatively positioned between
+            				// the focused element and the jspPane so we can get the true distance from the top
+            				// of the focused element to the top of the scrollpane...
+            				var $elementCurrent = $element, position;
+            				
+            				while ( !$elementCurrent.is('.jspPane') ) {
+            					position = $elementCurrent.position();
+            					left += position.left;
+            					top += position.top;
+            					$elementCurrent = $elementCurrent.offsetParent();
+            					if ( /^body|html$/i.test( $elementCurrent[0].nodeName ) ) {
+            						// we ended up too high in the document structure. Quit!
+            						return;
+            					}
+            				}
+                            
+                            right = left + $element.outerWidth();
+                            bottom = top + $element.outerHeight();
+                            
+                            if ( right > bounds.right ) bounds.right = right;
+                            if ( left < bounds.left ) bounds.left = left;
+                            if ( bottom > bounds.bottom ) bounds.bottom = bottom;
+                            if ( top < bounds.top ) bounds.top = top;
+                            
+                        }
+                        
+                    } );
+        			
+    				bounds.rightSansPane = bounds.right - container.width();
+    				bounds.bottomSansPane = bounds.bottom - container.height();
+                    
+                    return bounds;
+                    
+    			}
 				
 			}
 
@@ -920,27 +943,27 @@ function( $ ){
 				
 				var viewportTop, viewportLeft, maxVisibleEleTop, maxVisibleEleLeft, destY, destX;
 				
-				var bounds = getElementBounds( element );
-				
+				var bounds = getBounds( element );
+                
 				if ( bounds ) {
-
+                    /* TODO: FIX BELOW
 					viewportTop = contentPosition.y;
 					maxVisibleEleTop = viewportTop + paneHeight;
 					var verticalGutter = Math.max( settings.verticalGutter, 0 );
-					if ( bounds.y < viewportTop || stickToTop) { // element is above viewport
-						destY = bounds.y - verticalGutter;
-					} else if (bounds.y + bounds.height > maxVisibleEleTop) { // element is below viewport
-						destY = bounds.y - paneHeight + bounds.height + verticalGutter;
+					if ( bounds.top < viewportTop || stickToTop) { // element is above viewport
+						destY = bounds.top - verticalGutter;
+					} else if (bounds.bottom > maxVisibleEleTop) { // element is below viewport
+						destY = bounds.top - paneHeight + bounds.bottom + verticalGutter;
 					}
 					
 					viewportLeft = contentPosition.x;
 					maxVisibleEleLeft = viewportLeft + paneWidth;
 					var horizontalGutter = Math.max( settings.horizontalGutter, 0 );
-					if (bounds.x < viewportLeft || stickToTop) { // element is to the left of viewport
-						destX = bounds.x - horizontalGutter;
-					} else if (bounds.x + bounds.width > maxVisibleEleLeft) { // element is to the right viewport
-						destX = bounds.x - paneWidth + bounds.width + horizontalGutter;
-					}
+					if (bounds.left < viewportLeft || stickToTop) { // element is to the left of viewport
+						destX = bounds.left - horizontalGutter;
+					} else if ( bounds.right > maxVisibleEleLeft) { // element is to the right viewport
+						destX = bounds.left - paneWidth + bounds.right + horizontalGutter;
+					}*/
 					
 					handleMultiScroll ( destX, destY, duration, animateParameters );
 					
@@ -1654,10 +1677,10 @@ function( $ ){
 						return this;
 						
 					},
-					setRangeElement: function ( element ) {
+					setRangeElements: function ( elements ) {
 						
-						$rangeElement = $( element );
-						rangeElementBounds = getElementBounds( $rangeElement );
+						$rangeElements = $( elements );
+						rangeElementsBounds = getBounds( $rangeElements );
 						return this;
 						
 					},

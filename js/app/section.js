@@ -122,7 +122,7 @@ function ( $, _s, _ui, Signal ) {
 			
 			_ui.OnContentChanged( this.$element );
 			
-			_s.navigator.setRangeElement( this.$element );
+			_s.navigator.setRangeElements( $().add( this.$orbit ).add( this.$land ) );
 			
 			// when user reaches or passes orbit, close planet
 			// when user reaches land, open explore
@@ -162,7 +162,7 @@ function ( $, _s, _ui, Signal ) {
 			_s.navigator
 				.removeTrigger( this.triggers.landToExplore )
 				.removeTrigger( this.triggers.landToOrbit )
-				.setRangeElement();
+				.setRangeElements();
 			
 			_ui.OnContentChanged( this.$element );
 			
