@@ -53,6 +53,15 @@ function ( $ ) {
 	_de.$exploreMiddleground = _de.$explore.find( ".middleground" );
 	_de.$exploreBackground = _de.$explore.find( ".background" );
 	
+	/*===================================================
+	
+	dimensions
+	
+	=====================================================*/
+	
+	_s.windowWidth = _de.$window.width();
+    _s.windowHeight = _de.$window.height();
+	
 	return _s;
 	
 } );
