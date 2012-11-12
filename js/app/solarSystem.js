@@ -23,11 +23,14 @@ function ( $, _s, _section ) {
 		var $element = $( this );
 		var section = new _section.Instance( $element );
 		
-		section.onLandingStarted.add( SetActiveSection );
+		section.onOrbitingStarted.add( SetActiveSection );
 		
 		sections.push( section );
 		
 	} );
+	
+	_s.signals.onResized.add( OnWindowResized );
+	_de.$window.trigger( 'resize' );
 	
 	/*===================================================
 	
@@ -39,7 +42,6 @@ function ( $, _s, _section ) {
 		
 		if ( active instanceof _section.Instance ) {
 			
-			active.onOrbitingStarted.remove( ClearActiveSection );
 			active = undefined;
 			
 		}
@@ -57,7 +59,6 @@ function ( $, _s, _section ) {
 			// active setup
 			
 			active = target;
-			active.onOrbitingStarted.add( ClearActiveSection );
 			
 			// for all non active, ensure they are orbiting
 			
@@ -67,19 +68,37 @@ function ( $, _s, _section ) {
 				
 				if ( section !== active ) {
 					
-					section.StartOrbiting();
+					section.StopAll();
 					
 				}
 				
 			}
 			
 		}
-		
+		console.log( 'SOLAR SYSTEM ACTIVE SECTION: ', active );
 	}
 	
 	function GetActiveSection () {
 		
 		return active;
+		
+	}
+	
+	/*===================================================
+	
+	resize
+	
+	=====================================================*/
+	
+	function OnWindowResized () {
+		
+		var i, il, section;
+		
+		for ( i = 0, il = sections.length; i < il; i++ ) {
+			
+			sections[ i ].Resize();
+			
+		}
 		
 	}
 	

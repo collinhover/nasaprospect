@@ -50,6 +50,12 @@ section, .orbit, .land, .explore, .foreground, .middleground, .background {
     
 }
 
+.orbit-bottom {
+	.foreground, .middleground, .background {
+		.transform( rotate( 180deg ) );
+	}
+}
+
 .planet {
 	cursor: pointer;
     position: absolute;
@@ -77,15 +83,22 @@ section, .orbit, .land, .explore, .foreground, .middleground, .background {
 -------------------------------------------------------------------------------*/
 
 .land {
-    display: none;
 	#gradient-transparent > .vertical-three-colors( rgba( 51, 51, 51, 0 ), rgba( 51, 51, 51, 1 ), 50%, rgba( 51, 51, 51, 1 ) );
+}
+
+.land-bottom {
+	#gradient-transparent > .vertical-three-colors( rgba( 51, 51, 51, 1 ), rgba( 51, 51, 51, 1 ), 50%, rgba( 51, 51, 51, 0 ) );
+	
+	.foreground, .middleground, .background {
+		.transform( rotate( 180deg ) );
+	}
 }
 
 /* explore
 -------------------------------------------------------------------------------*/
 
 .explore {
-    display: none;   
+	background-color: rgba( 51, 51, 51, 1 );
 }
 
 /* planets
