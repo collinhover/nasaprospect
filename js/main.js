@@ -4,24 +4,49 @@ requirejs.config({
     // exceptions
     paths: {
         app: '../app'
+    },
+    shim: {
+        'soundmanager2': {
+            exports: 'soundManager'
+        }
     }
 });
 
-// start app
+// sound manager has odd loading structure, so handle it first
 
 require(
 [
-	"jquery",
-	"app/shared",
-	"app/ui",
-	"app/solarSystem",
-	"overthrow",
-	"RequestAnimationFrame",
-	"RequestInterval",
-	"RequestTimeout"
+	"soundmanager2"
 ],
-function ( $, _s, _ui, _solarSystem ) {
+function ( soundManager ) {
 	
-	var _de = _s.domElements;
+	soundManager.setup( {
+		url: 'swf/',
+		flashVersion: 9,
+		onready: function() {
+			
+			// start app
+			
+			require(
+			[
+				"jquery",
+				"app/shared",
+				"app/ui",
+				"app/solarSystem",
+				"overthrow"
+			],
+			function ( $, _s, _ui, _solarSystem ) {
+				
+				var _de = _s.domElements;
+				
+			} );
+			
+		},
+		ontimeout: function() {
+			
+			// TODO: error message
+			
+		}
+	} );
 	
 } );

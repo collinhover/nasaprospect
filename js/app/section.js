@@ -52,20 +52,20 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		this.$planet = this.$element.find( ".planet" );
 		
-		// sounds
+		// soundHandlers
 		
-		this.sounds = {
-			element: _snd.FindSounds( this.$element ),
-			orbit: _snd.FindSounds( this.$orbitTop, true ),
-			land: _snd.FindSounds( this.$landTop, true ),
-			explore: _snd.FindSounds( this.$explore, true )
+		this.soundHandlers = {
+			element: new _snd.SoundHandler( { element: this.$element } ),
+			orbit: new _snd.SoundHandler( { element: this.$orbitTop, options: { descendents: true } } ),
+			land: new _snd.SoundHandler( { element: this.$landTop, options: { descendents: true } } ),
+			explore: new _snd.SoundHandler( { element: this.$explore, options: { descendents: true } } )
 		};
 		
 		// triggers
 		
 		this.triggers = [];
 		this.triggersSound = [];
-		this.triggersOrbit = [
+		this.triggersPersistent = [
 			{
 				callback: this.StartOrbiting,
 				context: this,
@@ -78,9 +78,9 @@ function ( $, _s, _ui, _snd, Signal ) {
 			}
 		];
 		
-		// persistent triggers for orbit
+		// persistent triggers
 		
-		_s.navigator.addTriggers( this.triggersOrbit );
+		_s.navigator.addTriggers( this.triggersPersistent );
 		
 		// signals
 		
@@ -119,14 +119,15 @@ function ( $, _s, _ui, _snd, Signal ) {
 	
 	function Activate () {
 		
-		this.triggersSound = _s.navigator.addTriggers( this.sounds.element.triggers );
+		this.soundHandlers.element.Play();
 		
 	}
 	
 	function Deactivate () {
 		
 		this.StopAll();
-		_s.navigator.removeTriggers( this.triggersSound );
+		
+		// TODO: this.soundHandlers.element.Stop();
 		
 	}
 	
@@ -225,7 +226,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 			
 			// sounds as triggers
 			
-			this.triggers = this.triggers.concat( _s.navigator.addTriggers( this.sounds.land.triggers ) );
+			this.triggers = this.triggers.concat( _s.navigator.addTriggers( this.soundHandlers.land.triggers ) );
 			
 			this.onLandingStarted.dispatch( this );
 			

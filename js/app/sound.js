@@ -1,108 +1,35 @@
 define( [ 
 	"jquery",
 	"app/shared",
+	"app/utilities",
 	"soundmanager2",
 	"TweenMax"
 ],
-function ( $, _s ) {
+function ( $, _s, _utils, soundManager ) {
 	
-	var _snd = {};
-	var ready = false;
-	var infinite = 9999;
-	var soundDurationBase = 1000;
-	var duration = 0.1;
+	var _snd = {
+		infinite: 9999,
+		soundDurationBase: 1000,
+		duration: 0.1,
+		options: {
+			descendents: false
+		}
+	};
 	
 	/*===================================================
 	
-	init
+	instance
 	
 	=====================================================*/
 	
-	soundManager.setup( {
-		url: 'swf/',
-		flashVersion: 9,
-		onready: function() {
-			
-			ready = true;
-			
-		},
-		ontimeout: function() {
-			// Hrmm, SM2 could not start. Missing SWF? Flash blocked? Show an error, etc.?
-		}
-	} );
-	
-	function ReadyCatch ( callback ) {
+	function SoundHandler ( parameters ) {
 		
-		if ( ready === true ) {
-			
-			callback();
-			
-		}
-		else {
-			
-			soundManager.onready( callback );
-			
-		}
+		this.data = [];
+		this.dataIds = [];
+		this.dataById = {};
+		this.triggers = [];
 		
-	}
-	
-	/*===================================================
-	
-	fade
-	
-	=====================================================*/
-	
-	function FadeIn ( id, parameters ) {
-		
-		ReadyCatch( function () {
-			
-			var sound = soundManager.sounds[id];
-			
-			if ( typeof sound !== 'undefined' ) {
-				
-				parameters = parameters || {};
-				parameters.volume = parameters.volume || 100;
-				parameters.onUpdate = function () {
-					sound.setVolume( from.volume );
-				};
-				
-				if ( parameters.fromZero === true ) sound.setVolume( 0 );
-				
-				var from = { volume: sound.volume };
-				var durationActual = ( sound.durationEstimate / soundDurationBase ) * ( parameters.duration || duration );
-				
-				TweenMax.to( from, durationActual, parameters );
-				
-			}
-			
-		} );
-		
-	}
-	
-	function FadeOut ( id, parameters ) {
-		
-		ReadyCatch( function () {
-			
-			var sound = soundManager.sounds[id];
-			
-			if ( typeof sound !== 'undefined' ) {
-				
-				parameters = parameters || {};
-				parameters.volume = parameters.volume || 0;
-				parameters.onUpdate = function () {
-					sound.setVolume( from.volume );
-				};
-				
-				if ( parameters.fromZero === true ) sound.setVolume( 0 );
-				
-				var from = { volume: sound.volume };
-				var durationActual = ( sound.durationEstimate / soundDurationBase ) * ( parameters.duration || duration );
-				
-				TweenMax.to( from, durationActual, parameters );
-				
-			}
-			
-		} );
+		this.Find( parameters );
 		
 	}
 	
@@ -112,12 +39,15 @@ function ( $, _s ) {
 	
 	=====================================================*/
 	
-	function FindSounds ( elements, includeDescendents ) {
+	function Find ( parameters ) {
 		
-		var data = [];
-		var $elements = $( elements );
+		var me = this;
 		
-		if ( includeDescendents === true ) {
+		this.options = $.extend( true, {}, _snd.options, parameters.options );
+		
+		var $elements = this.$element = $( parameters.element || parameters.$element );
+		
+		if ( this.options.descendents === true ) {
 			
 			$elements = $elements.find( "[data-sound]" ).andSelf();
 			
@@ -125,36 +55,28 @@ function ( $, _s ) {
 		
 		$elements.each( function () {
 			
-			var i, il, datum;
-			var exists = false;
-			var datumNew = {};
+			var i, il;
+			var datum = {};
 			
-			var $element = datumNew.$element = $( this );
-			var file = datumNew.file = $element.attr( "data-sound" );
+			var $element = datum.$element = $( this );
+			var file = datum.file = $element.attr( "data-sound" );
 			
 			if ( typeof file === 'string' && file.length > 0 ) {
 				
-				datumNew.id = $element.attr( "data-sound-id" ) || file;
-				datumNew.fade = ParseAttribute( $element.attr( "data-sound-fade" ), duration, false );
-				datumNew.loops = ParseAttribute( $element.attr( "data-sound-loops" ), infinite, 1 );
-				datumNew.volume = $element.attr( "data-sound-volume" ) || 100;
+				datum.id = $element.attr( "data-sound-id" ) || file;
 				
-				for ( i = 0, il = data.length; i < il; i++ ) {
+				if ( typeof me.dataById[ datum.id ] === 'undefined' ) {
 					
-					datum = data[ i ];
+					datum.fade = ParseAttribute( $element.attr( "data-sound-fade" ), _snd.duration, false );
+					datum.loops = ParseAttribute( $element.attr( "data-sound-loops" ), _snd.infinite, 1 );
+					datum.volume = $element.attr( "data-sound-volume" ) || 100;
 					
-					if ( $element.is( datum.$element ) && file === datum.file && datumNew.id === datum.id ) {
-						
-						exists = true;
-						break;
-						
-					}
+					datum.trigger = GenerateScrollTrigger( datum );
 					
-				}
-				
-				if ( exists === false ) {
-					
-					data.push( datumNew );
+					me.data.push( datum );
+					me.dataIds.push( datum.id );
+					me.dataById[ datum.id ] = datum;
+					me.triggers.push( datum.trigger );
 					
 				}
 				
@@ -162,10 +84,7 @@ function ( $, _s ) {
 				
 		} );
 		
-		return {
-			data: data,
-			triggers: SoundsToScrollTriggers( data )
-		};
+		console.log( this, ' finished finding' );
 		
 	}
 	
@@ -207,107 +126,14 @@ function ( $, _s ) {
 		
 	}
 	
-	function DataToSounds ( data ) {
-		
-		var i, il, datum;
-		var sounds = [];
-		
-		for ( i = 0, il = data.length; i < il; i++ ) {
-			
-			datum = data[ i ];
-			
-			sounds.push( DatumToSound( datum ) );
-		
-		}
-		
-		return sounds;
-		
-	}
-	
-	function DatumToSound ( datum ) {
-		
-		return soundManager.createSound( datum.id, [ 
-			_s.pathToAssets + datum.file + '.mp3',
-			_s.pathToAssets + datum.file + '.ogg',
-			_s.pathToAssets + datum.file + '.wav'
-		] );
-		
-	}
-	
-	function PlayFromData ( data ) {
-		
-		ReadyCatch( function () {
-			
-			var i, il, datum;
-			
-			for ( i = 0, il = data.length; i < il; i++ ) {
-				
-				datum = data[ i ];
-				
-				PlayFromDatum( datum );
-			
-			}
-			
-		} );
-		
-	}
-	
-	function PlayFromDatum ( datum ) {
-		
-		ReadyCatch( function () {
-			
-			datum.sound = DatumToSound( datum );
-			
-			datum.sound.play( {
-				loops: datum.loops,
-				onplay: function () {
-					
-					if ( datum.fade !== false ) {
-						
-						_snd.FadeIn( datum.id, {
-							duration: datum.fade,
-							volume: datum.volume,
-							fromZero: true
-						} );
-						
-					}
-					
-				}
-			});
-			
-		} );
-		
-	}
-	
-	/*===================================================
-	
-	scroll triggers
-	
-	=====================================================*/
-	
-	function SoundsToScrollTriggers ( sounds ) {
-		
-		var i, il;
-		var soundTriggers = [];
-		
-		for ( i = 0, il = sounds.length; i < il; i++ ) {
-			
-			soundTriggers.push( SoundToScrollTrigger( sounds[ i ] ) );
-			
-		}
-		
-		return soundTriggers;
-		
-	}
-	
-	function SoundToScrollTrigger ( datum ) {
+	function GenerateScrollTrigger ( datum ) {
 		
 		return {
 			element: datum.$element,
 			continuous: false,
 			callback: function () {
 				
-				PlayFromDatum( datum );
+				PlaySound( datum );
 				
 			},
 			onRemoved: function () {
@@ -335,24 +161,151 @@ function ( $, _s ) {
 	
 	/*===================================================
 	
+	play
+	
+	=====================================================*/
+	
+	function Play ( parameters ) {
+		
+		parameters = parameters || {};
+		
+		if ( this.data.length === 0 ) {
+			
+			this.data = this.Find( parameters.element, parameters.descendents );
+			
+		}
+		
+		var ids = _utils.ToArray( parameters.id || parameters.ids || this.dataIds );
+		var i, il, id;
+		
+		for ( i = 0, il = ids.length; i < il; i++ ) {
+			
+			id = ids[ i ];
+			
+			if ( this.dataById.hasOwnProperty( id ) === true ) {
+				
+				PlaySound( this.dataById[ id ] );
+				
+			}
+			
+		}
+		
+	}
+	
+	function PlaySound ( datum ) {
+		
+		if ( typeof datum.sound === 'undefined' ) {
+			
+			datum.sound = soundManager.createSound( datum.id, [ 
+				_s.pathToAssets + datum.file + '.mp3',
+				_s.pathToAssets + datum.file + '.ogg',
+				_s.pathToAssets + datum.file + '.wav'
+			] );
+			
+		}
+		
+		if ( typeof datum.sound !== 'undefined' ) {
+			
+			datum.sound.play( {
+				loops: datum.loops,
+				onplay: function () {
+					
+					if ( datum.fade !== false ) {
+						
+						_snd.FadeIn( datum.id, {
+							duration: datum.fade,
+							volume: datum.volume,
+							fromZero: true
+						} );
+						
+					}
+					
+				}
+			});
+			
+		}
+		
+	}
+	
+	/*===================================================
+	
+	stop
+	
+	=====================================================*/
+	
+	function Stop ( parameters ) {
+		
+		
+		
+	}
+	
+	/*===================================================
+	
+	fade
+	
+	=====================================================*/
+	
+	function FadeIn ( id, parameters ) {
+		
+		var sound = soundManager.sounds[id];
+		
+		if ( typeof sound !== 'undefined' ) {
+			
+			parameters = parameters || {};
+			parameters.volume = parameters.volume || 100;
+			parameters.onUpdate = function () {
+				sound.setVolume( from.volume );
+			};
+			
+			if ( parameters.fromZero === true ) sound.setVolume( 0 );
+			
+			var from = { volume: sound.volume };
+			var durationActual = ( sound.durationEstimate / _snd.soundDurationBase ) * ( parameters.duration || _snd.duration );
+			
+			TweenMax.to( from, durationActual, parameters );
+			
+		}
+		
+	}
+	
+	function FadeOut ( id, parameters ) {
+		
+		var sound = soundManager.sounds[id];
+		
+		if ( typeof sound !== 'undefined' ) {
+			
+			parameters = parameters || {};
+			parameters.volume = parameters.volume || 0;
+			parameters.onUpdate = function () {
+				sound.setVolume( from.volume );
+			};
+			
+			if ( parameters.fromZero === true ) sound.setVolume( 0 );
+			
+			var from = { volume: sound.volume };
+			var durationActual = ( sound.durationEstimate / _snd.soundDurationBase ) * ( parameters.duration || _snd.duration );
+			
+			TweenMax.to( from, durationActual, parameters );
+			
+		}
+		
+	}
+	
+	/*===================================================
+	
 	public
 	
 	=====================================================*/
 	
-	_snd.infinite = infinite;
+	_snd.SoundHandler = SoundHandler;
+	_snd.SoundHandler.prototype.constructor = _snd.SoundHandler;
+	
+	_snd.SoundHandler.prototype.Find = Find;
+	_snd.SoundHandler.prototype.Play = Play;
+	_snd.SoundHandler.prototype.Stop = Stop;
 	
 	_snd.FadeIn = FadeIn;
 	_snd.FadeOut = FadeOut;
-	
-	_snd.FindSounds = FindSounds;
-	
-	_snd.DataToSounds = DataToSounds;
-	_snd.DatumToSound = DatumToSound;
-	_snd.PlayFromData = PlayFromData;
-	_snd.PlayFromDatum = PlayFromDatum;
-	
-	_snd.SoundsToScrollTriggers = SoundsToScrollTriggers;
-	_snd.SoundToScrollTrigger = SoundToScrollTrigger;
 	
 	return _snd;
 	

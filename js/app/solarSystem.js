@@ -9,10 +9,8 @@ function ( $, _s, _snd, _section ) {
 	var _de = _s.domElements;
 	var _solarSystem = {};
 	var $element = _de.$solarSystem;
-	var sounds = _snd.FindSounds( $element );
 	var sections = [];
 	var active;
-	var triggers = {};
 	
 	/*===================================================
 	
@@ -30,8 +28,6 @@ function ( $, _s, _snd, _section ) {
 		sections.push( section );
 		
 	} );
-	
-	_snd.PlayFromData( sounds.data );
 	
 	_s.signals.onResized.add( OnWindowResized );
 	_de.$window.trigger( 'resize' );
