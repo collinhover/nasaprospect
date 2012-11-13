@@ -69,7 +69,7 @@ function ( $, _s ) {
     }
 	
 	function OnContentChanged ( changed ) {
-		console.log( 'CONTENT CHANGED' );
+		
 		var $changed = $( changed );
 		var $scrollable;
 		

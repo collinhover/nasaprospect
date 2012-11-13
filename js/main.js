@@ -7,13 +7,18 @@ requirejs.config({
     }
 });
 
+// start app
+
 require(
 [
 	"jquery",
 	"app/shared",
 	"app/ui",
 	"app/solarSystem",
-	"overthrow"
+	"overthrow",
+	"RequestAnimationFrame",
+	"RequestInterval",
+	"RequestTimeout"
 ],
 function ( $, _s, _ui, _solarSystem ) {
 	

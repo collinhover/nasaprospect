@@ -1,13 +1,15 @@
 define( [ 
 	"jquery",
 	"app/shared",
+	"app/sound",
 	"app/section"
 ],
-function ( $, _s, _section ) {
+function ( $, _s, _snd, _section ) {
 	
 	var _de = _s.domElements;
 	var _solarSystem = {};
 	var $element = _de.$solarSystem;
+	var sounds = _snd.FindSounds( $element );
 	var sections = [];
 	var active;
 	var triggers = {};
@@ -29,6 +31,8 @@ function ( $, _s, _section ) {
 		
 	} );
 	
+	_snd.PlayFromData( sounds.data );
+	
 	_s.signals.onResized.add( OnWindowResized );
 	_de.$window.trigger( 'resize' );
 	
@@ -42,6 +46,7 @@ function ( $, _s, _section ) {
 		
 		if ( active instanceof _section.Instance ) {
 			
+			active.Deactivate();
 			active = undefined;
 			
 		}
@@ -52,30 +57,34 @@ function ( $, _s, _section ) {
 		
 		var i, il, section;
 		
-		ClearActiveSection();
-		
-		if ( target instanceof _section.Instance ) {
+		if ( active !== target ) {
 			
-			// active setup
+			ClearActiveSection();
 			
-			active = target;
-			
-			// for all non active, ensure they are orbiting
-			
-			for ( i = 0, il = sections.length; i < il; i++ ) {
+			if ( target instanceof _section.Instance ) {
 				
-				section = sections[ i ];
+				// active setup
 				
-				if ( section !== active ) {
+				active = target;
+				target.Activate();
+				
+				// for all non active, ensure they are orbiting
+				
+				for ( i = 0, il = sections.length; i < il; i++ ) {
 					
-					section.StopAll();
+					section = sections[ i ];
+					
+					if ( section !== active ) {
+						
+						section.Deactivate();
+						
+					}
 					
 				}
-				
+				console.log( 'SOLAR SYSTEM ACTIVE SECTION: ', active );
 			}
 			
 		}
-		console.log( 'SOLAR SYSTEM ACTIVE SECTION: ', active );
 	}
 	
 	function GetActiveSection () {

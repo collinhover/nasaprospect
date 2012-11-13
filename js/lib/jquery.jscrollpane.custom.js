@@ -1254,10 +1254,9 @@ function( $ ){
 			
 			function addTrigger ( parameters ) {
 				
-				parameters = parameters || {};
-				
-				var $element = $( parameters.element );
-				var bounds = getBounds( $element );
+				var triggerNew = $.extend( {}, parameters );
+				var $element = triggerNew.$element = $( triggerNew.element );
+				var bounds = triggerNew.bounds = getBounds( $element );
 				var context = parameters.context;
 				var callback = parameters.callback;
 				
@@ -1269,9 +1268,7 @@ function( $ ){
 					
 					trigger = triggers[ i ];
 					
-					if ( trigger.callback === callback && trigger.context === context
-						&& trigger.bounds.left === bounds.left && trigger.bounds.right === bounds.right
-						&& trigger.bounds.top === bounds.top && trigger.bounds.bottom === bounds.bottom ) {
+					if ( trigger.callback === callback && trigger.context === context && trigger.$element.is( $element ) ) {
 						
 						trigger.once = parameters.once;
 						
@@ -1281,25 +1278,9 @@ function( $ ){
 					
 				}
 				
-				trigger = {
-					$element: $element,
-					bounds: bounds,
-					callback: callback,
-					context: context,
-					once: parameters.once
-				};
+				triggers.push( triggerNew );
 				
-				// ignore trigger at next crossing if at current position
-				
-				if ( isInsideTriggerArea( scrollPosition.x, scrollPosition.y, scrollPositionLast.x, scrollPositionLast.y, trigger ) ) {
-					
-					trigger.ignore = true;
-					
-				}
-				
-				triggers.push( trigger );
-				console.log( 'NEW TRIGGER:', trigger );
-				return trigger;
+				return triggerNew;
 				
 			}
 			
@@ -1312,8 +1293,9 @@ function( $ ){
 					for( i = triggers.length - 1; i >= 0; i-- ) {
 						
 						if ( trigger === triggers[ i ] ) {
-							console.log( 'remove TRIGGER:', trigger );
-							triggers.splice( i, 1 );
+							
+							removeTriggerByIndex( i );
+							
 							break;
 							
 						}
@@ -1324,28 +1306,78 @@ function( $ ){
 				
 			}
 			
+			function removeTriggerByIndex ( index ) {
+				
+				var trigger = triggers[ index ];
+				
+				triggers.splice( index, 1 );
+				
+				if ( typeof trigger.onRemoved === 'function' ) {
+					
+					trigger.onRemoved.call( trigger.context );
+					
+				}
+				
+			}
+			
+			function addTriggers ( list ) {
+				
+				var i, il, added = [];
+				
+				if ( typeof list !== 'undefined' ) {
+					
+					for( i = 0, il = list.length; i < il; i++ ) {
+						
+						added.push( addTrigger( list[ i ] ) );
+						
+					}
+					
+				}
+				
+				return added;
+				
+			}
+			
+			function removeTriggers ( list ) {
+				
+				var i, il;
+				
+				if ( typeof list !== 'undefined' ) {
+					
+					for( i = 0, il = list.length; i < il; i++ ) {
+						
+						removeTrigger( list[ i ] );
+						
+					}
+					
+				}
+				
+			}
+			
 			function handleTriggers () {
 				
-				var x = contentPosition.x;
-				var y = contentPosition.y;
-				var lx = contentPositionLast.x;
-				var ly = contentPositionLast.y;
-				
-				if ( ( x !== lx || y !== ly ) && suppressTriggers !== true ) {
+				if ( ( contentPosition.x !== contentPositionLast.x || contentPosition.y !== contentPositionLast.y ) && suppressTriggers !== true ) {
 					
+					var cx = contentPosition.x + paneWidth * 0.5;
+					var cy = contentPosition.y + paneHeight * 0.5;
 					var i, trigger;
 					
 					for( i = triggers.length - 1; i >= 0; i-- ) {
 						
 						trigger = triggers[ i ];
 						
-						if ( isInsideTriggerArea( x, y, lx, ly, trigger ) ) {
+						if ( isInsideTriggerArea( cx, cy, trigger ) ) {
 							
 							if ( trigger.ignore !== true ) {
 								
 								if ( trigger.once === true ) {
 									
-									triggers.splice( i, 1 );
+									removeTriggerByIndex( i );
+									
+								}
+								else if ( trigger.continuous === false ) {
+									
+									trigger.ignore = true;
 									
 								}
 								
@@ -1366,57 +1398,21 @@ function( $ ){
 				
 			}
 			
-			function isInsideTriggerArea ( x, y, lx, ly, trigger ) {
+			function isInsideTriggerArea ( cx, cy, trigger ) {
 				
 				var bounds = trigger.bounds;
-				var left = bounds.left;
-				var top = bounds.top;
-				var right = bounds.right;
-				var bottom = bounds.bottom;
-				console.log( 'is ', x, y, ' inside trigger? LTRB: ', left, top, right, bottom );
+				
 				// do a 2D point-in-AABB test
-				// with added possibility that trigger area may be a line
 				
-				if ( left !== -Number.MAX_VALUE || right !== Number.MAX_VALUE ) {
-					
-					// when is a line, check if not yet crossed
-					
-					if ( left === right ) {
-						
-						if ( x > left && lx > left ) return false;
-						if ( x < left && lx < left ) return false;
-						
-					}
-					// else check if outside box
-					else {
-						
-						if ( x > right ) return false;
-						if ( x < left ) return false;
-						
-					}
-					
+				if ( trigger.anyX !== true ) {
+					if ( cx > bounds.right ) return false;
+					if ( cx < bounds.left ) return false;
+				}
+				if ( trigger.anyY !== true ) {
+					if ( cy > bounds.bottom ) return false;
+					if ( cy < bounds.top ) return false;
 				}
 				
-				if ( top !== -Number.MAX_VALUE || bottom !== Number.MAX_VALUE ) {
-					
-					// when is a line, check if not yet crossed
-					
-					if ( top === bottom ) {
-						
-						if ( y > top && ly > top ) return false;
-						if ( y < top && ly < top ) return false;
-						
-					}
-					// else check if outside box
-					else {
-						
-						if ( y > bottom ) return false;
-						if ( y < top ) return false;
-						
-					}
-					
-				}
-				console.log( ' > inside trigger!' )
 				return true;
 				
 			}
@@ -1589,11 +1585,18 @@ function( $ ){
 						return this;
 					},
 					// trigger callback once area has been entered / crossed
-					addTrigger: function ( callback, parameters ) {
-						return addTrigger( callback, parameters );
+					addTrigger: function ( parameters ) {
+						return addTrigger( parameters );
 					},
-					removeTrigger: function ( callback, parameters ) {
-						removeTrigger( callback, parameters );
+					addTriggers: function ( list ) {
+						return addTriggers( list );
+					},
+					removeTrigger: function ( trigger ) {
+						removeTrigger( trigger );
+						return this;
+					},
+					removeTriggers: function ( list ) {
+						removeTriggers( list );
 						return this;
 					},
 					// Returns the current x position of the viewport with regards to the content pane.

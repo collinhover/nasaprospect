@@ -88,6 +88,8 @@ AddType application/json               json
 
 # Audio
 AddType audio/ogg                      oga ogg
+AddType audio/wav                      wav
+AddType audio/mp3                      mp3
 AddType audio/mp4                      m4a f4a f4b
 
 # Video

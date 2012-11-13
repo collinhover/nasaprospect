@@ -2,9 +2,10 @@ define( [
 	"jquery",
 	"app/shared",
 	"app/ui",
+	"app/sound",
 	"signals"
 ],
-function ( $, _s, _ui, Signal ) {
+function ( $, _s, _ui, _snd, Signal ) {
 	
 	var _section = {};
 	
@@ -51,6 +52,38 @@ function ( $, _s, _ui, Signal ) {
 		
 		this.$planet = this.$element.find( ".planet" );
 		
+		// sounds
+		
+		this.sounds = {
+			element: _snd.FindSounds( this.$element ),
+			orbit: _snd.FindSounds( this.$orbitTop, true ),
+			land: _snd.FindSounds( this.$landTop, true ),
+			explore: _snd.FindSounds( this.$explore, true )
+		};
+		
+		// triggers
+		
+		this.triggers = [];
+		this.triggersSound = [];
+		this.triggersOrbit = [
+			{
+				callback: this.StartOrbiting,
+				context: this,
+				element: this.$orbitTop
+			},
+			{
+				callback: this.StartOrbiting,
+				context: this,
+				element: this.$orbitBottom
+			}
+		];
+		
+		// persistent triggers for orbit
+		
+		_s.navigator.addTriggers( this.triggersOrbit );
+		
+		// signals
+		
 		this.onOrbitingStarted = new Signal();
 		this.onOrbitingStopped = new Signal();
 		this.onLandingStarted = new Signal();
@@ -60,23 +93,40 @@ function ( $, _s, _ui, Signal ) {
 		
 		this.$planet.on( 'tap', $.proxy( this.ToOrbit, this ) );
 		
-		this.triggers = {};
-		
-		this.triggers.inLandTop = _s.navigator.addTrigger( {
-			callback: this.StartLanding,
-			context: this,
-			element: this.$landTop
-		} );
-		
 		_ui.OnContentChanged( this.$element );
 		
 	}
+	
+	/*===================================================
+	
+	utility
+	
+	=====================================================*/
 	
 	function StopAll () {
 		
 		this.StopOrbiting();
 		this.StopExploring();
 		this.StopLanding();
+		
+	}
+	
+	/*===================================================
+	
+	active
+	
+	=====================================================*/
+	
+	function Activate () {
+		
+		this.triggersSound = _s.navigator.addTriggers( this.sounds.element.triggers );
+		
+	}
+	
+	function Deactivate () {
+		
+		this.StopAll();
+		_s.navigator.removeTriggers( this.triggersSound );
 		
 	}
 	
@@ -103,6 +153,27 @@ function ( $, _s, _ui, Signal ) {
 			console.log( this.$element.attr( 'id' ), 'start orbiting!' );
 			this.orbiting = true;
 			
+			this.StopLanding();
+			this.StopExploring();
+			
+			// cycle triggers
+			
+			_s.navigator.removeTriggers( this.triggers );
+			this.triggers = _s.navigator.addTriggers( [
+				{
+					callback: this.StartLanding,
+					context: this,
+					element: this.$landTop,
+					once: true
+				},
+				{
+					callback: this.StartLanding,
+					context: this,
+					element: this.$landBottom,
+					once: true
+				}
+			] );
+			
 			this.onOrbitingStarted.dispatch( this );
 			
 		}
@@ -114,7 +185,7 @@ function ( $, _s, _ui, Signal ) {
 	function StopOrbiting () {
 		
 		if ( this.orbiting !== false ) {
-			console.log( this.$element.attr( 'id' ), 'stop orbiting!' );
+			
 			this.orbiting = false;
 			
 			this.onOrbitingStopped.dispatch( this );
@@ -137,6 +208,25 @@ function ( $, _s, _ui, Signal ) {
 			console.log( this.$element.attr( 'id' ), 'start landing!' );
 			this.landing = true;
 			
+			this.StopOrbiting();
+			this.StopExploring();
+			
+			// triggers
+			
+			_s.navigator.removeTriggers( this.triggers );
+			this.triggers = _s.navigator.addTriggers( [
+				{
+					callback: this.StartExploring,
+					context: this,
+					element: this.$explore,
+					once: true
+				}
+			] );
+			
+			// sounds as triggers
+			
+			this.triggers = this.triggers.concat( _s.navigator.addTriggers( this.sounds.land.triggers ) );
+			
 			this.onLandingStarted.dispatch( this );
 			
 		}
@@ -148,7 +238,7 @@ function ( $, _s, _ui, Signal ) {
 	function StopLanding () {
 		
 		if ( this.landing !== false ) {
-			console.log( this.$element.attr( 'id' ), 'stop landing!' );
+			
 			this.landing = false;
 			
 			this.onLandingStopped.dispatch( this );
@@ -171,6 +261,27 @@ function ( $, _s, _ui, Signal ) {
 			console.log( this.$element.attr( 'id' ), 'start exploring!' );
 			this.exploring = true;
 			
+			this.StopOrbiting();
+			this.StopLanding();
+			
+			// cycle triggers
+			
+			_s.navigator.removeTriggers( this.triggers );
+			this.triggers = _s.navigator.addTriggers( [
+				{
+					callback: this.StartLanding,
+					context: this,
+					element: this.$landTop,
+					once: true
+				},
+				{
+					callback: this.StartLanding,
+					context: this,
+					element: this.$landBottom,
+					once: true
+				}
+			] );
+			
 			this.onExploringStarted.dispatch( this );
 			
 		}
@@ -182,7 +293,7 @@ function ( $, _s, _ui, Signal ) {
 	function StopExploring () {
 		
 		if ( this.exploring !== false ) {
-			console.log( this.$element.attr( 'id' ), 'stop exploring!' );
+			
 			this.exploring = false;
 			
 			this.onExploringStopped.dispatch( this );
@@ -237,6 +348,8 @@ function ( $, _s, _ui, Signal ) {
 	_section.Instance.prototype.constructor = _section.Instance;
 	
 	_section.Instance.prototype.StopAll = StopAll;
+	_section.Instance.prototype.Activate = Activate;
+	_section.Instance.prototype.Deactivate = Deactivate;
 	_section.Instance.prototype.ToOrbit = ToOrbit;
 	_section.Instance.prototype.StartOrbiting = StartOrbiting;
 	_section.Instance.prototype.StopOrbiting = StopOrbiting;
