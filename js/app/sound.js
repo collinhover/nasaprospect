@@ -1,7 +1,7 @@
 define( [ 
 	"jquery",
 	"app/shared",
-	"soundManager2",
+	"soundmanager2",
 	"TweenMax"
 ],
 function ( $, _s ) {
