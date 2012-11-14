@@ -1358,15 +1358,19 @@ function( $ ){
 				
 				if ( ( contentPosition.x !== contentPositionLast.x || contentPosition.y !== contentPositionLast.y ) && suppressTriggers !== true ) {
 					
-					var cx = contentPosition.x + paneWidth * 0.5;
-					var cy = contentPosition.y + paneHeight * 0.5;
+					var paneWidthHalf = paneWidth * 0.5;
+					var paneHeightHalf = paneHeight * 0.5;
+					var cx = contentPosition.x + paneWidthHalf;
+					var cy = contentPosition.y + paneHeightHalf;
+					var lcx = contentPositionLast.x + paneWidthHalf;
+					var lcy = contentPositionLast.y + paneHeightHalf;
 					var i, trigger;
 					
 					for( i = triggers.length - 1; i >= 0; i-- ) {
 						
 						trigger = triggers[ i ];
 						
-						if ( isInsideTriggerArea( cx, cy, trigger ) ) {
+						if ( isInsideTriggerArea( cx, cy, lcx, lcy, trigger ) ) {
 							
 							if ( trigger.ignore !== true ) {
 								
@@ -1375,7 +1379,7 @@ function( $ ){
 									removeTriggerByIndex( i );
 									
 								}
-								else if ( trigger.continuous === false ) {
+								else if ( trigger.continuous !== true ) {
 									
 									trigger.ignore = true;
 									
@@ -1398,20 +1402,16 @@ function( $ ){
 				
 			}
 			
-			function isInsideTriggerArea ( cx, cy, trigger ) {
+			function isInsideTriggerArea ( maxX, maxY, minX, minY, trigger ) {
 				
 				var bounds = trigger.bounds;
 				
-				// do a 2D point-in-AABB test
+				// do a 2D AABB-AABB test
 				
-				if ( trigger.anyX !== true ) {
-					if ( cx > bounds.right ) return false;
-					if ( cx < bounds.left ) return false;
-				}
-				if ( trigger.anyY !== true ) {
-					if ( cy > bounds.bottom ) return false;
-					if ( cy < bounds.top ) return false;
-				}
+				if ( minX > bounds.right ) return false;
+				if ( maxX < bounds.left ) return false;
+				if ( minY > bounds.bottom ) return false;
+				if ( maxY < bounds.top ) return false;
 				
 				return true;
 				
@@ -1482,6 +1482,22 @@ function( $ ){
 				
 				bounds.rightSansPane = bounds.right - container.width();
 				bounds.bottomSansPane = bounds.bottom - container.height();
+				
+				// bounds won't be entered by scrolling center point
+				
+				if ( isScrollableH === false && bounds.right - bounds.left < contentWidth ) {
+					
+					bounds.left = -Number.MAX_VALUE;
+					bounds.right = Number.MAX_VALUE;
+					
+				}
+				
+				if ( isScrollableV === false && bounds.bottom - bounds.top < contentHeight ) {
+					
+					bounds.top = -Number.MAX_VALUE;
+					bounds.bottom = Number.MAX_VALUE;
+					
+				}
 				
 				return bounds;
 				

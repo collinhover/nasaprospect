@@ -18,7 +18,7 @@ function ( $, _s, _utils, soundManager ) {
 	
 	/*===================================================
 	
-	instance
+	instances
 	
 	=====================================================*/
 	
@@ -30,6 +30,21 @@ function ( $, _s, _utils, soundManager ) {
 		this.triggers = [];
 		
 		this.Find( parameters );
+		
+	}
+	
+	function SoundDatum ( parameters ) {
+		
+		parameters = parameters || {};
+		
+		this.$element = $( parameters.element || parameters.$element );
+		this.file = parameters.file;
+		this.id = parameters.id || this.file;
+		this.fade = ParseAttribute( parameters.fade, _snd.duration, false );
+		this.loops = ParseAttribute( parameters.loops, _snd.infinite, 1 );
+		this.volume = parameters.volume || 100;
+		
+		this.trigger = GenerateScrollTrigger( this );
 		
 	}
 	
@@ -55,36 +70,20 @@ function ( $, _s, _utils, soundManager ) {
 		
 		$elements.each( function () {
 			
-			var i, il;
-			var datum = {};
+			var $element = $( this );
 			
-			var $element = datum.$element = $( this );
-			var file = datum.file = $element.attr( "data-sound" );
-			
-			if ( typeof file === 'string' && file.length > 0 ) {
-				
-				datum.id = $element.attr( "data-sound-id" ) || file;
-				
-				if ( typeof me.dataById[ datum.id ] === 'undefined' ) {
-					
-					datum.fade = ParseAttribute( $element.attr( "data-sound-fade" ), _snd.duration, false );
-					datum.loops = ParseAttribute( $element.attr( "data-sound-loops" ), _snd.infinite, 1 );
-					datum.volume = $element.attr( "data-sound-volume" ) || 100;
-					
-					datum.trigger = GenerateScrollTrigger( datum );
-					
-					me.data.push( datum );
-					me.dataIds.push( datum.id );
-					me.dataById[ datum.id ] = datum;
-					me.triggers.push( datum.trigger );
-					
-				}
-				
-			}
+			me.Add( {
+				$element: $element,
+				file: $element.attr( "data-sound" ),
+				id: $element.attr( "data-sound-id" ),
+				fade: $element.attr( "data-sound-fade" ),
+				loops: $element.attr( "data-sound-loops" ),
+				volume: $element.attr( "data-sound-volume" )
+			} );
 				
 		} );
 		
-		console.log( this, ' finished finding' );
+		return this;
 		
 	}
 	
@@ -130,7 +129,6 @@ function ( $, _s, _utils, soundManager ) {
 		
 		return {
 			element: datum.$element,
-			continuous: false,
 			callback: function () {
 				
 				PlaySound( datum );
@@ -138,24 +136,125 @@ function ( $, _s, _utils, soundManager ) {
 			},
 			onRemoved: function () {
 				
-				if ( datum.fade !== false ) {
+				StopSound( datum );
+				
+			}
+		};
+		
+	}
+	
+	/*===================================================
+	
+	add
+	
+	=====================================================*/
+	
+	function Add ( parameters ) {
+		
+		if ( typeof parameters !== 'undefined' ) {
+			
+			if ( _utils.IsArray( parameters ) ) {
+				
+				for( var i = 0, il = parameters.length; i < il; i++ ) {
 					
-					_snd.FadeOut( datum.id, {
-						duration: datum.fade,
-						onComplete: function () {
-							soundManager.stop( datum.id );
-						}
-					} );
-					
-				}
-				else {
-					
-					soundManager.stop( datum.id );
+					this.Add( parameters[ i ] );
 					
 				}
 				
 			}
-		};
+			else {
+				
+				var file = parameters.file;
+				
+				if ( typeof file === 'string' && file.length > 0 ) {
+					
+					var datum = new SoundDatum( parameters );
+					
+					if ( _utils.IndexOfProperties( this.data, [ "$element", "file" ], datum ) !== -1 ) {
+						
+						this.Remove( datum );
+						
+					}
+					
+					this.data.push( datum );
+					this.dataIds.push( datum.id );
+					this.triggers.push( datum.trigger );
+					
+					if ( typeof this.dataById[ datum.id ] === 'undefined' ) {
+						
+						this.dataById[ datum.id ] = [];
+						
+					}
+					
+					this.dataById[ datum.id ].push( datum );
+					
+				}
+				
+			}
+			
+		}
+		
+		return this;
+		
+	}
+	
+	/*===================================================
+	
+	remove
+	
+	=====================================================*/
+	
+	function Remove ( datum ) {
+		
+		if ( typeof datum !== 'undefined' ) {
+			
+			if ( _utils.IsArray( datum ) ) {
+				
+				for( var i = 0, il = datum.length; i < il; i++ ) {
+					
+					this.Remove( datum[ i ] );
+					
+				}
+				
+			}
+			else if ( typeof datum === 'string' ) {
+				
+				this.Remove( this.dataById[ datum ] );
+				
+			}
+			else {
+				
+				var index = _utils.IndexOfValue( this.data, datum );
+				
+				if ( index !== -1 ) {
+					
+					this.data.splice( index, 1 );
+					this.dataIds.splice( index, 1 );
+					this.triggers.splice( index, 1 );
+					
+					var dataById = this.dataById[ datum.id ];
+					
+					index = _utils.IndexOfValue( dataById, datum );
+					
+					if ( index !== -1 ) {
+						
+						dataById.splice( index, 1 );
+						
+						if ( dataById.length === 0 ) {
+							
+							delete this.dataById[ datum.id ];
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		return this;
 		
 	}
 	
@@ -167,42 +266,13 @@ function ( $, _s, _utils, soundManager ) {
 	
 	function Play ( parameters ) {
 		
-		parameters = parameters || {};
-		
-		if ( this.data.length === 0 ) {
-			
-			this.data = this.Find( parameters.element, parameters.descendents );
-			
-		}
-		
-		var ids = _utils.ToArray( parameters.id || parameters.ids || this.dataIds );
-		var i, il, id;
-		
-		for ( i = 0, il = ids.length; i < il; i++ ) {
-			
-			id = ids[ i ];
-			
-			if ( this.dataById.hasOwnProperty( id ) === true ) {
-				
-				PlaySound( this.dataById[ id ] );
-				
-			}
-			
-		}
+		this.ForData( parameters, PlaySound, this );
 		
 	}
 	
 	function PlaySound ( datum ) {
 		
-		if ( typeof datum.sound === 'undefined' ) {
-			
-			datum.sound = soundManager.createSound( datum.id, [ 
-				_s.pathToAssets + datum.file + '.mp3',
-				_s.pathToAssets + datum.file + '.ogg',
-				_s.pathToAssets + datum.file + '.wav'
-			] );
-			
-		}
+		SoundCheck( datum );
 		
 		if ( typeof datum.sound !== 'undefined' ) {
 			
@@ -212,11 +282,7 @@ function ( $, _s, _utils, soundManager ) {
 					
 					if ( datum.fade !== false ) {
 						
-						_snd.FadeIn( datum.id, {
-							duration: datum.fade,
-							volume: datum.volume,
-							fromZero: true
-						} );
+						FadeInSound( datum );
 						
 					}
 					
@@ -235,7 +301,30 @@ function ( $, _s, _utils, soundManager ) {
 	
 	function Stop ( parameters ) {
 		
+		this.ForData( parameters, StopSound, this );
 		
+	}
+	
+	function StopSound ( datum ) {
+		
+		if ( datum.sound && datum.sound.playState === 1 ) {
+			
+			if ( datum.fade !== false ) {
+				
+				FadeOutSound( datum, {
+					onComplete: function () {
+						soundManager.stop( datum.id );
+					}
+				} );
+				
+			}
+			else {
+				
+				soundManager.stop( datum.id );
+				
+			}
+			
+		}
 		
 	}
 	
@@ -245,47 +334,138 @@ function ( $, _s, _utils, soundManager ) {
 	
 	=====================================================*/
 	
-	function FadeIn ( id, parameters ) {
+	function FadeIn ( parameters ) {
 		
-		var sound = soundManager.sounds[id];
+		this.ForData( parameters, FadeInSound, this );
 		
-		if ( typeof sound !== 'undefined' ) {
+	}
+	
+	function FadeInSound ( datum, parameters ) {
+		
+		SoundCheck( datum );
+		
+		var sound = datum.sound;
+		var from = { volume: sound.volume };
+		
+		parameters = parameters || {};
+		parameters.volume = parameters.volume || datum.volume || 100,
+		parameters.onUpdate = function () {
+			sound.setVolume( from.volume );
+		};
+		
+		if ( parameters.fromZero !== false ) sound.setVolume( 0 );
+		
+		var durationActual = ( sound.durationEstimate / _snd.soundDurationBase ) * ( parameters.duration || datum.fade || _snd.duration );
+		
+		TweenMax.to( from, durationActual, parameters );
+		
+	}
+	
+	function FadeOut ( parameters ) {
+		
+		this.ForData( parameters, FadeOutSound, this );
+		
+	}
+	
+	function FadeOutSound ( datum, parameters ) {
+		
+		SoundCheck( datum );
+		
+		var sound = datum.sound;
+		var from = { volume: sound.volume };
+		
+		parameters = parameters || {};
+		parameters.volume = parameters.volume || 0,
+		parameters.onUpdate = function () {
+			sound.setVolume( from.volume );
+		};
+		
+		var durationActual = ( sound.durationEstimate / _snd.soundDurationBase ) * ( parameters.duration || datum.fade || _snd.duration );
+		
+		TweenMax.to( from, durationActual, parameters );
+		
+	}
+	
+	/*===================================================
+	
+	utility
+	
+	=====================================================*/
+	
+	function ForData ( parameters, callback, context ) {
+		
+		var i, il;
+		var data = this.GetData( parameters );
+		
+		for ( i = 0, il = data.length; i < il; i++ ) {
 			
-			parameters = parameters || {};
-			parameters.volume = parameters.volume || 100;
-			parameters.onUpdate = function () {
-				sound.setVolume( from.volume );
-			};
-			
-			if ( parameters.fromZero === true ) sound.setVolume( 0 );
-			
-			var from = { volume: sound.volume };
-			var durationActual = ( sound.durationEstimate / _snd.soundDurationBase ) * ( parameters.duration || _snd.duration );
-			
-			TweenMax.to( from, durationActual, parameters );
+			callback.call( context, data[ i ], parameters );
 			
 		}
 		
 	}
 	
-	function FadeOut ( id, parameters ) {
+	function GetData ( parameters ) {
 		
-		var sound = soundManager.sounds[id];
+		var data;
 		
-		if ( typeof sound !== 'undefined' ) {
+		if ( parameters instanceof SoundDatum ) {
 			
-			parameters = parameters || {};
-			parameters.volume = parameters.volume || 0;
-			parameters.onUpdate = function () {
-				sound.setVolume( from.volume );
-			};
+			return _utils.ToArray( parameters );
 			
-			if ( parameters.fromZero === true ) sound.setVolume( 0 );
+		}
+		else if ( typeof parameters === 'string' ) {
 			
-			var from = { volume: sound.volume };
-			var durationActual = ( sound.durationEstimate / _snd.soundDurationBase ) * ( parameters.duration || _snd.duration );
+			data = this.dataById[ parameters ];
 			
-			TweenMax.to( from, durationActual, parameters );
+		}
+		
+		if ( typeof data === 'undefined'  && typeof parameters !== 'undefined' ) {
+			
+			data = parameters.data || parameters.datum;
+			
+			if ( typeof data === 'undefined' ) {
+				
+				var ids = parameters.id || parameters.ids;
+				
+				if ( typeof ids !== 'undefined' ) {
+					
+					var i, il, dataById;
+					
+					ids = _utils.ToArray( ids );
+					data = [];
+					
+					for ( i = 0, il = ids.length; i < il; i++ ) {
+						
+						dataById = this.dataById[ ids[ i ] ];
+						
+						if ( typeof dataById !== 'undefined' ) {
+							
+							data = data.concat( dataById );
+							
+						}
+						
+					}
+					
+				}
+				
+			}
+			
+		}
+			
+		return data ? _utils.ToArray( data ) : this.data;
+		
+	}
+	
+	function SoundCheck ( datum ) {
+		
+		if ( typeof datum.sound === 'undefined' ) {
+			
+			datum.sound = soundManager.createSound( datum.id, [ 
+				_s.pathToAssets + datum.file + '.mp3',
+				_s.pathToAssets + datum.file + '.ogg',
+				_s.pathToAssets + datum.file + '.wav'
+			] );
 			
 		}
 		
@@ -301,11 +481,17 @@ function ( $, _s, _utils, soundManager ) {
 	_snd.SoundHandler.prototype.constructor = _snd.SoundHandler;
 	
 	_snd.SoundHandler.prototype.Find = Find;
+	_snd.SoundHandler.prototype.Add = Add;
+	_snd.SoundHandler.prototype.Remove = Remove;
+	
 	_snd.SoundHandler.prototype.Play = Play;
 	_snd.SoundHandler.prototype.Stop = Stop;
 	
-	_snd.FadeIn = FadeIn;
-	_snd.FadeOut = FadeOut;
+	_snd.SoundHandler.prototype.ForData = ForData;
+	_snd.SoundHandler.prototype.GetData = GetData;
+	
+	_snd.SoundHandler.prototype.FadeIn = FadeIn;
+	_snd.SoundHandler.prototype.FadeOut = FadeOut;
 	
 	return _snd;
 	

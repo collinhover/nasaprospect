@@ -77,7 +77,7 @@ function ( $, _s, _snd, _section ) {
 					}
 					
 				}
-				console.log( 'SOLAR SYSTEM ACTIVE SECTION: ', active );
+				
 			}
 			
 		}

@@ -56,8 +56,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		this.soundHandlers = {
 			element: new _snd.SoundHandler( { element: this.$element } ),
-			orbit: new _snd.SoundHandler( { element: this.$orbitTop, options: { descendents: true } } ),
-			land: new _snd.SoundHandler( { element: this.$landTop, options: { descendents: true } } ),
+			orbit: new _snd.SoundHandler( { element: $().add( this.$orbitTop ).add( this.$orbitBottom ), options: { descendents: true } } ),
+			land: new _snd.SoundHandler( { element: $().add( this.$landTop ).add( this.$landBottom ), options: { descendents: true } } ),
 			explore: new _snd.SoundHandler( { element: this.$explore, options: { descendents: true } } )
 		};
 		
@@ -67,14 +67,14 @@ function ( $, _s, _ui, _snd, Signal ) {
 		this.triggersSound = [];
 		this.triggersPersistent = [
 			{
+				element: this.$orbitTop,
 				callback: this.StartOrbiting,
-				context: this,
-				element: this.$orbitTop
+				context: this
 			},
 			{
+				element: this.$orbitBottom,
 				callback: this.StartOrbiting,
-				context: this,
-				element: this.$orbitBottom
+				context: this
 			}
 		];
 		
@@ -118,16 +118,16 @@ function ( $, _s, _ui, _snd, Signal ) {
 	=====================================================*/
 	
 	function Activate () {
-		
+		console.log( 'Activate', this.$element.attr( 'id' ) );
 		this.soundHandlers.element.Play();
 		
 	}
 	
 	function Deactivate () {
-		
+		console.log( 'Deactivate', this.$element.attr( 'id' ) );
 		this.StopAll();
 		
-		// TODO: this.soundHandlers.element.Stop();
+		this.soundHandlers.element.Stop();
 		
 	}
 	
