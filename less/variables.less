@@ -44,18 +44,20 @@
 
 // Typography
 // -------------------------
-@sansFontFamily:        "Helvetica Neue", Helvetica, Arial, sans-serif;
+@sansFontFamily:       "Sansation", "Helvetica Neue", Helvetica, Arial, sans-serif;
 @serifFontFamily:       Georgia, "Times New Roman", Times, serif;
 @monoFontFamily:        Monaco, Menlo, Consolas, "Courier New", monospace;
 
 @baseFontSize:          16px;
 @baseFontFamily:        @sansFontFamily;
 @baseLineHeight:        22px;
-@altFontFamily:         @serifFontFamily;
+@altFontFamily:         @sansFontFamily;
 
-@headingsFontFamily:    inherit; // empty to use BS default, @baseFontFamily
-@headingsFontWeight:    bold;    // instead of browser default, bold
+@headingsFontFamily:    "Copperplate", @baseFontFamily; // empty to use BS default, @baseFontFamily
+@headingsFontWeight:    normal;    // instead of browser default, bold
 @headingsColor:         inherit; // empty to use BS default, @textColor
+
+@logoFontFamily: 'BebasNeue', @headingsFontFamily;
 
 // Tables
 // -------------------------
@@ -277,3 +279,14 @@
 // 768px-979px
 @fluidGridColumnWidth768:      percentage(@gridColumnWidth768/@gridRowWidth768);
 @fluidGridGutterWidth768:      percentage(@gridGutterWidth768/@gridRowWidth768);
+
+
+// Containers
+// ----------------------------
+@uiPaneMinHeight: 60px;
+@uiPaneMinWidth: 60px;
+@uiPaneColumnSidesWidth: 10%;
+@uiPanePaddingLeft: 20px;
+@uiPanePaddingRight: @uiPanePaddingLeft;
+@uiPanePaddingTop: @uiPanePaddingLeft;
+@uiPanePaddingBottom: @uiPanePaddingTop;

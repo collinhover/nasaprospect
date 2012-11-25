@@ -12,6 +12,10 @@
         
         <meta name="description" content="NASA: Prospect">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+		
+        <!-- JS setup -->
+        
+        <script src="js/lib/modernizr-2.6.2.min.js"></script>
         
         <!-- LESS -->
         
@@ -20,11 +24,7 @@
         
         <!-- CSS -->
         
-        <link rel="stylesheet" type="text/css" href="css/main.css">
-        
-        <!-- JS setup -->
-        
-        <script src="js/lib/modernizr-2.6.2.min.js"></script>
+        <!--<link rel="stylesheet" type="text/css" href="css/main.css">-->
         
     </head>
     
@@ -32,70 +32,134 @@
 			
 		<div id="solar-system" class="unselectable">
 			
-			<section id="earth" data-sound="space" data-sound-loops="true" data-sound-fade="true">
+			<section id="sun" data-sound="wind" data-sound-loop="true" data-sound-fade="true">
 				
 				<div class="orbit orbit-top">
 					
-					<div class="background">
-						
-					</div>
-					
 					<div class="middleground">
 						
-						<div class="planet">
-							<h1 class="skewed"><span>Earth</span></h1>
-						</div>
+						<img src="img/sun.png" class="planetoid">
 						
 					</div>
 					
 					<div class="foreground">
+						
+						<div class="logo container-center">
+							
+							<div class="row-fluid">
+								
+								<div class="span2"></div>
+								
+								<div class="span1">
+									<h2>Mercury</h2>
+									<h1 class="logo-type">P</h1>
+								</div>
+								<div class="span1">
+									<h2>Venus</h2>
+									<h1 class="logo-type">R</h1>
+								</div>
+								<div class="span1">
+									<h2>Earth</h2>
+									<h1 class="logo-type">O</h1>
+								</div>
+								<div class="span1">
+									<h2>Mars</h2>
+									<h1 class="logo-type">S</h1>
+								</div>
+								<div class="span1">
+									<h2>Jupiter</h2>
+									<h1 class="logo-type">P</h1>
+								</div>
+								<div class="span1">
+									<h2>Saturn</h2>
+									<h1 class="logo-type">E</h1>
+								</div>
+								<div class="span1">
+									<h2>Uranus</h2>
+									<h1 class="logo-type">C</h1>
+								</div>
+								<div class="span1">
+									<h2>Neptune</h2>
+									<h1 class="logo-type">T</h1>
+								</div>
+								
+							</div>
+							
+						</div>
 						
 					</div>
 					
 				</div>
 				<!-- /orbit -->
 				
-				<div class="land land-top" data-sound="wind" data-sound-id="earth-land-wind" data-sound-loops="true" data-sound-fade="true">
+			</section>
+			<!-- /sun -->
+			
+			<section id="mercury">
+				
+				<div class="orbit orbit-top">
+					
+					<div class="middleground">
+						
+						<img src="img/mercury.svg" class="planetoid">
+						
+					</div>
+					
+				</div>
+				<!-- /orbit -->
+				
+			</section>
+			<!-- /mercury -->
+			
+			<section id="venus">
+				
+				<div class="orbit orbit-top">
+					
+					<div class="middleground">
+						
+						<img src="img/venus.svg" class="planetoid">
+						
+					</div>
+					
+				</div>
+				<!-- /orbit -->
+				
+			</section>
+			<!-- /venus -->
+			
+			<section id="earth">
+				
+				<div class="orbit orbit-top">
+					
+					<div class="middleground">
+						
+						<img src="img/earth.png" class="planetoid">
+						
+					</div>
+					
+				</div>
+				<!-- /orbit -->
+				
+				<!--<div class="land land-top" data-sound="wind" data-sound-id="earth-land-wind" data-sound-loop="true" data-sound-fade="true">
 					
 					<div class="background">
-						
-						<img src="img/cloud.png" id="cloud1">
-						<img src="img/cloud.png" id="cloud2">
-						<img src="img/cloud.png" id="cloud3">
-						<img src="img/cloud.png" id="cloud4">
 						
 					</div>
 					
 					<div class="middleground">
 						
-						<img src="img/cloud.png" id="cloud5">
-						<img src="img/cloud.png" id="cloud6">
-						<img src="img/cloud.png" id="cloud7">
-						<img src="img/cloud.png" id="cloud8">
-						<img src="img/cloud.png" id="cloud9">
-						<img src="img/cloud.png" id="cloud10">
-						
 					</div>
 					
 					<div class="foreground">
 						
-						<img src="img/cloud.png" id="cloud11">
-						<img src="img/cloud.png" id="cloud12">
-						<img src="img/cloud.png" id="cloud13">
-						<img src="img/cloud.png" id="cloud14">
-						<img src="img/cloud.png" id="cloud15">
-						<img src="img/cloud.png" id="cloud16">
-						<img src="img/cloud.png" id="cloud17">
-						<img src="img/cloud.png" id="cloud18">
-						
 					</div>
 					
-				</div>
+				</div>-->
 				<!-- /land -->
 				
-				<div class="explore">
+				<!--<div class="explore">
 					
-				</div>
+				</div>-->
 				<!-- /explore -->
 				
 			</section>
@@ -105,37 +169,105 @@
 			
 				<div class="orbit orbit-top">
 					
-					<div class="background">
-					
-					</div>
-					
 					<div class="middleground">
 						
-						<div class="planet">
-							<h1 class="skewed"><span>Mars</span></h1>
-						</div>
-						
-					</div>
-					
-					<div class="foreground">
+						<img src="img/mars.svg" class="planetoid">
 						
 					</div>
 				
 				</div>
 				<!-- /orbit -->
 				
-				<div class="land land-top">
-					
-				</div>
-				<!-- /land -->
-				
-				<div class="explore">
-					
-				</div>
-				<!-- /explore -->
-				
 			</section>
 			<!-- /mars -->
+			
+			<section id="asteroidBelt">
+				
+				<div class="orbit orbit-top">
+					
+					<div class="background">
+						
+					</div>
+					
+					<div class="middleground">
+						
+						<img src="img/asteroid_a.png" class="parallaxable" style="height:5%; top:10%; left: 10%;">
+						
+					</div>
+					
+					<div class="foreground">
+						
+					</div>
+					
+				</div>
+				<!-- /orbit -->
+				
+			</section>
+			<!-- /asteroidBelt -->
+			
+			<section id="jupiter">
+				
+				<div class="orbit orbit-top">
+					
+					<div class="middleground">
+						
+						<img src="img/jupiter.svg" class="planetoid">
+						
+					</div>
+					
+				</div>
+				<!-- /orbit -->
+				
+			</section>
+			<!-- /jupiter -->
+			
+			<section id="saturn">
+				
+				<div class="orbit orbit-top">
+					
+					<div class="middleground">
+						
+						<img src="img/saturn.svg" class="planetoid">
+						
+					</div>
+					
+				</div>
+				<!-- /orbit -->
+				
+			</section>
+			<!-- /saturn -->
+			
+			<section id="uranus">
+				
+				<div class="orbit orbit-top">
+					
+					<div class="middleground">
+						
+						<img src="img/uranus.svg" class="planetoid">
+						
+					</div>
+					
+				</div>
+				<!-- /orbit -->
+				
+			</section>
+			<!-- /uranus -->
+			
+			<section id="neptune">
+				
+				<div class="orbit orbit-top">
+					
+					<div class="middleground">
+						
+						<img src="img/neptune.svg" class="planetoid">
+						
+					</div>
+					
+				</div>
+				<!-- /orbit -->
+				
+			</section>
+			<!-- /neptune -->
 			
 		</div>
 		<!-- /system -->
@@ -152,7 +284,7 @@
     		} )();
     	</script>
         
-        <script data-main="js/main.js" src="js/lib/require-jquery.js"></script>
+		<script data-main="js/main.js" src="js/lib/require-jquery.js"></script>
         
     </body>
     

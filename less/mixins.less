@@ -126,6 +126,12 @@
     .monospace() {
       font-family: @monoFontFamily;
     }
+	.header() {
+      font-family: @headingsFontFamily;
+	}
+	.logo() {
+		font-family: @logoFontFamily;
+	}
   }
   .shorthand(@size: @baseFontSize, @weight: normal, @lineHeight: @baseLineHeight) {
     font-size: @size;
@@ -142,6 +148,10 @@
   }
   .monospace(@size: @baseFontSize, @weight: normal, @lineHeight: @baseLineHeight) {
     #font > #family > .monospace;
+    #font > .shorthand(@size, @weight, @lineHeight);
+  }
+  .logo(@size: @baseFontSize, @weight: normal, @lineHeight: @baseLineHeight) {
+    #font > #family > .logo;
     #font > .shorthand(@size, @weight, @lineHeight);
   }
 }

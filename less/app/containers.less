@@ -1,0 +1,152 @@
+/* containers 
+-------------------------*/
+
+.container-center {
+	text-align: center;
+	
+	.brand {
+		float: none;
+		position: absolute;
+	}
+	
+	.nav, .thumbnails, .inline {
+		.inline-block;
+		float: none;
+	}
+	
+	.inline {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+    
+    .row {
+        .inline-block;
+    }
+	
+}
+
+.container-left {
+    text-align: left;
+    
+    .brand {
+    	float: left;
+		position: relative;
+	}
+    
+    .nav, .thumbnails, .inline {
+    	display: block;
+		float: left;
+	}
+	
+	.inline {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+    
+    .row {
+        display: block;
+    }
+    
+}
+
+.container-right {
+    text-align: right;
+    
+    .brand {
+    	float: right;
+		position: relative;
+	}
+    
+    .nav, .thumbnails, .inline {
+    	display: block;
+		float: right;
+	}
+	
+	.inline {
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+    
+    .row {
+        display: block;
+    }
+    
+}
+
+@media (max-width: 767px) {    
+    .container {
+        padding-left: 20px;
+        padding-right: 20px;
+        
+        .container {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        
+    }
+}
+
+/* panes 
+-------------------------*/
+
+.ui-pane, [class^="ui-pane-"], [class*=" ui-pane-"] {
+	position: absolute;
+	min-width: @uiPaneMinWidth;
+	min-height: @uiPaneMinHeight;
+}
+
+.ui-pane-column, [class^="ui-pane-column"], [class*=" ui-pane-column"] {
+	height: 100%;
+	top: 0;
+	
+	.ui-pane-header, .ui-pane-footer, .ui-pane-body, .ui-pane-body-top, .ui-pane-body-bottom {
+		width: 100%;
+	}
+	
+	.ui-pane-header, .ui-pane-footer {
+		min-height: @uiPaneMinHeight;
+	}
+	
+	.ui-pane-header {
+		top: 0;
+	}
+	
+	.ui-pane-footer {
+		bottom: 0;
+	}
+	
+	.ui-pane-body {
+		top: @uiPaneMinHeight;
+		bottom: @uiPaneMinHeight;
+		
+		.ui-pane-body-top, .ui-pane-body-bottom {
+			height: 50%;
+		}
+	}
+	
+}
+
+.ui-pane-column-left, .ui-pane-column-right {
+	min-width: @uiPaneColumnSidesWidth;
+}
+
+.ui-pane-column-middle {
+	width: 100% - @uiPaneColumnSidesWidth * 2;
+	left: @uiPaneColumnSidesWidth;
+	right: @uiPaneColumnSidesWidth;
+}
+
+.ui-pane-column-right {
+	right: 0;
+	
+	& > * {
+		.clearfix;
+		
+		& > * {
+			float: right;
+			.clearfix;
+		}
+		
+	}
+	
+}

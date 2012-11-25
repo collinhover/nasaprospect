@@ -21,18 +21,25 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		parameters = parameters || {};
 		
-		this.$element = $( element );
-		this.$element.data( 'section', this );
-		
 		this.orbiting = false;
 		this.landing = false;
 		this.exploring = false;
+		
+		this.$element = $( element );
+		this.$element.data( 'section', this );
+		
+		// triggers
+		
+		this.triggers = [];
+		this.triggersSound = [];
+		this.triggersPersistent = [];
+		
+		// areas
 		
 		this.$explore = this.$element.find( ".explore" );
 		
 		// clone orbit and land top to create bottom versions
 		
-		this.$orbitTop = this.$element.find( ".orbit-top" );
 		this.$landTop = this.$element.find( ".land-top" );
 		
 		this.$landBottom = this.$landTop
@@ -40,6 +47,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 			.removeClass( "land-top" )
 			.addClass( "land-bottom" )
 			.insertAfter( this.$explore );
+		
+		this.$orbitTop = this.$element.find( ".orbit-top" );
 		
 		this.$orbitBottom = this.$orbitTop
 			.clone()
@@ -56,29 +65,22 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		this.soundHandlers = {
 			element: new _snd.SoundHandler( { element: this.$element } ),
-			orbit: new _snd.SoundHandler( { element: $().add( this.$orbitTop ).add( this.$orbitBottom ), options: { descendents: true } } ),
-			land: new _snd.SoundHandler( { element: $().add( this.$landTop ).add( this.$landBottom ), options: { descendents: true } } ),
+			orbit: new _snd.SoundHandler( { element: this.$orbit, options: { descendents: true } } ),
+			land: new _snd.SoundHandler( { element: this.$land, options: { descendents: true } } ),
 			explore: new _snd.SoundHandler( { element: this.$explore, options: { descendents: true } } )
-		};
-		
-		// triggers
-		
-		this.triggers = [];
-		this.triggersSound = [];
-		this.triggersPersistent = [
-			{
-				element: this.$orbitTop,
-				callback: this.StartOrbiting,
-				context: this
-			},
-			{
-				element: this.$orbitBottom,
-				callback: this.StartOrbiting,
-				context: this
-			}
-		];
+		}
 		
 		// persistent triggers
+		
+		this.$orbit.each( function () {
+			
+			me.triggersPersistent.push( {
+				element: this,
+				callback: me.StartOrbiting,
+				context: me
+			} );
+			
+		} );
 		
 		_s.navigator.addTriggers( this.triggersPersistent );
 		
@@ -150,6 +152,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 	
 	function StartOrbiting () {
 		
+		var me = this;
+		
 		if ( this.orbiting !== true ) {
 			console.log( this.$element.attr( 'id' ), 'start orbiting!' );
 			this.orbiting = true;
@@ -160,20 +164,19 @@ function ( $, _s, _ui, _snd, Signal ) {
 			// cycle triggers
 			
 			_s.navigator.removeTriggers( this.triggers );
-			this.triggers = _s.navigator.addTriggers( [
-				{
-					callback: this.StartLanding,
-					context: this,
-					element: this.$landTop,
+			
+			this.triggers = [];
+			
+			this.$land.each( function () {
+				
+				this.triggers.push( _s.navigator.addTrigger( {
+					callback: me.StartLanding,
+					context: me,
+					element: this,
 					once: true
-				},
-				{
-					callback: this.StartLanding,
-					context: this,
-					element: this.$landBottom,
-					once: true
-				}
-			] );
+				} ) );
+				
+			} );
 			
 			this.onOrbitingStarted.dispatch( this );
 			
@@ -215,14 +218,19 @@ function ( $, _s, _ui, _snd, Signal ) {
 			// triggers
 			
 			_s.navigator.removeTriggers( this.triggers );
-			this.triggers = _s.navigator.addTriggers( [
-				{
-					callback: this.StartExploring,
-					context: this,
-					element: this.$explore,
+			
+			this.triggers = [];
+			
+			this.$explore.each( function () {
+				
+				this.triggers.push( _s.navigator.addTrigger( {
+					callback: me.StartExploring,
+					context: me,
+					element: this,
 					once: true
-				}
-			] );
+				} ) );
+				
+			} );
 			
 			// sounds as triggers
 			
@@ -268,20 +276,19 @@ function ( $, _s, _ui, _snd, Signal ) {
 			// cycle triggers
 			
 			_s.navigator.removeTriggers( this.triggers );
-			this.triggers = _s.navigator.addTriggers( [
-				{
-					callback: this.StartLanding,
-					context: this,
-					element: this.$landTop,
+			
+			this.triggers = [];
+			
+			this.$land.each( function () {
+				
+				this.triggers.push( _s.navigator.addTrigger( {
+					callback: me.StartLanding,
+					context: me,
+					element: this,
 					once: true
-				},
-				{
-					callback: this.StartLanding,
-					context: this,
-					element: this.$landBottom,
-					once: true
-				}
-			] );
+				} ) );
+				
+			} );
 			
 			this.onExploringStarted.dispatch( this );
 			

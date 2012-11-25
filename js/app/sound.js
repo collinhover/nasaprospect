@@ -2,15 +2,14 @@ define( [
 	"jquery",
 	"app/shared",
 	"app/utilities",
-	"soundmanager2",
+	"buzz",
 	"TweenMax"
 ],
-function ( $, _s, _utils, soundManager ) {
+function ( $, _s, _utils ) {
 	
 	var _snd = {
-		infinite: 9999,
 		soundDurationBase: 1000,
-		duration: 0.1,
+		duration: 100,
 		options: {
 			descendents: false
 		}
@@ -41,7 +40,7 @@ function ( $, _s, _utils, soundManager ) {
 		this.file = parameters.file;
 		this.id = parameters.id || this.file;
 		this.fade = ParseAttribute( parameters.fade, _snd.duration, false );
-		this.loops = ParseAttribute( parameters.loops, _snd.infinite, 1 );
+		this.loop = ParseAttribute( parameters.loop, true, false );
 		this.volume = parameters.volume || 100;
 		
 		this.trigger = GenerateScrollTrigger( this );
@@ -77,7 +76,7 @@ function ( $, _s, _utils, soundManager ) {
 				file: $element.attr( "data-sound" ),
 				id: $element.attr( "data-sound-id" ),
 				fade: $element.attr( "data-sound-fade" ),
-				loops: $element.attr( "data-sound-loops" ),
+				loop: $element.attr( "data-sound-loop" ),
 				volume: $element.attr( "data-sound-volume" )
 			} );
 				
@@ -113,7 +112,11 @@ function ( $, _s, _utils, soundManager ) {
 			
 		}
 		
-		attribute = parseInt( attribute );
+		if ( _utils.IsNumber( fallback ) ) {
+			
+			attribute = parseInt( attribute );
+			
+		}
 		
 		if ( !attribute ) {
 			
@@ -270,24 +273,36 @@ function ( $, _s, _utils, soundManager ) {
 		
 	}
 	
-	function PlaySound ( datum ) {
+	function PlaySound ( datum, parameters ) {
 		
-		SoundCheck( datum );
+		var sound = SoundCheck( datum ),
+			durationActual;
 		
-		if ( typeof datum.sound !== 'undefined' ) {
+		if ( typeof sound !== 'undefined' ) {
 			
-			datum.sound.play( {
-				loops: datum.loops,
-				onplay: function () {
+			sound.play()
+				.bind( 'playing', function () {
 					
 					if ( datum.fade !== false ) {
 						
-						FadeInSound( datum );
+						durationActual = Math.round( ( ( sound.getDuration() * 1000 ) / _snd.soundDurationBase ) * ( ( parameters && parameters.duration ) || ( _utils.IsNumber( datum.fade ) && datum.fade ) || _snd.duration ) );
+						
+						sound.fadeIn( durationActual );
 						
 					}
 					
-				}
-			});
+					if ( datum.loop === true ) {
+						
+						sound.unloop().loop();
+						
+					}
+					
+				} )
+				.bind( 'ended', function () {
+					
+					console.log( datum.id, datum.sound );
+					
+				} );
 			
 		}
 		
@@ -305,22 +320,25 @@ function ( $, _s, _utils, soundManager ) {
 		
 	}
 	
-	function StopSound ( datum ) {
+	function StopSound ( datum, parameters ) {
 		
-		if ( datum.sound && datum.sound.playState === 1 ) {
+		var sound = datum.sound,
+			durationActual;
+		
+		if ( sound && sound.isPaused() !== true ) {
 			
 			if ( datum.fade !== false ) {
 				
-				FadeOutSound( datum, {
-					onComplete: function () {
-						soundManager.stop( datum.id );
-					}
+				durationActual = Math.round( ( ( sound.getDuration() * 1000 ) / _snd.soundDurationBase ) * ( ( parameters && parameters.duration ) || ( _utils.IsNumber( datum.fade ) && datum.fade ) || _snd.duration ) );
+				
+				sound.fadeOut( durationActual, function () {
+					sound.stop();
 				} );
 				
 			}
 			else {
 				
-				soundManager.stop( datum.id );
+				sound.stop();
 				
 			}
 			
@@ -461,13 +479,14 @@ function ( $, _s, _utils, soundManager ) {
 		
 		if ( typeof datum.sound === 'undefined' ) {
 			
-			datum.sound = soundManager.createSound( datum.id, [ 
-				_s.pathToAssets + datum.file + '.mp3',
-				_s.pathToAssets + datum.file + '.ogg',
-				_s.pathToAssets + datum.file + '.wav'
-			] );
+			datum.sound = new buzz.sound( _s.pathToAssets + datum.file, {
+				formats: [ "mp3", "ogg", "wav" ],
+				preload: true
+			} ).load();
 			
 		}
+		
+		return datum.sound;
 		
 	}
 	
