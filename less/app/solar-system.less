@@ -2,8 +2,9 @@
 -------------------------------------------------------------------------------*/
 
 #solar-system {
-    background-image: url( "../img/stars.png" );
-	background-size: 35%;
+	background-color: @logoDark;
+    background-image: url( "../img/stars.svg" );
+	background-size: 25%;
 }
 
 #solar-system, section {
@@ -47,10 +48,54 @@ section, .orbit, .land, .explore, .foreground, .middleground, .background {
 /* objects
 -------------------------------------------------------------------------------*/
 
+#parallax {
+	
+	.centerHorizontal {
+		margin-left: auto;
+		margin-right: auto;
+		left: 0;
+		right: 0;
+	}
+	
+	.centerVertical {
+		margin-top: auto;
+		margin-bottom: auto;
+		top: 0;
+		bottom: 0;
+	}
+	
+	.fullHeight {
+		.fillHeight;
+		#parallax > .centerHorizontal;
+		top: 0;
+	}
+	
+	.fullWidth {
+		.fillWidth;
+		#parallax > .centerVertical;
+	}
+	
+}
+
 .parallaxable {
 	position: absolute;
 	width: auto;
 	height: auto;
+	
+	&.fillHeight {
+		#parallax > .fullHeight;
+	}
+	
+	&.fillWidth {
+		#parallax > .fullWidth;
+	}
+	
+}
+
+.planetoid {
+	.parallaxable;
+	#parallax > .fullHeight;
+	cursor: pointer;
 }
 
 /* orbit
@@ -64,16 +109,6 @@ section, .orbit, .land, .explore, .foreground, .middleground, .background {
 	.foreground, .middleground, .background {
 		.transform( rotate( 180deg ) );
 	}
-}
-
-.planetoid {
-	cursor: pointer;
-	display: block;
-	height: 50%;
-	width: auto;
-	margin: 0 auto;
-	display: block;
-	text-align: center;
 }
 
 /* land
