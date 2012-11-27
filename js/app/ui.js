@@ -6,7 +6,8 @@ define( [
 	"mwheelIntent",
 	"jquery.mousewheel",
 	"jquery.jscrollpane.custom",
-	"jquery.stellar"
+	"jquery.stellar",
+	"jquery.fittext"
 ],
 function ( $, _s ) {
 	
@@ -51,6 +52,8 @@ function ( $, _s ) {
 	=====================================================*/
 	
 	// resize once on start
+	
+	$( ".prospect-name h1" ).fitText();
 	
 	_de.$window.on( 'resize', $.throttle( _s.throttleTimeLong, OnWindowResized ) );
 	_de.$window.trigger( 'resize' );

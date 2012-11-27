@@ -9,20 +9,41 @@
 
 .logo {
 	position: absolute;
-	top: 40%;
-	margin-top: -100px;
+	top: 10%;
 	width: 100%;
+	height: 70%;
 	color: @logoLight;
 	
-	h1 {
-		font-size: 200px;
-		line-height: 75%;
-		margin: 0;
+	.planet-names {
+		h2 {
+			font-size: 16px;
+			margin: 0;
+		}
 	}
 	
-	h2 {
-		font-size: 16px;
-		margin: 0;
+	.prospect-name {
+		height: 33%;
+		
+		.row-fluid, [class*="span"] {
+			height: 100%;
+		}
+		
+		h1 {
+			font-size: 200px;
+			line-height: 75%;
+			width: 100%;
+			margin: 0;
+		}
+		
 	}
 	
+	.prospect {
+		padding-bottom: 20px;
+		height: 33%
+	}
+	
+	.nasa {
+		padding-top: 20px;
+		height: 33%
+	}
 }
