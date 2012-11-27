@@ -56,7 +56,7 @@ function ( $, _s ) {
 	_de.$window.trigger( 'resize' );
     
     function OnWindowResized () {
-       console.log( 'resize' );
+       
 		_s.w = _de.$window.width();
         _s.h = _de.$window.height();
 		
@@ -66,7 +66,7 @@ function ( $, _s ) {
 		
 		var lnHeight = _de.$logoName.height();
 		
-		_de.$logoName.find( ".letter" ).each( function () {
+		_de.$logoName.find( '[class^="letter"]' ).each( function () {
 			
 			var $element = $( this );
 			var elWidth = $element.width();

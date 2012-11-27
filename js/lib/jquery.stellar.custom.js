@@ -204,12 +204,12 @@
 		},
 		refresh: function() {
 			var self = this,
-				oldLeft = self._getScrollLeft(),
-				oldTop = self._getScrollTop();
-			console.log( 'oldTop', oldTop );
+				oldLeft = this._getScrollLeft(),
+				oldTop = this._getScrollTop();
+			
 			this._setScrollLeft(0);
 			this._setScrollTop(0);
-			console.log( '> new top', self._getScrollTop() );
+			
 			this._setOffsets();
 			this._findParticles();
 			this._findBackgrounds();
@@ -227,9 +227,12 @@
 					self._setScrollTop(oldTop);
 				});
 			}
-			console.log( 'oldTop2', oldTop );
-			self._setScrollLeft(oldLeft);
-			self._setScrollTop(oldTop);
+			
+			this._setScrollLeft(oldLeft);
+			this._setScrollTop(oldTop);
+			
+			this._repositionElements( true );
+			
 		},
 		_findParticles: function(){
 			var self = this,
@@ -476,7 +479,7 @@
 				this.verticalOffset = this.options.verticalOffset;
 			}
 		},
-		_repositionElements: function() {
+		_repositionElements: function( force ) {
 			var scrollLeft = this._getScrollLeft(),
 				scrollTop = this._getScrollTop(),
 				horizontalOffset,
@@ -493,9 +496,9 @@
 				newOffsetLeft,
 				newOffsetTop,
 				i;
-
+			
 			//First check that the scroll position or container size has changed
-			if (this.currentScrollLeft === scrollLeft && this.currentScrollTop === scrollTop && this.currentWidth === this.viewportWidth && this.currentHeight === this.viewportHeight) {
+			if (force !== true && this.currentScrollLeft === scrollLeft && this.currentScrollTop === scrollTop && this.currentWidth === this.viewportWidth && this.currentHeight === this.viewportHeight ) {
 				return;
 			} else {
 				this.currentScrollLeft = scrollLeft;
