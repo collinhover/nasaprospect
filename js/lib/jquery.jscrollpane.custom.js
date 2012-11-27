@@ -80,7 +80,7 @@ function( $ ){
 						maintainAtBottom = false, maintainAtRight = false;
 
 				settings = s;
-
+				
 				if (pane === undefined) {
 					originalScrollTop = elem.scrollTop();
 					originalScrollLeft = elem.scrollLeft();
@@ -120,7 +120,9 @@ function( $ ){
 					firstChild.css('margin-top', 0);
 					lastChild.css('margin-bottom', 0);
 					*/
-				} else {
+				}
+				else {
+					
 					elem.css('width', '');
 
 					maintainAtBottom = settings.stickToBottom && isCloseToBottom();
@@ -146,18 +148,21 @@ function( $ ){
 					pane.css('width', '');
 					elem.width(paneWidth);
 					
-					container.find('>.jspVerticalBar,>.jspHorizontalBar').remove().end();
+					// remove bars on reinit always?
+					//container.find('>.jspVerticalBar,>.jspHorizontalBar').remove();
+					
 				}
 				
 				suppressTriggers = true;
 				
 				contentWidthLast = contentWidth;
 				contentHeightLast = contentHeight;
-
+				
 				pane.css('overflow', 'auto');
 				if (s.contentWidth) {
 					contentWidth = s.contentWidth;
-				} else {
+				}
+				else {
 					contentWidth = pane[0].scrollWidth;
 				}
 				contentHeight = pane[0].scrollHeight;
@@ -165,27 +170,46 @@ function( $ ){
 
 				percentInViewH = contentWidth / paneWidth;
 				percentInViewV = contentHeight / paneHeight;
+				isScrollableVLast = isScrollableV;
+				isScrollableHLast = isScrollableH;
 				isScrollableV = percentInViewV > 1;
 				isScrollableH = percentInViewH > 1;
-
+				
 				//console.log(paneWidth, paneHeight, contentWidth, contentHeight, percentInViewH, percentInViewV, isScrollableH, isScrollableV);
-
+				
+				// remove bars only when not scrollable
+				
+				if ( isScrollableH !== true ) {
+					
+					container.find('>.jspHorizontalBar').remove();
+					
+				}
+				if ( isScrollableV !== true ) {
+					
+					container.find('>.jspVerticalBar').remove();
+					
+				}
+				
 				if (!(isScrollableH || isScrollableV)) {
 					
 					// trigger one final reposition / scroll
-					_positionDragX( contentPosition.x, true );
-					_positionDragY( contentPosition.y, true );
+					_positionDragX( scrollPosition.x, true );
+					_positionDragY( scrollPosition.y, true );
 					
 					elem.removeClass('jspScrollable');
 					pane.css({
 						top: 0,
 						width: container.width() - originalPaddingTotalWidth
 					});
+					
 					removeMousewheel();
 					removeFocusHandler();
 					removeKeyboardNav();
 					removeClickOnTrack();
-				} else {
+					
+				}
+				else {
+					
 					elem.addClass('jspScrollable');
 					
 					isMaintainingPositon = settings.maintainPosition && (scrollPosition.y || scrollPosition.x);
@@ -197,10 +221,10 @@ function( $ ){
 					initialiseVerticalScroll();
 					initialiseHorizontalScroll();
 					resizeScrollbars();
-
+					
 					if (isMaintainingPositon) {
-						scrollToX(maintainAtRight  ? (contentWidth  - paneWidth ) : contentPositionLastX, false);
-						scrollToY(maintainAtBottom ? (contentHeight - paneHeight) : contentPositionLastY, false);
+						//scrollToX(maintainAtRight  ? (contentWidth  - paneWidth ) : contentPositionLastX, 0 );
+						//scrollToY(maintainAtBottom ? (contentHeight - paneHeight) : contentPositionLastY, 0 );
 					}
 
 					initFocusHandler();
@@ -233,8 +257,8 @@ function( $ ){
 					clearInterval(reinitialiseInterval);
 				}
 				
-				originalScrollTop && elem.scrollTop(0) && scrollToY(originalScrollTop, false);
-				originalScrollLeft && elem.scrollLeft(0) && scrollToX(originalScrollLeft, false);
+				//originalScrollTop && elem.scrollTop(0) && scrollToY(originalScrollTop, 0);
+				//originalScrollLeft && elem.scrollLeft(0) && scrollToX(originalScrollLeft, 0);
 				
 				suppressTriggers = false;
 				
@@ -243,24 +267,29 @@ function( $ ){
 			}
 
 			function initialiseVerticalScroll() {
+				
 				if (isScrollableV) {
+					
+					if ( isScrollableVLast !== true ) {
+						
+						container.append(
+							$('<div class="jspVerticalBar" />').append(
+								$('<div class="jspCap jspCapTop" />'),
+								$('<div class="jspTrack" />').append(
+									$('<div class="jspDrag" />').append(
+										$('<div class="jspDragTop" />'),
+										$('<div class="jspDragBottom" />')
+									)
+								),
+								$('<div class="jspCap jspCapBottom" />')
+							)
+						);
 
-					container.append(
-						$('<div class="jspVerticalBar" />').append(
-							$('<div class="jspCap jspCapTop" />'),
-							$('<div class="jspTrack" />').append(
-								$('<div class="jspDrag" />').append(
-									$('<div class="jspDragTop" />'),
-									$('<div class="jspDragBottom" />')
-								)
-							),
-							$('<div class="jspCap jspCapBottom" />')
-						)
-					);
-
-					verticalBar = container.find('>.jspVerticalBar');
-					verticalTrack = verticalBar.find('>.jspTrack');
-					verticalDrag = verticalTrack.find('>.jspDrag');
+						verticalBar = container.find('>.jspVerticalBar');
+						verticalTrack = verticalBar.find('>.jspTrack');
+						verticalDrag = verticalTrack.find('>.jspDrag');
+						
+					}
 
 					if (settings.showArrows) {
 						arrowUp = $('<a class="jspArrow jspArrowUp" />').on(
@@ -316,13 +345,16 @@ function( $ ){
 							return false;
 						}
 					);
+					
 					sizeVerticalScrollbar();
+					
 				}
+				
 			}
 
 			function sizeVerticalScrollbar() {
 				verticalTrack.height(verticalTrackHeight + 'px');
-				scrollPosition.y = 0;
+				//scrollPosition.y = 0;
 				scrollbarWidth = settings.verticalGutter + verticalTrack.outerWidth();
 
 				// Make the pane thinner to allow for the vertical scrollbar
@@ -339,24 +371,29 @@ function( $ ){
 			}
 
 			function initialiseHorizontalScroll() {
+				
 				if (isScrollableH) {
+					
+					if ( isScrollableHLast !== true ) {
+						
+						container.append(
+							$('<div class="jspHorizontalBar" />').append(
+								$('<div class="jspCap jspCapLeft" />'),
+								$('<div class="jspTrack" />').append(
+									$('<div class="jspDrag" />').append(
+										$('<div class="jspDragLeft" />'),
+										$('<div class="jspDragRight" />')
+									)
+								),
+								$('<div class="jspCap jspCapRight" />')
+							)
+						);
 
-					container.append(
-						$('<div class="jspHorizontalBar" />').append(
-							$('<div class="jspCap jspCapLeft" />'),
-							$('<div class="jspTrack" />').append(
-								$('<div class="jspDrag" />').append(
-									$('<div class="jspDragLeft" />'),
-									$('<div class="jspDragRight" />')
-								)
-							),
-							$('<div class="jspCap jspCapRight" />')
-						)
-					);
-
-					horizontalBar = container.find('>.jspHorizontalBar');
-					horizontalTrack = horizontalBar.find('>.jspTrack');
-					horizontalDrag = horizontalTrack.find('>.jspDrag');
+						horizontalBar = container.find('>.jspHorizontalBar');
+						horizontalTrack = horizontalBar.find('>.jspTrack');
+						horizontalDrag = horizontalTrack.find('>.jspDrag');
+						
+					}
 
 					if (settings.showArrows) {
 						arrowLeft = $('<a class="jspArrow jspArrowLeft" />').on(
@@ -402,9 +439,12 @@ function( $ ){
 							return false;
 						}
 					);
+					
 					horizontalTrackWidth = container.innerWidth();
 					sizeHorizontalScrollbar();
+					
 				}
+				
 			}
 
 			function sizeHorizontalScrollbar() {
@@ -458,7 +498,9 @@ function( $ ){
 					}
 					horizontalDrag.width(horizontalDragWidth + 'px');
 					dragMax.x = horizontalTrackWidth - horizontalDragWidth;
-					_positionDragX(scrollPosition.x); // To update the state for the arrow buttons
+					
+					// force update to position all new items correctly
+					_positionDragX(scrollPosition.x, true);
 				}
 				if (isScrollableV) {
 					verticalDragHeight = Math.ceil(1 / percentInViewV * verticalTrackHeight);
@@ -469,7 +511,9 @@ function( $ ){
 					}
 					verticalDrag.height(verticalDragHeight + 'px');
 					dragMax.y = Math.round( verticalTrackHeight - verticalDragHeight );
-					_positionDragY(scrollPosition.y); // To update the state for the arrow buttons
+					
+					// force update to position all new items correctly
+					_positionDragY(scrollPosition.y, true);
 				}
 				
 			}
@@ -1572,7 +1616,6 @@ function( $ ){
 						
 						handleMultiScroll( destX, destY, duration, animateParameters );
 						return this;
-						
 					},
 					// Scrolls the pane by the specified amount of pixels. 
 					scrollByX: function(deltaX, duration, animateParameters) {
@@ -1580,7 +1623,6 @@ function( $ ){
 							percentScrolled = destX / (contentWidth - paneWidth);
 						positionDragX(percentScrolled * dragMax.x, duration, animateParameters);
 						return this;
-						
 					},
 					// Scrolls the pane by the specified amount of pixels. 
 					scrollByY: function(deltaY, duration, animateParameters) {
@@ -1588,7 +1630,6 @@ function( $ ){
 							percentScrolled = destY / (contentHeight - paneHeight);
 						positionDragY(percentScrolled * dragMax.y, duration, animateParameters);
 						return this;
-						
 					},
 					// Positions the horizontal drag at the specified x position (and updates the viewport to reflect this).
 					positionDragX: function (destX, duration, animateParameters) {

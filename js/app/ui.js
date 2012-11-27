@@ -6,7 +6,7 @@ define( [
 	"mwheelIntent",
 	"jquery.mousewheel",
 	"jquery.jscrollpane.custom",
-	"jquery.stellar"
+	"jquery.stellar.custom"
 ],
 function ( $, _s ) {
 	
@@ -32,13 +32,13 @@ function ( $, _s ) {
 	
 	_de.$scrollable.jScrollPane( scrollSettings );
 	
+	_s.navigator = _de.$body.data( 'jsp' );
+	
 	/*===================================================
 	
 	parallax
 	
 	=====================================================*/
-	
-	_s.navigator = _de.$body.data( 'jsp' );
 	
 	_s.navigator.getContentPane().stellar( {
 		scrollProperty: 'position'
@@ -56,7 +56,7 @@ function ( $, _s ) {
 	_de.$window.trigger( 'resize' );
     
     function OnWindowResized () {
-       
+       console.log( 'resize' );
 		_s.w = _de.$window.width();
         _s.h = _de.$window.height();
 		

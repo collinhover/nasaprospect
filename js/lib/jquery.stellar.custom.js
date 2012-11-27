@@ -35,24 +35,24 @@
 			},
 			position: {
 				getTop: function($elem) { return parseInt($elem.css('top'), 10) * -1; },
-				setTop: function($elem, val) { $elem.css('top', val); },
+				setTop: function($elem, val) { $elem.css('top', val * -1); },
 
 				getLeft: function($elem) { return parseInt($elem.css('left'), 10) * -1; },
-				setLeft: function($elem, val) { $elem.css('left', val); }
+				setLeft: function($elem, val) { $elem.css('left', val * -1); }
 			},
 			margin: {
 				getTop: function($elem) { return parseInt($elem.css('margin-top'), 10) * -1; },
-				setTop: function($elem, val) { $elem.css('margin-top', val); },
+				setTop: function($elem, val) { $elem.css('margin-top', val * -1); },
 
 				getLeft: function($elem) { return parseInt($elem.css('margin-left'), 10) * -1; },
-				setLeft: function($elem, val) { $elem.css('margin-left', val); }
+				setLeft: function($elem, val) { $elem.css('margin-left', val * -1); }
 			},
 			transform: {
 				getTop: function($elem) { return ($elem.css(vendorPrefix + 'transform') !== 'none' ? parseInt($elem.css(vendorPrefix + 'transform').match(/(-?[0-9]+)/g)[5], 10) * -1 : 0); },
-				setTop: function($elem, val) { setTransform($elem, val, 'Y'); },
+				setTop: function($elem, val) { setTransform($elem, val * -1, 'Y'); },
 
 				getLeft: function($elem) { return ($elem.css(vendorPrefix + 'transform') !== 'none' ? parseInt($elem.css(vendorPrefix + 'transform').match(/(-?[0-9]+)/g)[4], 10) * -1 : 0); },
-				setLeft: function($elem, val) {	setTransform($elem, val, 'X');	}
+				setLeft: function($elem, val) {	setTransform($elem, val * -1, 'X');	}
 			}
 		},
 
@@ -206,10 +206,10 @@
 			var self = this,
 				oldLeft = self._getScrollLeft(),
 				oldTop = self._getScrollTop();
-
+			console.log( 'oldTop', oldTop );
 			this._setScrollLeft(0);
 			this._setScrollTop(0);
-
+			console.log( '> new top', self._getScrollTop() );
 			this._setOffsets();
 			this._findParticles();
 			this._findBackgrounds();
@@ -227,7 +227,7 @@
 					self._setScrollTop(oldTop);
 				});
 			}
-
+			console.log( 'oldTop2', oldTop );
 			self._setScrollLeft(oldLeft);
 			self._setScrollTop(oldTop);
 		},
