@@ -37,6 +37,8 @@ function ( $, Signal ) {
 	_de.$body = _de.$document.find( "body" );
 	_de.$scrollable = $( ".scrollable" );
 	
+	_de.$logoName = $( ".prospect-name" );
+	
 	_de.$solarSystem = $( "#solar-system" );
 	_de.$section = _de.$solarSystem.find( "section" );
 	

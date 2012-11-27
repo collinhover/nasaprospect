@@ -14,36 +14,52 @@
 	height: 70%;
 	color: @logoLight;
 	
-	.planet-names {
-		h2 {
-			font-size: 16px;
-			margin: 0;
-		}
-	}
-	
 	.prospect-name {
 		height: 33%;
+		width: 70%;
+		margin: 0 auto;
 		
 		.row-fluid, [class*="span"] {
 			height: 100%;
 		}
 		
-		h1 {
-			font-size: 200px;
-			line-height: 75%;
-			width: 100%;
-			margin: 0;
-		}
-		
+	}
+	
+	.letter {
+		width: 11%;
+		height: 100%;
+		display: inline-block;
+	}
+	
+	.letter:first-child {
+		margin-left: 0;
+	}
+	
+	.letter:last-child {
+		margin-right: 0;
+	}
+	
+	h1 {
+		font-size: 200px;
+		line-height: 75%;
+		margin: 0;
+		margin-top: 20px;
+	}
+	
+	h2 {
+		font-size: 16px;
+		line-height: 100%;
+		margin: 0;
+		display: inline;
 	}
 	
 	.prospect {
-		padding-bottom: 20px;
-		height: 33%
+		padding-bottom: 2%;
+		height: 30%
 	}
 	
 	.nasa {
-		padding-top: 20px;
-		height: 33%
+		padding-top: 2%;
+		height: 30%
 	}
 }

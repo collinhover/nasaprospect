@@ -6,8 +6,7 @@ define( [
 	"mwheelIntent",
 	"jquery.mousewheel",
 	"jquery.jscrollpane.custom",
-	"jquery.stellar",
-	"jquery.fittext"
+	"jquery.stellar"
 ],
 function ( $, _s ) {
 	
@@ -53,8 +52,6 @@ function ( $, _s ) {
 	
 	// resize once on start
 	
-	$( ".prospect-name h1" ).fitText();
-	
 	_de.$window.on( 'resize', $.throttle( _s.throttleTimeLong, OnWindowResized ) );
 	_de.$window.trigger( 'resize' );
     
@@ -64,6 +61,31 @@ function ( $, _s ) {
         _s.h = _de.$window.height();
 		
 		_s.signals.onResized.dispatch( _s.w, _s.h );
+		
+		// keep logo type filling space
+		
+		var lnHeight = _de.$logoName.height();
+		
+		_de.$logoName.find( ".letter" ).each( function () {
+			
+			var $element = $( this );
+			var elWidth = $element.width();
+			var $h1 = $element.find( "h1" );
+			var $h2 = $element.find( "h2" );
+			
+			$h2.css( 'font-size', '' );
+			
+			var h2Width = $h2.width();
+			
+			if ( h2Width > elWidth ) {
+				
+				$h2.css( 'font-size', elWidth / 4 );
+				
+			}
+			
+			$h1.css( 'font-size', Math.min( lnHeight - $h2.height(), elWidth ) * 1.3 );
+			
+		} );
 		
 		// refresh scroll panes
 		
