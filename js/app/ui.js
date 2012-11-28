@@ -1,9 +1,10 @@
 define( [ 
 	"jquery",
 	"app/shared",
-	"jquery.throttle-debounce.custom",
 	"hammer.custom",
+	"bootstrap",
 	"mwheelIntent",
+	"jquery.throttle-debounce.custom",
 	"jquery.mousewheel",
 	"jquery.jscrollpane.custom",
 	"jquery.stellar.custom"
@@ -24,7 +25,8 @@ function ( $, _s ) {
 	
 	var scrollSettings = {
 		verticalGutter : -scrollbarV.width(),
-		horizontalGutter: -scrollbarH.height()
+		horizontalGutter: -scrollbarH.height(),
+		hijackInternalLinks: true
 	};
 	
 	scrollbarV.remove();
@@ -43,6 +45,49 @@ function ( $, _s ) {
 	_s.navigator.getContentPane().stellar( {
 		scrollProperty: 'position'
 	} );
+	
+	/*===================================================
+	
+	sticky
+	
+	=====================================================*/
+	
+	// load sticky late so it can use throttle to improve performance
+	
+	require( [
+		"jquery.multi-sticky"
+	],
+	function () {
+		
+		_de.$stickied.each( function () {
+			
+			var $stickied = $( this );
+			var $target = $( $stickied.data( "target" ) );
+			var stickyParameters = {
+				//handlePosition: false
+			};
+			
+			// if target empty, assume body
+			
+			if ( $target.length === 0 ) {
+				
+				$target = _de.$body;
+				stickyParameters.scrollTop = function () {
+					
+					return _s.navigator.getContentPositionY();
+					
+				};
+				
+			}
+			
+			stickyParameters.scrollTarget = $target;
+			
+			$stickied.removeClass( 'is-sticky' ).sticky( stickyParameters );
+			
+		} );
+		
+	}
+	);
 	
 	/*===================================================
 	
@@ -86,6 +131,15 @@ function ( $, _s ) {
 			$h1.css( 'font-size', Math.min( lnHeight - $h2.height(), elWidth ) * 1.3 );
 			
 		} );
+		
+		// keep nav at correct width
+		
+		var $items = _de.$navbarPlanets.find( 'li' );
+		var navHeight = _de.$navPlanets.height();
+		var numItems = $items.length;
+		var heightPerItem = navHeight / numItems;
+		
+		_de.$navbarPlanets.css( 'width', heightPerItem );
 		
 		// refresh scroll panes
 		

@@ -120,13 +120,13 @@ function ( $, _s, _ui, _snd, Signal ) {
 	=====================================================*/
 	
 	function Activate () {
-		console.log( 'Activate', this.$element.attr( 'id' ) );
+		
 		this.soundHandlers.element.Play();
 		
 	}
 	
 	function Deactivate () {
-		console.log( 'Deactivate', this.$element.attr( 'id' ) );
+		
 		this.StopAll();
 		
 		this.soundHandlers.element.Stop();

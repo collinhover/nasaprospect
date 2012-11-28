@@ -11,7 +11,7 @@ define( [
     'jquery',
     "TweenMax"
 ],
-function( $ ){
+function ( $ ){
 
 	$.fn.jScrollPane = function(settings)
 	{
@@ -510,7 +510,7 @@ function( $ ){
 						verticalDragHeight = settings.verticalDragMinHeight;
 					}
 					verticalDrag.height(verticalDragHeight + 'px');
-					dragMax.y = Math.round( verticalTrackHeight - verticalDragHeight );
+					dragMax.y = verticalTrackHeight - verticalDragHeight;
 					
 					// force update to position all new items correctly
 					_positionDragY(scrollPosition.y, true);
@@ -709,7 +709,7 @@ function( $ ){
 				}
 				
 				animateParameters = animateParameters || {};
-				animateParameters.y = Math.round( Math.max( 0, Math.min( dragMax.y, destY ) ) );
+				animateParameters.y = Math.max( 0, Math.min( dragMax.y, destY ) );
 				animateParameters.onUpdate = positionDragUpdateY;
 				
 				if ( settings.animate !== true || scrollPosition.y === animateParameters.y || duration === false ) {
@@ -744,9 +744,9 @@ function( $ ){
 				
 				// find basic destination y and top
 				
-				destY = Math.round( Math.max( 0, Math.min( dragMax.y, destY ) ) );
+				destY = Math.max( 0, Math.min( dragMax.y, destY ) );
 				var percentScrolled = destY / dragMax.y;
-				var destTop = Math.round( percentScrolled * (contentHeight - paneHeight) );
+				var destTop = percentScrolled * (contentHeight - paneHeight);
 				
 				if ( isNaN( destTop ) ) {
 					
@@ -777,7 +777,9 @@ function( $ ){
 					
 					pane.css('top', -destTop);
 					
-					elem.trigger('jsp-scroll-y', [destTop, isAtTop, isAtBottom]).trigger('scroll');
+					elem
+						.trigger( 'jsp-scroll-y', [destTop, isAtTop, isAtBottom] )
+						.trigger( 'scroll' );
 					
 					handleTriggers();
 					
@@ -792,7 +794,7 @@ function( $ ){
 				}
 				
 				animateParameters = animateParameters || {};
-                animateParameters.x = Math.round( Math.max( 0, Math.min( dragMax.x, destX ) ) );
+                animateParameters.x = Math.max( 0, Math.min( dragMax.x, destX ) );
                 animateParameters.onUpdate = positionDragUpdateX;
 				
 				if ( settings.animate !== true || scrollPosition.x === animateParameters.x || duration === false ) {
@@ -825,10 +827,10 @@ function( $ ){
 					destX = horizontalDrag.position().left;
 				}
 				
-				destX = Math.round( Math.max( 0, Math.min( dragMax.x, destX ) ) );
+				destX = Math.max( 0, Math.min( dragMax.x, destX ) );
 				
 				var percentScrolled = destX / dragMax.x;
-				var destLeft = Math.round( percentScrolled * (contentWidth - paneWidth) );
+				var destLeft = percentScrolled * (contentWidth - paneWidth);
 				
 				if ( isNaN( destLeft ) ) {
 					
@@ -858,7 +860,9 @@ function( $ ){
 					if ( horizontalDrag ) horizontalDrag.css('left', destX);
 					pane.css('left', -destLeft);
 					
-					elem.trigger('jsp-scroll-x', [destLeft, isAtLeft, isAtRight]).trigger('scroll');
+					elem
+						.trigger('jsp-scroll-x', [destLeft, isAtLeft, isAtRight])
+						.trigger('scroll');
 					
 					handleTriggers();
 					
@@ -893,7 +897,6 @@ function( $ ){
 			function scrollToElement( elements, stickToTop, duration, animateParameters) {
 				
 				var destY, destX;
-				
 				var $elements = $( elements );
 				var $elementClosest = $elements;
 				var screenCenterX = contentPosition.x + paneWidth * 0.5;
@@ -937,6 +940,20 @@ function( $ ){
 						destX = boundsMin.left - Math.max( 0, settings.horizontalGutter );
 					} else if (boundsMin.right > maxVisibleEleLeft) { // element is to the right viewport
 						destX = boundsMin.right - paneWidth + Math.max( 0, settings.horizontalGutter );
+					}
+					
+					animateParameters = animateParameters || {};
+					animateParameters.ease = animateParameters.ease || settings.scrollToElementEase;
+					
+					if ( settings.scrollToElementAnimate !== true ) {
+						
+						duration = 0;
+						
+					}
+					else if ( duration !== false && isNumber( duration ) !== true ) {
+						
+						duration = Math.min( settings.scrollToElementDurationMax, settings.scrollToElementDuration * ( Math.sqrt( distanceMin ) / settings.scrollToElementBaseDistance ) );
+						
 					}
 					
 					handleMultiScroll( destX, destY, duration, animateParameters );
@@ -1332,7 +1349,7 @@ function( $ ){
 				
 				if ( typeof trigger !== 'undefined' ) {
 					
-					var i, trigger;
+					var i;
 					
 					for( i = triggers.length - 1; i >= 0; i-- ) {
 						
@@ -1751,8 +1768,13 @@ function( $ ){
 		horizontalDragMinWidth: 0,
 		horizontalDragMaxWidth: 99999,
 		contentWidth: undefined,
-		animateDuration: 0.3,
 		animate: true,
+		animateDuration: 0.3,
+		scrollToElementAnimate: true,
+		scrollToElementDuration: 1,
+		scrollToElementDurationMax: 2,
+		scrollToElementBaseDistance: 500,
+		scrollToElementEase: Strong.easeOut,
 		hijackInternalLinks: false,
 		verticalGutter: 4,
 		horizontalGutter: 4,
@@ -1769,7 +1791,7 @@ function( $ ){
 		keyboardSpeed: 0,
 		initialDelay: 300,        // Delay before starting repeating
 		speed: 60,		// Default speed when others falsey
-		scrollPagePercent: .8		// Percent of visible area scrolled when pageUp/Down or track area pressed
+		scrollPagePercent: 0.8		// Percent of visible area scrolled when pageUp/Down or track area pressed
 	};
 
 } );
