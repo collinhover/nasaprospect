@@ -59,11 +59,12 @@
 @baseLineHeight:        22px;
 @altFontFamily:         @sansFontFamily;
 
-@headingsFontFamily:    "Copperplate", @baseFontFamily; // empty to use BS default, @baseFontFamily
+@headingsFontFamily:    'BebasNeue', @baseFontFamily; // empty to use BS default, @baseFontFamily
 @headingsFontWeight:    normal;    // instead of browser default, bold
 @headingsColor:         inherit; // empty to use BS default, @textColor
 
-@logoFontFamily: 'BebasNeue', @headingsFontFamily;
+@logoFontFamily: @headingsFontFamily;
+@logoAltFontFamily: "Copperplate", @logoFontFamily;
 
 // Tables
 // -------------------------
@@ -289,8 +290,8 @@
 
 // Containers
 // ----------------------------
-@uiPaneMinHeight: 60px;
 @uiPaneMinWidth: 60px;
+@uiPaneMinHeight: 60px;
 @uiPaneColumnSidesWidth: 10%;
 @uiPanePaddingLeft: 20px;
 @uiPanePaddingRight: @uiPanePaddingLeft;

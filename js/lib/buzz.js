@@ -760,8 +760,8 @@ var buzz = {
             return this;
         };
 
-        this.fade = function( from, to, duration, callback ) {
-            fn( 'fade', from, to, duration, callback );
+        this.fadeTo = function( to, duration, callback ) {
+            fn( 'fadeTo', to, duration, callback );
             return this;
         };
 

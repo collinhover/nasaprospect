@@ -73,6 +73,12 @@
     
 }
 
+.container-fill {
+	position: relative;
+	.fill;
+	.fillMin;
+}
+
 @media (max-width: 767px) {    
     .container {
         padding-left: 20px;
@@ -161,4 +167,11 @@
 
 .is-sticky {
 	z-index: 9999;
+	position: fixed;
+	
+	&.container-fill {
+		top: 0;
+		left: 0;
+	}
+	
 }

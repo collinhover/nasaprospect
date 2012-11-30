@@ -795,6 +795,24 @@
 	zoom:1;
 }
 
+.sidekick-type {
+	font-family: @serifFontFamily;
+	font-style: italic;
+	font-weight: normal;
+}
+
+.robot-type {
+    font-family: @monoFontFamily;
+	font-weight: normal;
+}
+
+.inline-type {
+	.inline-block;
+	vertical-align: middle;
+    padding: 0 5px;
+	margin: 0;
+}
+
 .inline {
     
     p {
@@ -876,20 +894,8 @@ a.dim:hover, button.dim:hover, .btn.dim:hover {
 	.fill;
 }
 
-.fillContainer {
-	.fill;
-	.fillMin;
-}
-
 .fillTopLeft {
 	.fill;
-	position: absolute;
-	left: 0;
-	top: 0;
-}
-
-.fillTopLeftMin {
-	.fillContainer;
 	position: absolute;
 	left: 0;
 	top: 0;

@@ -1,0 +1,35 @@
+/* toggles
+-------------------------------------------------------------------------------*/
+
+.toggle {
+	
+	.toggle-on, .toggle-off {
+		cursor: pointer;
+	}
+	
+	.state-off {
+		position: relative;
+		opacity: 1;
+		z-index: 1;
+	}
+	
+	.state-on {
+		position: relative;
+		opacity: 0;
+	}
+	
+	&.on {
+		
+		.state-off {
+			.hidden;
+			opacity: 0;
+			.transition( none );
+		}
+		
+		.state-on {
+			opacity: 1;
+		}
+		
+	}
+	
+}

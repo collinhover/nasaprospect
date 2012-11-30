@@ -42,8 +42,13 @@
 						scrollTargetElements,
                         id = $element.attr('id'),
                         $wrapper = $('<div></div>')
-                            .attr('id', id + '-sticky-wrapper')
                             .addClass(data.wrapperClassName);
+					
+					if ( typeof id === 'string' && id.length > 0 ) {
+						
+                        $wrapper.attr('id', id + '-sticky-wrapper');
+						
+					}
 					
 					// if this element not already sticked
                     

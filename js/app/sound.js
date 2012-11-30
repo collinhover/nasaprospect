@@ -3,17 +3,60 @@ define( [
 	"app/shared",
 	"app/utilities",
 	"buzz",
-	"TweenMax"
+	"TweenMax",
+	"MobileRangeSlider",
+	"jquery.throttle-debounce.custom"
 ],
 function ( $, _s, _utils ) {
 	
+	var _de = _s.domElements;
 	var _snd = {
-		soundDurationBase: 1000,
-		duration: 100,
 		options: {
 			descendents: false
 		}
 	};
+	var _durationFade = 500;
+	var _durationFadeMax = 1000;
+	var _durationSoundBase = 1000;
+	var _volume = 100;
+	var _volumeLast = 0;
+	
+	Object.defineProperty( _snd, 'volume', { 
+		get : function () { return _volume; },
+		set: function ( volume ) {
+			
+			if ( _volume !== volume ) {
+				
+				_volumeLast = _volume;
+				_volume = volume;
+				
+			}
+			
+			buzz.defaults.volume = _volume;
+			buzz.all().fadeTo( _volume, _durationFade );
+			
+			_de.$toggleSound.each( function () {
+				
+				var $element = $( this );
+				var $slider = $element.data( '$slider' );
+				var sliderAPI;
+				
+				if ( $slider ) {
+					
+					sliderAPI = $slider.data( 'sliderAPI' );
+					
+					if ( sliderAPI instanceof MobileRangeSlider && sliderAPI.value !== _volume ) {
+						
+						sliderAPI.setValue( _volume );
+						
+					}
+					
+				}
+				
+			} );
+			
+		}
+	});
 	
 	/*===================================================
 	
@@ -39,9 +82,8 @@ function ( $, _s, _utils ) {
 		this.$element = $( parameters.element || parameters.$element );
 		this.file = parameters.file;
 		this.id = parameters.id || this.file;
-		this.fade = ParseAttribute( parameters.fade, _snd.duration, false );
+		this.fade = ParseAttribute( parameters.fade, _durationFade, false );
 		this.loop = ParseAttribute( parameters.loop, true, false );
-		this.volume = parameters.volume || 100;
 		
 		this.trigger = GenerateScrollTrigger( this );
 		
@@ -76,8 +118,7 @@ function ( $, _s, _utils ) {
 				file: $element.attr( "data-sound" ),
 				id: $element.attr( "data-sound-id" ),
 				fade: $element.attr( "data-sound-fade" ),
-				loop: $element.attr( "data-sound-loop" ),
-				volume: $element.attr( "data-sound-volume" )
+				loop: $element.attr( "data-sound-loop" )
 			} );
 				
 		} );
@@ -276,18 +317,24 @@ function ( $, _s, _utils ) {
 	function PlaySound ( datum, parameters ) {
 		
 		var sound = SoundCheck( datum ),
-			durationActual;
+			durationFade;
 		
 		if ( typeof sound !== 'undefined' ) {
 			
 			sound.play()
+				.setVolume( 0 )
 				.bind( 'playing', function () {
 					
 					if ( datum.fade !== false ) {
 						
-						durationActual = Math.round( ( ( sound.getDuration() * 1000 ) / _snd.soundDurationBase ) * ( ( parameters && parameters.duration ) || ( _utils.IsNumber( datum.fade ) && datum.fade ) || _snd.duration ) );
+						durationFade = Math.max( _durationFade, Math.min( _durationFadeMax, Math.round( ( ( sound.getDuration() * 1000 ) / _durationSoundBase ) * ( ( parameters && parameters.duration ) || ( _utils.IsNumber( datum.fade ) && datum.fade ) || _durationFade ) ) ) );
 						
-						sound.fadeIn( durationActual );
+						sound.fadeTo( _volume, durationFade );
+						
+					}
+					else {
+						
+						sound.setVolume( _volume );
 						
 					}
 					
@@ -296,11 +343,6 @@ function ( $, _s, _utils ) {
 						sound.unloop().loop();
 						
 					}
-					
-				} )
-				.bind( 'ended', function () {
-					
-					console.log( datum.id, datum.sound );
 					
 				} );
 			
@@ -323,15 +365,15 @@ function ( $, _s, _utils ) {
 	function StopSound ( datum, parameters ) {
 		
 		var sound = datum.sound,
-			durationActual;
+			durationFade;
 		
 		if ( sound && sound.isPaused() !== true ) {
 			
 			if ( datum.fade !== false ) {
 				
-				durationActual = Math.round( ( ( sound.getDuration() * 1000 ) / _snd.soundDurationBase ) * ( ( parameters && parameters.duration ) || ( _utils.IsNumber( datum.fade ) && datum.fade ) || _snd.duration ) );
+				durationFade = Math.max( _durationFade, Math.min( _durationFadeMax, Math.round( ( ( sound.getDuration() * 1000 ) / _durationSoundBase ) * ( ( parameters && parameters.duration ) || ( _utils.IsNumber( datum.fade ) && datum.fade ) || _durationFade ) ) ) );
 				
-				sound.fadeOut( durationActual, function () {
+				sound.fadeOut( durationFade, function () {
 					sound.stop();
 				} );
 				
@@ -352,7 +394,7 @@ function ( $, _s, _utils ) {
 	
 	=====================================================*/
 	
-	function FadeIn ( parameters ) {
+	/*function FadeIn ( parameters ) {
 		
 		this.ForData( parameters, FadeInSound, this );
 		
@@ -373,9 +415,9 @@ function ( $, _s, _utils ) {
 		
 		if ( parameters.fromZero !== false ) sound.setVolume( 0 );
 		
-		var durationActual = ( sound.durationEstimate / _snd.soundDurationBase ) * ( parameters.duration || datum.fade || _snd.duration );
+		var durationFade = ( sound.durationEstimate / _durationSoundBase ) * ( parameters.duration || datum.fade || _durationFade );
 		
-		TweenMax.to( from, durationActual, parameters );
+		TweenMax.to( from, durationFade, parameters );
 		
 	}
 	
@@ -398,11 +440,11 @@ function ( $, _s, _utils ) {
 			sound.setVolume( from.volume );
 		};
 		
-		var durationActual = ( sound.durationEstimate / _snd.soundDurationBase ) * ( parameters.duration || datum.fade || _snd.duration );
+		var durationFade = ( sound.durationEstimate / _durationSoundBase ) * ( parameters.duration || datum.fade || _durationFade );
 		
-		TweenMax.to( from, durationActual, parameters );
+		TweenMax.to( from, durationFade, parameters );
 		
-	}
+	}*/
 	
 	/*===================================================
 	
@@ -482,13 +524,121 @@ function ( $, _s, _utils ) {
 			datum.sound = new buzz.sound( _s.pathToAssets + datum.file, {
 				formats: [ "mp3", "ogg", "wav" ],
 				preload: true
-			} ).load();
+			} )
+			.load();
 			
 		}
 		
 		return datum.sound;
 		
 	}
+	
+	/*===================================================
+	
+	volume
+	
+	=====================================================*/
+	
+	function Mute () {
+		
+		_snd.volume = 0;
+		
+		_de.$toggleSound.removeClass( 'on' );
+		
+	}
+	
+	function Unmute () {
+		
+		if ( _volume !== _volumeLast ) {
+			
+			_snd.volume = _volumeLast;
+			
+			_de.$toggleSound.addClass( 'on' );
+			
+		}
+		
+	}
+	
+	/*===================================================
+	
+	ui
+	
+	=====================================================*/
+	
+	// for each sound toggle
+	
+	_de.$toggleSound.each( function () {
+		
+		var $element = $( this );
+		var $toggleOn = $element.find( '.toggle-on' );
+		var $toggleOff = $element.find( '.toggle-off' );
+		var $slider = $element.find( '.slider' );
+		var sliderAPI;
+		
+		if ( $slider.length > 0 ) {
+			
+			sliderAPI = new MobileRangeSlider( $slider.get( 0 ), {
+				min: 0,
+				max: 100,
+				value: _volume,
+				change: $.throttle( _s.throttleTimeLong, function( volume ){
+					
+					if ( _volume !== volume ) {
+						
+						_snd.volume = volume;
+						
+					}
+					
+				} )
+			} );
+			
+			$slider.data( 'sliderAPI', sliderAPI );
+			$element.data( '$slider', $slider );
+			
+		}
+		
+		if ( $toggleOn.length === 0 && $toggleOff.length === 0 ) {
+			
+			$element.on( 'tap', function () {
+				
+				var $element = $( this );
+				
+				if ( $element.hasClass( 'on' ) ) {
+					
+					Mute();
+					
+				}
+				else {
+					
+					Unmute();
+					
+				}
+				
+			} );
+			
+		}
+		else {
+			
+			$toggleOn.on( 'tap', function () {
+				
+				Unmute();
+				
+			} );
+			
+			$toggleOff.on( 'tap', function () {
+				
+				Mute();
+				
+			} );
+			
+		}
+		
+		
+	} );
+	
+	// start muted
+	
+	Mute();
 	
 	/*===================================================
 	
@@ -509,8 +659,8 @@ function ( $, _s, _utils ) {
 	_snd.SoundHandler.prototype.ForData = ForData;
 	_snd.SoundHandler.prototype.GetData = GetData;
 	
-	_snd.SoundHandler.prototype.FadeIn = FadeIn;
-	_snd.SoundHandler.prototype.FadeOut = FadeOut;
+	_snd.Mute = Mute;
+	_snd.Unmute = Unmute;
 	
 	return _snd;
 	

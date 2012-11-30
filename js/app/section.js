@@ -7,6 +7,7 @@ define( [
 ],
 function ( $, _s, _ui, _snd, Signal ) {
 	
+	var _de = _s.domElements;
 	var _section = {};
 	
 	/*===================================================
@@ -48,6 +49,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 			.addClass( "land-bottom" )
 			.insertAfter( this.$explore );
 		
+		_de.$containerFill = _de.$containerFill.add( this.$landBottom );
+		
 		this.$orbitTop = this.$element.find( ".orbit-top" );
 		
 		this.$orbitBottom = this.$orbitTop
@@ -55,6 +58,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 			.removeClass( "orbit-top" )
 			.addClass( "orbit-bottom" )
 			.insertAfter( this.$landBottom );
+		
+		_de.$containerFill = _de.$containerFill.add( this.$orbitBottom );
 		
 		this.$orbit = this.$element.find( ".orbit" );
 		this.$land = this.$element.find( ".land" );
@@ -94,8 +99,6 @@ function ( $, _s, _ui, _snd, Signal ) {
 		this.onExploringStopped = new Signal();
 		
 		this.$planet.on( 'tap', $.proxy( this.ToOrbit, this ) );
-		
-		_ui.OnContentChanged( this.$element );
 		
 	}
 	
@@ -319,7 +322,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 	=====================================================*/
 	
 	function Resize ( w, h ) {
-		
+		/*
 		w = w || _s.w;
 		h = h || _s.h;
 		
@@ -343,7 +346,7 @@ function ( $, _s, _ui, _snd, Signal ) {
             "width": w,
             "min-height": h
         } );
-		
+		*/
 	}
 	
 	/*===================================================

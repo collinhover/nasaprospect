@@ -3,7 +3,11 @@
 
 .logo-type {
 	font-family: @logoFontFamily;
-	line-height: 100%;
+	text-transform: uppercase;
+}
+
+.logo-alt-type {
+	font-family: @logoAltFontFamily;
 	text-transform: uppercase;
 }
 
@@ -58,6 +62,7 @@
 		}
 		
 		h1 {
+			.logo-type;
 			font-size: 200px;
 			line-height: 75%;
 			margin: 0;
@@ -66,6 +71,7 @@
 		}
 		
 		h2 {
+			.logo-alt-type;
 			font-size: 16px;
 			line-height: 100%;
 			margin: 0;

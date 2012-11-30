@@ -35,8 +35,12 @@ function ( $, Signal ) {
 	_de.$window = $( window );
 	_de.$document = $( document );
 	_de.$body = _de.$document.find( "body" );
+	
 	_de.$scrollable = $( ".scrollable" );
-	_de.$stickied = $( ".is-sticky" );
+	_de.$stickable = $( ".stickyme, .is-sticky" );
+	_de.$toggleSound = $( ".toggle-sound" );
+	
+	_de.$containerFill = $( ".container-fill" );
 	
 	_de.$logoName = $( ".prospect-name" );
 	

@@ -59,12 +59,12 @@ function ( $, _s ) {
 	],
 	function () {
 		
-		_de.$stickied.each( function () {
+		_de.$stickable.each( function () {
 			
-			var $stickied = $( this );
-			var $target = $( $stickied.data( "target" ) );
+			var $element = $( this );
+			var $target = $( $element.data( "target" ) );
 			var stickyParameters = {
-				//handlePosition: false
+				handlePosition: false
 			};
 			
 			// if target empty, assume body
@@ -82,7 +82,7 @@ function ( $, _s ) {
 			
 			stickyParameters.scrollTarget = $target;
 			
-			$stickied.removeClass( 'is-sticky' ).sticky( stickyParameters );
+			$element.removeClass( 'is-sticky' ).sticky( stickyParameters );
 			
 		} );
 		
@@ -106,6 +106,13 @@ function ( $, _s ) {
         _s.h = _de.$window.height();
 		
 		_s.signals.onResized.dispatch( _s.w, _s.h );
+		
+		// fill container elements
+		
+		_de.$containerFill.css( {
+            "width": _s.w,
+            "height": _s.h
+        } );
 		
 		// keep logo type filling space
 		
@@ -134,7 +141,7 @@ function ( $, _s ) {
 		
 		// keep nav at correct width
 		
-		var $items = _de.$navbarPlanets.find( 'li' );
+		var $items = _de.$navPlanets.find( 'li' );
 		var navHeight = _de.$navPlanets.height();
 		var numItems = $items.length;
 		var heightPerItem = navHeight / numItems;

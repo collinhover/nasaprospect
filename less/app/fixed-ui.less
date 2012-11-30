@@ -1,0 +1,204 @@
+#ui {
+
+	/* nav
+	-------------------------------------------------------------------------------*/
+
+	#navbarPlanets {
+		position: relative;
+		width: 7%;
+		min-width: 40px;
+		max-width: 200px;
+		height: 100%;
+		box-sizing: border-box;
+		padding: 0 @uiPanePaddingRight 0 @uiPanePaddingLeft;
+		top: 0;
+		bottom: 0;
+		
+		.nav-planets {
+			position: absolute;
+			list-style: none;
+			width: 100%;
+			height: 60%;
+			top: 0;
+			bottom: 0;
+			margin: auto 0;
+			padding: 0;
+			
+			a {
+				display: block;
+			}
+			
+			[class^="nav-planet-"] {
+				position: relative;
+				width: 100%;
+				height: 11%;
+				
+				.aspect-shape {
+					text-indent: -200%;
+					overflow: hidden;
+					border-radius: 50%;
+					background-color: lighten( @logoDark, 10% );
+					background-color: rgba( 255, 255, 255, 0.1 );
+					.box-shadow( 0 0 10px rgba( 0, 0, 0, 0.2 ) );
+				}
+				
+				h2 {
+					height: 20px;
+					font-size: 20px;
+					letter-spacing: 0.1em;
+					position: absolute;
+					left: 100%;
+					top: 0;
+					bottom: 0;
+					margin: auto 0;
+					line-height: 100%;
+					padding: 0 10px 0 20px;
+					color: lighten( @logoDark, 20% );
+					color: rgba( 255, 255, 255, 0.2 );
+					opacity: 0;
+					.transition(e('opacity .3s linear'));
+				}
+				
+				&:hover {
+					
+					.aspect-shape {
+						background-color: lighten( @logoDark, 50% );
+						background-color: rgba( 255, 255, 255, 0.5 );
+					}
+					
+					h2 {
+						opacity: 1;
+						color: lighten( @logoDark, 40% );
+						color: rgba( 255, 255, 255, 0.4 );
+						.transition-delay( e('.5s') );
+					}
+					
+				}
+				
+			}
+			
+		}
+		
+		.nav-planet-mercury {
+			.aspect-shape {
+				width: 30%;
+				height: 30%;
+			}
+		}
+		
+		.nav-planet-venus {
+			.aspect-shape {
+				width: 38%;
+				height: 38%;
+			}
+		}
+		
+		.nav-planet-earth {
+			.aspect-shape {
+				width: 42%;
+				height: 42%;
+			}
+		}
+		
+		.nav-planet-mars {
+			.aspect-shape {
+				width: 34%;
+				height: 34%;
+			}
+		}
+		
+		.nav-planet-jupiter {
+			.aspect-shape {
+				width: 70%;
+				height: 70%;
+			}
+		}
+		
+		.nav-planet-saturn {
+			.aspect-shape {
+				width: 55%;
+				height: 55%;
+			}
+		}
+		
+		.nav-planet-uranus {
+			.aspect-shape {
+				width: 50%;
+				height: 50%;
+			}
+		}
+		
+		.nav-planet-neptune {
+			.aspect-shape {
+				width: 50%;
+				height: 50%;
+			}
+		}
+		
+	}
+
+	/* sound
+	-------------------------------------------------------------------------------*/
+
+	.toggle-sound {
+		position: relative;
+		display: inline-block;
+		margin-left: @uiPanePaddingLeft;
+		opacity: 0.2;
+		.transition(e('opacity .3s linear'));
+		
+		.state-on, .state-off {
+			display: inline-block;
+		}
+		
+		.slider-volume {
+			position: relative;
+			padding: 0;
+			margin: 0 0 0 10px;
+			opacity: 0;
+			-webkit-user-select: none;
+			-webkit-tap-highlight-color: rgba(0,0,0,0);
+			-webkit-text-size-adjust: none;
+			-webkit-touch-callout: none;
+			
+			.track {
+				position: absolute;
+				top: 40%;
+				left: 0;
+				right: 0;
+				height: 10%;
+				min-height: 6px;
+				background-color: lighten( @logoDark, 50% );
+				background-color: rgba( 255, 255, 255, 0.5 );
+				z-index: -1;
+			}
+
+			.knob {
+				cursor: pointer;
+				position: absolute;
+				width: 15%;
+				min-width: 10px;
+				height: 30%;
+				min-height: 20px;
+				top: 25%;
+				background-color: #FFFFFF;
+				.border-radius( 25% );
+				.flush;
+			}
+			
+		}
+		
+		&.on {
+			.slider-volume {
+				opacity: 1;
+				.transition(e('opacity .3s linear'));
+			}
+		}
+		
+		&:hover {
+			opacity: 0.6;
+		}
+		
+	}
+	
+}
