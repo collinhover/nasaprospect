@@ -35,6 +35,7 @@ function ( $, Signal ) {
 	_de.$window = $( window );
 	_de.$document = $( document );
 	_de.$body = _de.$document.find( "body" );
+	_de.$main = $( "#main" );
 	
 	_de.$scrollable = $( ".scrollable" );
 	_de.$stickable = $( ".stickyme, .is-sticky" );

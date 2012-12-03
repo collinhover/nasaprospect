@@ -8,29 +8,10 @@ function ( $, _s, _snd, _section ) {
 	
 	var _de = _s.domElements;
 	var _solarSystem = {};
-	var $element = _de.$solarSystem;
-	var sections = [];
-	var active;
-	
-	/*===================================================
-	
-	init
-	
-	=====================================================*/
-	
-	_de.$section.each( function () {
-		
-		var $element = $( this );
-		var section = new _section.Instance( $element );
-		
-		section.onOrbitingStarted.add( SetActiveSection );
-		
-		sections.push( section );
-		
-	} );
-	
-	_s.signals.onResized.add( OnWindowResized );
-	_de.$window.trigger( 'resize' );
+	var _$element = _de.$solarSystem;
+	var _sound = new _snd.SoundHandler( { element: _$element } );
+	var _sections = [];
+	var _active;
 	
 	/*===================================================
 	
@@ -40,10 +21,10 @@ function ( $, _s, _snd, _section ) {
 	
 	function ClearActiveSection () {
 		
-		if ( active instanceof _section.Instance ) {
+		if ( _active instanceof _section.Instance ) {
 			
-			active.Deactivate();
-			active = undefined;
+			_active.Deactivate();
+			_active = undefined;
 			
 		}
 		
@@ -53,7 +34,7 @@ function ( $, _s, _snd, _section ) {
 		
 		var i, il, section;
 		
-		if ( active !== target ) {
+		if ( _active !== target ) {
 			
 			ClearActiveSection();
 			
@@ -61,16 +42,15 @@ function ( $, _s, _snd, _section ) {
 				
 				// active setup
 				
-				active = target;
-				target.Activate();
+				_active = target;
 				
 				// for all non active, ensure they are orbiting
 				
-				for ( i = 0, il = sections.length; i < il; i++ ) {
+				for ( i = 0, il = _sections.length; i < il; i++ ) {
 					
-					section = sections[ i ];
+					section = _sections[ i ];
 					
-					if ( section !== active ) {
+					if ( section !== _active ) {
 						
 						section.Deactivate();
 						
@@ -85,7 +65,7 @@ function ( $, _s, _snd, _section ) {
 	
 	function GetActiveSection () {
 		
-		return active;
+		return _active;
 		
 	}
 	
@@ -99,9 +79,9 @@ function ( $, _s, _snd, _section ) {
 		
 		var i, il, section;
 		
-		for ( i = 0, il = sections.length; i < il; i++ ) {
+		for ( i = 0, il = _sections.length; i < il; i++ ) {
 			
-			sections[ i ].Resize();
+			_sections[ i ].Resize();
 			
 		}
 		
@@ -109,12 +89,35 @@ function ( $, _s, _snd, _section ) {
 	
 	/*===================================================
 	
-	public
+	init
 	
 	=====================================================*/
 	
-	_solarSystem.$element = $element;
-	_solarSystem.sections = sections;
+	// init all sections
+	
+	_de.$section.each( function () {
+		
+		var $element = $( this );
+		var section = new _section.Instance( $element );
+		
+		section.onActivated.add( SetActiveSection );
+		
+		_sections.push( section );
+		
+	} );
+	
+	// add system sound as filler for when no other sounds are playing
+	
+	_snd.AddFiller( _sound );
+	
+	_s.signals.onResized.add( OnWindowResized );
+	_de.$window.trigger( 'resize' );
+	
+	/*===================================================
+	
+	public
+	
+	=====================================================*/
 	
 	_solarSystem.ClearActiveSection = ClearActiveSection;
 	_solarSystem.SetActiveSection = SetActiveSection;

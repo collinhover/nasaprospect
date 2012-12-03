@@ -77,20 +77,16 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		// persistent triggers
 		
-		this.$orbit.each( function () {
-			
-			me.triggersPersistent.push( {
-				element: this,
-				callback: me.StartOrbiting,
-				context: me
-			} );
-			
+		this.triggersPersistent.push( {
+			element: this.$element,
+			callback: this.Activate,
+			context: this
 		} );
-		
-		_s.navigator.addTriggers( this.triggersPersistent );
 		
 		// signals
 		
+		this.onActivated = new Signal();
+		this.onDeactivated = new Signal();
 		this.onOrbitingStarted = new Signal();
 		this.onOrbitingStopped = new Signal();
 		this.onLandingStarted = new Signal();
@@ -99,6 +95,10 @@ function ( $, _s, _ui, _snd, Signal ) {
 		this.onExploringStopped = new Signal();
 		
 		this.$planet.on( 'tap', $.proxy( this.ToOrbit, this ) );
+		
+		// deactivate
+		
+		this.Deactivate();
 		
 	}
 	
@@ -124,15 +124,52 @@ function ( $, _s, _ui, _snd, Signal ) {
 	
 	function Activate () {
 		
-		this.soundHandlers.element.Play();
+		var me = this;
+		
+		if ( this.active !== true ) {
+			
+			this.active = true;
+			
+			this.soundHandlers.element.Play();
+			
+			_s.navigator.removeTriggers( this.triggers );
+			this.triggers = [];
+			
+			this.$orbit.each( function () {
+				
+				me.triggers.push( _s.navigator.addTrigger( {
+					callback: me.StartOrbiting,
+					context: me,
+					element: this,
+					once: true
+				} ) );
+				
+			} );
+			
+			this.onActivated.dispatch( this );
+			
+		}
 		
 	}
 	
 	function Deactivate () {
 		
-		this.StopAll();
-		
-		this.soundHandlers.element.Stop();
+		if ( this.active !== false ) {
+			
+			this.active = false;
+			
+			this.StopAll();
+			
+			this.soundHandlers.element.Stop();
+			
+			_s.navigator.removeTriggers( this.triggers );
+			this.triggers = [];
+			
+			_s.navigator.addTriggers( this.triggersPersistent );
+			
+			this.onDeactivated.dispatch( this );
+			
+		}
 		
 	}
 	
@@ -167,12 +204,11 @@ function ( $, _s, _ui, _snd, Signal ) {
 			// cycle triggers
 			
 			_s.navigator.removeTriggers( this.triggers );
-			
 			this.triggers = [];
 			
 			this.$land.each( function () {
 				
-				this.triggers.push( _s.navigator.addTrigger( {
+				me.triggers.push( _s.navigator.addTrigger( {
 					callback: me.StartLanding,
 					context: me,
 					element: this,
@@ -221,12 +257,11 @@ function ( $, _s, _ui, _snd, Signal ) {
 			// triggers
 			
 			_s.navigator.removeTriggers( this.triggers );
-			
 			this.triggers = [];
 			
 			this.$explore.each( function () {
 				
-				this.triggers.push( _s.navigator.addTrigger( {
+				me.triggers.push( _s.navigator.addTrigger( {
 					callback: me.StartExploring,
 					context: me,
 					element: this,
@@ -279,12 +314,11 @@ function ( $, _s, _ui, _snd, Signal ) {
 			// cycle triggers
 			
 			_s.navigator.removeTriggers( this.triggers );
-			
 			this.triggers = [];
 			
 			this.$land.each( function () {
 				
-				this.triggers.push( _s.navigator.addTrigger( {
+				me.triggers.push( _s.navigator.addTrigger( {
 					callback: me.StartLanding,
 					context: me,
 					element: this,

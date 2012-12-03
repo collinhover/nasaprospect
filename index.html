@@ -16,6 +16,18 @@
         <!-- JS setup -->
         
         <script src="js/lib/modernizr-2.6.2.min.js"></script>
+		<!-- sound manager has a strange loading setup, so we need to do it first -->
+        <script src="js/lib/soundmanager2.js"></script>
+        <script>
+			soundManager.setup({
+				url: 'swf/',
+				flashVersion: 9,
+				useFlashBlock: true,
+				preferFlash: true,
+				useHighPerformance: true,
+				waitForWindowLoad: true
+			});
+		</script>
         
         <!-- LESS -->
         
@@ -28,449 +40,464 @@
         
     </head>
     
-    <body class="scrollable">
-			
-		<div id="solar-system" class="unselectable">
-			
-			<section id="sun" data-sound="space" data-sound-loop="true" data-sound-fade="true">
+    <body>
+		
+		<div id="sm2-container"></div>
+		
+		<div id="main" class="scrollable">
 				
-				<div class="orbit orbit-top container-fill">
+			<div id="solar-system" class="unselectable" data-sound="space" data-sound-loops="true" data-sound-fade="true">
+				
+				<section id="setup">
 					
-					<div class="background">
-						
-						<img src="img/sun.svg" class="planetoid">
+					<div class="container-fill">
 						
 					</div>
 					
-					<div class="middleground">
-						
-						<div class="logo container-center">
-						</div>
-						
-					</div>
-					
-					<div class="foreground">
-						
-						<div class="logo container-center" data-stellar-offset-parent="true" data-stellar-offset-vertical="0" data-stellar-offset-horizontal="0">
-							<img src="img/logo_mark_color_light.svg" class="prospect">
-							<div class="prospect-name">
-								<div class="letter-1">
-									<h2>Mercury</h2>
-									<h1 data-stellar-ratio="1.5">P</h1>
-								</div>
-								<div class="letter-2">
-									<h2>Venus</h2>
-									<h1 data-stellar-ratio="2.25">R</h1>
-								</div>
-								<div class="letter-3">
-									<h2>Earth</h2>
-									<h1 data-stellar-ratio="2.6">O</h1>
-								</div>
-								<div class="letter-4">
-									<h2>Mars</h2>
-									<h1 data-stellar-ratio="1.8">S</h1>
-								</div>
-								<div class="letter-5">
-									<h2>Jupiter</h2>
-									<h1 data-stellar-ratio="3.35">P</h1>
-								</div>
-								<div class="letter-6">
-									<h2>Saturn</h2>
-									<h1 data-stellar-ratio="3">E</h1>
-								</div>
-								<div class="letter-7">
-									<h2>Uranus</h2>
-									<h1 data-stellar-ratio="1.9">C</h1>
-								</div>
-								<div class="letter-8">
-									<h2>Neptune</h2>
-									<h1 data-stellar-ratio="1.25">T</h1>
-								</div>
-							</div>
-							<img src="img/logo_nasa_color_light.svg" class="nasa">
-						</div>
-						
-					</div>
-					
-				</div>
-				<!-- /orbit -->
+				</section>
+				<!-- /setup -->
 				
-			</section>
-			<!-- /sun -->
-			
-			<section id="ui">
-				
-				<div class="container-fill stickyme">
+				<section id="ui">
 					
-					<div class="ui-pane-column-left">
+					<div class="container-fill stickyme">
 						
-						<div class="ui-pane-body">
+						<div class="ui-pane-column-left">
 							
-							<div id="navbarPlanets">
-								<ul class="nav-planets">
-									<li> 
-										<a href="#sun" class="nav-planet-sun">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Sun</div>
-											<h2>Sun</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#mercury" class="nav-planet-mercury">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Mercury</div>
-											<h2>Mercury</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#venus" class="nav-planet-venus">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Venus</div>
-											<h2>Venus</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#earth" class="nav-planet-earth">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Earth</div>
-											<h2>Earth</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#mars" class="nav-planet-mars">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Mars</div>
-											<h2>Mars</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#jupiter" class="nav-planet-jupiter">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Jupiter</div>
-											<h2>Jupiter</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#saturn" class="nav-planet-saturn">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Saturn</div>
-											<h2>Saturn</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#uranus" class="nav-planet-uranus">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Uranus</div>
-											<h2>Uranus</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#neptune" class="nav-planet-neptune">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Neptune</div>
-											<h2>Neptune</h2>
-										</a>
-									</li>
-								</ul>
-							</div>
-						
-						</div>
-						
-						<div class="ui-pane-footer">
-							
-							<div class="toggle toggle-sound">
+							<div class="ui-pane-body">
 								
-								<div class="state-off">
-									<img src="img/sound_off_white.svg" class="iconk-large toggle-on">
+								<div id="navbarPlanets">
+									<ul class="nav-planets">
+										<li> 
+											<a href="#sun" class="nav-planet-sun">
+												<div class="aspect-enforcer"></div>
+												<div class="aspect-shape">Sun</div>
+												<h2>Sun</h2>
+											</a>
+										</li>
+										<li>
+											<a href="#mercury" class="nav-planet-mercury">
+												<div class="aspect-enforcer"></div>
+												<div class="aspect-shape">Mercury</div>
+												<h2>Mercury</h2>
+											</a>
+										</li>
+										<li>
+											<a href="#venus" class="nav-planet-venus">
+												<div class="aspect-enforcer"></div>
+												<div class="aspect-shape">Venus</div>
+												<h2>Venus</h2>
+											</a>
+										</li>
+										<li>
+											<a href="#earth" class="nav-planet-earth">
+												<div class="aspect-enforcer"></div>
+												<div class="aspect-shape">Earth</div>
+												<h2>Earth</h2>
+											</a>
+										</li>
+										<li>
+											<a href="#mars" class="nav-planet-mars">
+												<div class="aspect-enforcer"></div>
+												<div class="aspect-shape">Mars</div>
+												<h2>Mars</h2>
+											</a>
+										</li>
+										<li>
+											<a href="#jupiter" class="nav-planet-jupiter">
+												<div class="aspect-enforcer"></div>
+												<div class="aspect-shape">Jupiter</div>
+												<h2>Jupiter</h2>
+											</a>
+										</li>
+										<li>
+											<a href="#saturn" class="nav-planet-saturn">
+												<div class="aspect-enforcer"></div>
+												<div class="aspect-shape">Saturn</div>
+												<h2>Saturn</h2>
+											</a>
+										</li>
+										<li>
+											<a href="#uranus" class="nav-planet-uranus">
+												<div class="aspect-enforcer"></div>
+												<div class="aspect-shape">Uranus</div>
+												<h2>Uranus</h2>
+											</a>
+										</li>
+										<li>
+											<a href="#neptune" class="nav-planet-neptune">
+												<div class="aspect-enforcer"></div>
+												<div class="aspect-shape">Neptune</div>
+												<h2>Neptune</h2>
+											</a>
+										</li>
+									</ul>
 								</div>
+							
+							</div>
+							
+							<div class="ui-pane-footer">
 								
-								<div class="state-on">
-									<img src="img/sound_on_white.svg" class="iconk-large toggle-off">
+								<div class="toggle toggle-sound">
 									
-									<div class="iconk-large slider slider-volume">
-										<div class="track"></div>
-										<div class="knob"></div>
+									<div class="state-off">
+										<img src="img/sound_off_white.svg" class="iconk-large toggle-on">
+									</div>
+									
+									<div class="state-on">
+										<img src="img/sound_on_white.svg" class="iconk-large toggle-off">
+										
+										<div class="iconk-large slider slider-volume">
+											<div class="track"></div>
+											<div class="knob"></div>
+										</div>
+									</div>
+									
+								</div>
+								
+							</div>
+							
+						</div>
+						
+					</div>
+						
+				</section>
+				<!-- /ui -->
+				
+				<section id="sun" data-sound="wind" data-sound-loops="true" data-sound-fade="true">
+					
+					<div class="orbit orbit-top container-fill">
+						
+						<div class="background">
+							
+							<img src="img/sun.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="middleground">
+							
+							<div class="logo container-center">
+							</div>
+							
+						</div>
+						
+						<div class="foreground">
+							
+							<div class="logo container-center" data-stellar-offset-parent="true" data-stellar-offset-vertical="0" data-stellar-offset-horizontal="0">
+								<img src="img/logo_mark_color_light.svg" class="prospect">
+								<div class="prospect-name">
+									<div class="letter-1">
+										<h2>Mercury</h2>
+										<h1 data-stellar-ratio="1.5">P</h1>
+									</div>
+									<div class="letter-2">
+										<h2>Venus</h2>
+										<h1 data-stellar-ratio="2.25">R</h1>
+									</div>
+									<div class="letter-3">
+										<h2>Earth</h2>
+										<h1 data-stellar-ratio="2.6">O</h1>
+									</div>
+									<div class="letter-4">
+										<h2>Mars</h2>
+										<h1 data-stellar-ratio="1.8">S</h1>
+									</div>
+									<div class="letter-5">
+										<h2>Jupiter</h2>
+										<h1 data-stellar-ratio="3.35">P</h1>
+									</div>
+									<div class="letter-6">
+										<h2>Saturn</h2>
+										<h1 data-stellar-ratio="3">E</h1>
+									</div>
+									<div class="letter-7">
+										<h2>Uranus</h2>
+										<h1 data-stellar-ratio="1.9">C</h1>
+									</div>
+									<div class="letter-8">
+										<h2>Neptune</h2>
+										<h1 data-stellar-ratio="1.25">T</h1>
 									</div>
 								</div>
-								
+								<img src="img/logo_nasa_color_light.svg" class="nasa">
 							</div>
 							
 						</div>
 						
 					</div>
 					
-				</div>
-					
-			</section>
-			<!-- /navPlanets -->
-			
-			<section id="mercury">
+				</section>
+				<!-- /sun -->
 				
-				<div class="orbit orbit-top container-fill">
+				<section id="mercury">
 					
-					<div class="middleground">
+					<div class="orbit orbit-top container-fill">
 						
-						<img src="img/mercury.svg" class="planetoid">
+						<div class="middleground">
+							
+							<img src="img/mercury.svg" class="planetoid">
+							
+						</div>
 						
 					</div>
+					<!-- /orbit -->
 					
-				</div>
-				<!-- /orbit -->
+				</section>
+				<!-- /mercury -->
 				
-			</section>
-			<!-- /mercury -->
-			
-			<section id="venus">
+				<section id="venus">
+					
+					<div class="orbit orbit-top container-fill">
+						
+						<div class="middleground">
+							
+							<img src="img/venus.svg" class="planetoid">
+							
+						</div>
+						
+					</div>
+					<!-- /orbit -->
+					
+				</section>
+				<!-- /venus -->
 				
-				<div class="orbit orbit-top container-fill">
+				<section id="earth">
 					
-					<div class="middleground">
+					<div class="orbit orbit-top container-fill">
 						
-						<img src="img/venus.svg" class="planetoid">
+						<div class="middleground">
+							
+							<img src="img/earth.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="foreground">
+							
+							<img src="img/earth_fg.svg" class="planetoid">
+							
+						</div>
 						
 					</div>
+					<!-- /orbit -->
 					
-				</div>
-				<!-- /orbit -->
+					<!--<div class="land land-top container-fill" data-sound="wind" data-sound-id="earth-land-wind" data-sound-loops="true" data-sound-fade="true">
+						
+						<div class="background">
+							
+						</div>
+						
+						<div class="middleground">
+							
+						</div>
+						
+						<div class="foreground">
+							
+						</div>
+						
+					</div>-->
+					<!-- /land -->
+					
+					<!--<div class="explore container-fill">
+						
+					</div>-->
+					<!-- /explore -->
+					
+				</section>
+				<!-- /earth -->
 				
-			</section>
-			<!-- /venus -->
-			
-			<section id="earth">
+				<section id="mars">
 				
-				<div class="orbit orbit-top container-fill">
+					<div class="orbit orbit-top container-fill">
+						
+						<div class="background">
+							
+							<img src="img/mars_bg.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="middleground">
+							
+							<img src="img/mars.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="foreground">
+							
+							<img src="img/mars_fg.svg" class="planetoid">
+							
+						</div>
 					
-					<div class="middleground">
-						
-						<img src="img/earth.svg" class="planetoid">
-						
 					</div>
+					<!-- /orbit -->
 					
-					<div class="foreground">
-						
-						<img src="img/earth_fg.svg" class="planetoid">
-						
-					</div>
-					
-				</div>
-				<!-- /orbit -->
+				</section>
+				<!-- /mars -->
 				
-				<!--<div class="land land-top container-fill" data-sound="wind" data-sound-id="earth-land-wind" data-sound-loop="true" data-sound-fade="true">
+				<section id="asteroidBelt">
 					
-					<div class="background">
+					<div class="orbit orbit-top container-fill">
+						
+						<div class="background">
+							
+							<img src="img/asteroid_003.svg" class="parallaxable" style="height:8%; top:0%; right: 35%;">
+							<img src="img/asteroid_001.svg" class="parallaxable" style="height:7%; top:3%; right: 11%;">
+							<img src="img/asteroid_002.svg" class="parallaxable" style="height:5%; top:10%; left: 5%;">
+							<img src="img/asteroid_002.svg" class="parallaxable" style="height:6%; top:20%; left: -1%;">
+							<img src="img/asteroid_003.svg" class="parallaxable" style="height:7%; top:32%; left: 12%;">
+							<img src="img/asteroid_003.svg" class="parallaxable" style="height:8%; top:40%; right: 16%;">
+							<img src="img/asteroid_001.svg" class="parallaxable" style="height:8%; top:15%; left: 28%;">
+							<img src="img/asteroid_002.svg" class="parallaxable" style="height:9%; bottom:3%; left: 10%;">
+							<img src="img/asteroid_003.svg" class="parallaxable" style="height:5%; bottom:8%; left: 32%;">
+							<img src="img/asteroid_002.svg" class="parallaxable" style="height:7%; bottom:14%; right: 4%;">
+							<img src="img/asteroid_003.svg" class="parallaxable" style="height:6%; bottom:22%; right: 40%;">
+							<img src="img/asteroid_001.svg" class="parallaxable" style="height:8%; bottom:31%; right: -1%;">
+							<img src="img/asteroid_001.svg" class="parallaxable" style="height:7%; bottom:34%; left: 20%;">
+							<img src="img/asteroid_002.svg" class="parallaxable" style="height:7%; bottom:42%; right: 34%;">
+							
+						</div>
+						
+						<div class="middleground">
+							
+							<img src="img/asteroid_001.svg" class="parallaxable" style="height:10%; top:30%; left: 10%;">
+							<img src="img/asteroid_003.svg" class="parallaxable" style="height:12%; top:40%; left: 40%;">
+							<img src="img/asteroid_001.svg" class="parallaxable" style="height:22%; top:30%; right: 27%;">
+							<img src="img/asteroid_002.svg" class="parallaxable" style="height:13%; top:20%; right: 8%;">
+							<img src="img/asteroid_003.svg" class="parallaxable" style="height:17%; bottom:20%; left: 15%;">
+							<img src="img/asteroid_002.svg" class="parallaxable" style="height:19%; bottom:10%; left: -1%;">
+							<img src="img/asteroid_002.svg" class="parallaxable" style="height:20%; bottom:0%; right: 23%;">
+							
+						</div>
+						
+						<div class="foreground">
+							
+							<img src="img/asteroid_002.svg" class="parallaxable" style="height:30%; top:16%; left: 20%;">
+							<img src="img/asteroid_001.svg" class="parallaxable" style="height:25%; bottom:-2%; left: 35%;">
+							<img src="img/asteroid_003.svg" class="parallaxable" style="height:35%; bottom:26%; right: 9%;">
+							
+						</div>
 						
 					</div>
+					<!-- /orbit -->
 					
-					<div class="middleground">
-						
-					</div>
-					
-					<div class="foreground">
-						
-					</div>
-					
-				</div>-->
-				<!-- /land -->
+				</section>
+				<!-- /asteroidBelt -->
 				
-				<!--<div class="explore container-fill">
+				<section id="jupiter">
 					
-				</div>-->
-				<!-- /explore -->
+					<div class="orbit orbit-top container-fill">
+						
+						<div class="background">
+							
+							<img src="img/jupiter_bg.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="middleground">
+							
+							<img src="img/jupiter.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="foreground">
+							
+							<img src="img/jupiter_fg.svg" class="planetoid">
+							
+						</div>
+						
+					</div>
+					<!-- /orbit -->
+					
+				</section>
+				<!-- /jupiter -->
 				
-			</section>
-			<!-- /earth -->
-			
-			<section id="mars">
-			
-				<div class="orbit orbit-top container-fill">
+				<section id="saturn">
 					
-					<div class="background">
+					<div class="orbit orbit-top container-fill">
 						
-						<img src="img/mars_bg.svg" class="planetoid">
+						<div class="background">
+							
+							<img src="img/saturn_bg.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="middleground">
+							
+							<img src="img/saturn.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="foreground">
+							
+							<img src="img/saturn_fg.svg" class="planetoid">
+							
+						</div>
 						
 					</div>
+					<!-- /orbit -->
 					
-					<div class="middleground">
-						
-						<img src="img/mars.svg" class="planetoid">
-						
-					</div>
-					
-					<div class="foreground">
-						
-						<img src="img/mars_fg.svg" class="planetoid">
-						
-					</div>
+				</section>
+				<!-- /saturn -->
 				
-				</div>
-				<!-- /orbit -->
+				<section id="uranus">
+					
+					<div class="orbit orbit-top container-fill">
+						
+						<div class="background">
+							
+							<img src="img/uranus_bg.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="middleground">
+							
+							<img src="img/uranus.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="foreground">
+							
+							<img src="img/uranus_fg.svg" class="planetoid">
+							
+						</div>
+						
+					</div>
+					<!-- /orbit -->
+					
+				</section>
+				<!-- /uranus -->
 				
-			</section>
-			<!-- /mars -->
-			
-			<section id="asteroidBelt">
+				<section id="neptune">
+					
+					<div class="orbit orbit-top container-fill">
+						
+						<div class="background">
+							
+							<img src="img/neptune_bg.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="middleground">
+							
+							<img src="img/neptune.svg" class="planetoid">
+							
+						</div>
+						
+						<div class="foreground">
+							
+							<img src="img/neptune_fg.svg" class="planetoid">
+							
+						</div>
+						
+					</div>
+					<!-- /orbit -->
+					
+				</section>
+				<!-- /neptune -->
 				
-				<div class="orbit orbit-top container-fill">
-					
-					<div class="background">
-						
-						<img src="img/asteroid_003.svg" class="parallaxable" style="height:8%; top:0%; right: 35%;">
-						<img src="img/asteroid_001.svg" class="parallaxable" style="height:7%; top:3%; right: 11%;">
-						<img src="img/asteroid_002.svg" class="parallaxable" style="height:5%; top:10%; left: 5%;">
-						<img src="img/asteroid_002.svg" class="parallaxable" style="height:6%; top:20%; left: -1%;">
-						<img src="img/asteroid_003.svg" class="parallaxable" style="height:7%; top:32%; left: 12%;">
-						<img src="img/asteroid_003.svg" class="parallaxable" style="height:8%; top:40%; right: 16%;">
-						<img src="img/asteroid_001.svg" class="parallaxable" style="height:8%; top:15%; left: 28%;">
-						<img src="img/asteroid_002.svg" class="parallaxable" style="height:9%; bottom:3%; left: 10%;">
-						<img src="img/asteroid_003.svg" class="parallaxable" style="height:5%; bottom:8%; left: 32%;">
-						<img src="img/asteroid_002.svg" class="parallaxable" style="height:7%; bottom:14%; right: 4%;">
-						<img src="img/asteroid_003.svg" class="parallaxable" style="height:6%; bottom:22%; right: 40%;">
-						<img src="img/asteroid_001.svg" class="parallaxable" style="height:8%; bottom:31%; right: -1%;">
-						<img src="img/asteroid_001.svg" class="parallaxable" style="height:7%; bottom:34%; left: 20%;">
-						<img src="img/asteroid_002.svg" class="parallaxable" style="height:7%; bottom:42%; right: 34%;">
-						
-					</div>
-					
-					<div class="middleground">
-						
-						<img src="img/asteroid_001.svg" class="parallaxable" style="height:10%; top:30%; left: 10%;">
-						<img src="img/asteroid_003.svg" class="parallaxable" style="height:12%; top:40%; left: 40%;">
-						<img src="img/asteroid_001.svg" class="parallaxable" style="height:22%; top:30%; right: 27%;">
-						<img src="img/asteroid_002.svg" class="parallaxable" style="height:13%; top:20%; right: 8%;">
-						<img src="img/asteroid_003.svg" class="parallaxable" style="height:17%; bottom:20%; left: 15%;">
-						<img src="img/asteroid_002.svg" class="parallaxable" style="height:19%; bottom:10%; left: -1%;">
-						<img src="img/asteroid_002.svg" class="parallaxable" style="height:20%; bottom:0%; right: 23%;">
-						
-					</div>
-					
-					<div class="foreground">
-						
-						<img src="img/asteroid_002.svg" class="parallaxable" style="height:30%; top:16%; left: 20%;">
-						<img src="img/asteroid_001.svg" class="parallaxable" style="height:25%; bottom:-2%; left: 35%;">
-						<img src="img/asteroid_003.svg" class="parallaxable" style="height:35%; bottom:26%; right: 9%;">
-						
-					</div>
-					
-				</div>
-				<!-- /orbit -->
-				
-			</section>
-			<!-- /asteroidBelt -->
-			
-			<section id="jupiter">
-				
-				<div class="orbit orbit-top container-fill">
-					
-					<div class="background">
-						
-						<img src="img/jupiter_bg.svg" class="planetoid">
-						
-					</div>
-					
-					<div class="middleground">
-						
-						<img src="img/jupiter.svg" class="planetoid">
-						
-					</div>
-					
-					<div class="foreground">
-						
-						<img src="img/jupiter_fg.svg" class="planetoid">
-						
-					</div>
-					
-				</div>
-				<!-- /orbit -->
-				
-			</section>
-			<!-- /jupiter -->
-			
-			<section id="saturn">
-				
-				<div class="orbit orbit-top container-fill">
-					
-					<div class="background">
-						
-						<img src="img/saturn_bg.svg" class="planetoid">
-						
-					</div>
-					
-					<div class="middleground">
-						
-						<img src="img/saturn.svg" class="planetoid">
-						
-					</div>
-					
-					<div class="foreground">
-						
-						<img src="img/saturn_fg.svg" class="planetoid">
-						
-					</div>
-					
-				</div>
-				<!-- /orbit -->
-				
-			</section>
-			<!-- /saturn -->
-			
-			<section id="uranus">
-				
-				<div class="orbit orbit-top container-fill">
-					
-					<div class="background">
-						
-						<img src="img/uranus_bg.svg" class="planetoid">
-						
-					</div>
-					
-					<div class="middleground">
-						
-						<img src="img/uranus.svg" class="planetoid">
-						
-					</div>
-					
-					<div class="foreground">
-						
-						<img src="img/uranus_fg.svg" class="planetoid">
-						
-					</div>
-					
-				</div>
-				<!-- /orbit -->
-				
-			</section>
-			<!-- /uranus -->
-			
-			<section id="neptune">
-				
-				<div class="orbit orbit-top container-fill">
-					
-					<div class="background">
-						
-						<img src="img/neptune_bg.svg" class="planetoid">
-						
-					</div>
-					
-					<div class="middleground">
-						
-						<img src="img/neptune.svg" class="planetoid">
-						
-					</div>
-					
-					<div class="foreground">
-						
-						<img src="img/neptune_fg.svg" class="planetoid">
-						
-					</div>
-					
-				</div>
-				<!-- /orbit -->
-				
-			</section>
-			<!-- /neptune -->
-			
+			</div>
+			<!-- /system -->
+		
 		</div>
-		<!-- /system -->
+		<!-- /main -->
         
         <!-- javascript -->
         

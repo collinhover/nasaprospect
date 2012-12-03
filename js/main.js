@@ -7,16 +7,23 @@ requirejs.config({
 	}
 });
 
-require(
-[
-	"jquery",
-	"app/shared",
-	"app/ui",
-	"app/solarSystem",
-	"overthrow"
-],
-function ( $, _s, _ui, _solarSystem ) {
+// assumes we have already loaded sound manager
+// sound manager tends to not load properly in module format
+
+soundManager.onready( function () {
 	
-	var _de = _s.domElements;
+	require(
+	[
+		"jquery",
+		"app/shared",
+		"app/ui",
+		"app/solarSystem",
+		"overthrow"
+	],
+	function ( $, _s, _ui, _solarSystem ) {
+		
+		var _de = _s.domElements;
+		
+	} );
 	
 } );

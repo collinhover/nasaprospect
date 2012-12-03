@@ -2,7 +2,6 @@ define( [
 	"jquery",
 	"app/shared",
 	"app/utilities",
-	"buzz",
 	"TweenMax",
 	"MobileRangeSlider",
 	"jquery.throttle-debounce.custom"
@@ -15,10 +14,16 @@ function ( $, _s, _utils ) {
 			descendents: false
 		}
 	};
+	var _handlers = [];
+	var _playing = [];
+	var _fillers = [];
+	var _fillersActive = true;
+	var _infinite = true;
 	var _durationFade = 500;
-	var _durationFadeMax = 1000;
-	var _durationSoundBase = 1000;
-	var _volume = 100;
+	var _durationFadeMax = 2500;
+	var _durationSoundBase = 10000;
+	var _durationSoundMinToFade = 1000;
+	var _volume = 50;
 	var _volumeLast = 0;
 	
 	Object.defineProperty( _snd, 'volume', { 
@@ -32,8 +37,7 @@ function ( $, _s, _utils ) {
 				
 			}
 			
-			buzz.defaults.volume = _volume;
-			buzz.all().fadeTo( _volume, _durationFade );
+			ForAll( undefined, UpdateVolume );
 			
 			_de.$toggleSound.each( function () {
 				
@@ -73,6 +77,8 @@ function ( $, _s, _utils ) {
 		
 		this.Find( parameters );
 		
+		_utils.ArrayCautiousAdd( _handlers, this );
+		
 	}
 	
 	function SoundDatum ( parameters ) {
@@ -83,7 +89,11 @@ function ( $, _s, _utils ) {
 		this.file = parameters.file;
 		this.id = parameters.id || this.file;
 		this.fade = ParseAttribute( parameters.fade, _durationFade, false );
-		this.loop = ParseAttribute( parameters.loop, true, false );
+		this.loops = ParseAttribute( parameters.loops, _infinite, 1 );
+		this.loopCount = 0;
+		this.volumeBase = parameters.volume || 100;
+		this.volume = this.volumeBase;
+		this.volumeLast = this.volume === 0 ? 100 : 0;
 		
 		this.trigger = GenerateScrollTrigger( this );
 		
@@ -118,7 +128,8 @@ function ( $, _s, _utils ) {
 				file: $element.attr( "data-sound" ),
 				id: $element.attr( "data-sound-id" ),
 				fade: $element.attr( "data-sound-fade" ),
-				loop: $element.attr( "data-sound-loop" )
+				loops: $element.attr( "data-sound-loops" ),
+				volume: $element.attr( "data-sound-volume" )
 			} );
 				
 		} );
@@ -153,11 +164,7 @@ function ( $, _s, _utils ) {
 			
 		}
 		
-		if ( _utils.IsNumber( fallback ) ) {
-			
-			attribute = parseInt( attribute );
-			
-		}
+		attribute = parseInt( attribute );
 		
 		if ( !attribute ) {
 			
@@ -180,7 +187,7 @@ function ( $, _s, _utils ) {
 			},
 			onRemoved: function () {
 				
-				StopSound( datum );
+				PauseSound( datum );
 				
 			}
 		};
@@ -310,41 +317,81 @@ function ( $, _s, _utils ) {
 	
 	function Play ( parameters ) {
 		
-		this.ForData( parameters, PlaySound, this );
+		if ( this.data.length > 0 ) {
+			
+			this.ForData( parameters, PlaySound );
+			
+			Playing.call( this );
+			
+		}
 		
 	}
 	
-	function PlaySound ( datum, parameters ) {
+	function PlaySound () {
 		
-		var sound = SoundCheck( datum ),
-			durationFade;
+		var sound = SoundCheck( this );
 		
-		if ( typeof sound !== 'undefined' ) {
+		if ( sound ) {
 			
-			sound.play()
-				.setVolume( 0 )
-				.bind( 'playing', function () {
-					
-					if ( datum.fade !== false ) {
-						
-						durationFade = Math.max( _durationFade, Math.min( _durationFadeMax, Math.round( ( ( sound.getDuration() * 1000 ) / _durationSoundBase ) * ( ( parameters && parameters.duration ) || ( _utils.IsNumber( datum.fade ) && datum.fade ) || _durationFade ) ) ) );
-						
-						sound.fadeTo( _volume, durationFade );
-						
-					}
-					else {
-						
-						sound.setVolume( _volume );
-						
-					}
-					
-					if ( datum.loop === true ) {
-						
-						sound.unloop().loop();
-						
-					}
-					
+			if ( sound.playState !== 1 ) {
+				
+				sound.play( {
+					onplay: $.proxy( OnPlaySound, this ),
+					onfinish: $.proxy( OnFinishSound, this ),
+					onstop: $.proxy( OnStopSound, this )
 				} );
+				
+			}
+			else if ( sound.paused ) {
+				
+				OnPlaySound.call( this );
+				
+				sound.resume();
+				
+			}
+			
+		}
+		
+	}
+	
+	/*===================================================
+	
+	pause
+	
+	=====================================================*/
+	
+	function Pause ( parameters ) {
+		
+		if ( this.data.length > 0 ) {
+			
+			NotPlaying.call( this );
+			
+			this.ForData( parameters, PauseSound );
+			
+		}
+		
+	}
+	
+	function PauseSound () {
+		
+		var sound = this.sound;
+		
+		if ( sound && sound.playState === 1 ) {
+			
+			if ( this.fade !== false ) {
+				
+				FadeSound.call( this, {
+					onComplete: function () {
+						sound.pause();
+					}
+				} );
+				
+			}
+			else {
+				
+				sound.pause();
+				
+			}
 			
 		}
 		
@@ -358,23 +405,30 @@ function ( $, _s, _utils ) {
 	
 	function Stop ( parameters ) {
 		
-		this.ForData( parameters, StopSound, this );
+		if ( this.data.length > 0 ) {
+			
+			NotPlaying.call( this );
+			
+			this.ForData( parameters, StopSound );
+			
+		}
 		
 	}
 	
-	function StopSound ( datum, parameters ) {
+	function StopSound () {
 		
-		var sound = datum.sound,
-			durationFade;
+		var sound = this.sound;
 		
-		if ( sound && sound.isPaused() !== true ) {
+		if ( sound && sound.playState === 1 ) {
 			
-			if ( datum.fade !== false ) {
+			if ( this.fade !== false ) {
 				
-				durationFade = Math.max( _durationFade, Math.min( _durationFadeMax, Math.round( ( ( sound.getDuration() * 1000 ) / _durationSoundBase ) * ( ( parameters && parameters.duration ) || ( _utils.IsNumber( datum.fade ) && datum.fade ) || _durationFade ) ) ) );
-				
-				sound.fadeOut( durationFade, function () {
-					sound.stop();
+				FadeSound.call( this, {
+					onComplete: function () {
+						
+						sound.stop();
+						
+					}
 				} );
 				
 			}
@@ -390,61 +444,210 @@ function ( $, _s, _utils ) {
 	
 	/*===================================================
 	
-	fade
+	events
 	
 	=====================================================*/
 	
-	/*function FadeIn ( parameters ) {
+	function OnPlaySound () {
 		
-		this.ForData( parameters, FadeInSound, this );
+		if ( this.loopCount === 0 ) {
+			
+			SetVolumeSound.call( this, { volume: 0 } );
+			
+		}
+		
+		if ( this.volume !== this.volumeBase ) {
+			
+			if ( this.fade !== false ) {
+				
+				FadeSound.call( this, { volume: this.volumeBase } );
+				
+			}
+			else {
+				
+				SetVolumeSound.call( this, { volume: this.volumeBase } );
+				
+			}
+			
+		}
 		
 	}
 	
-	function FadeInSound ( datum, parameters ) {
+	function OnFinishSound () {
 		
-		SoundCheck( datum );
+		this.loopCount++;
 		
-		var sound = datum.sound;
-		var from = { volume: sound.volume };
+		if ( this.fadingOut !== true ) {
+			
+			if ( this.loops === true ) {
+				
+				PlaySound.call( this );
+				
+			}
+			else if ( _utils.IsNumber( this.loops ) ) {
+				
+				if ( this.loopCount < this.loops ) {
+					
+					PlaySound.call( this );
+					
+				}
+				
+			}
+			
+		}
+	
+	}
+	
+	function OnStopSound () {
+		
+		this.loopCount = 0;
+		
+	}
+	
+	/*===================================================
+	
+	volume
+	
+	=====================================================*/
+	
+	function SetVolume ( parameters ) {
+		
+		this.ForData( parameters, SetVolumeSound );
+		
+	}
+	
+	function SetVolumeSound ( parameters ) {
+		
+		var me = this;
+		var sound = this.sound;
+		
+		if ( sound ) {
+			
+			if ( parameters ) {
+				
+				parameters = parameters || {};
+				parameters.volume = _utils.Clamp( _utils.IsNumber( parameters.volume ) ? parameters.volume : this.volume, 0, 100 );
+				parameters.duration = parameters.duration || 0;
+				
+				if ( this.volume !== parameters.volume ) {
+					
+					this.volumeLast = this.volume;
+					this.fadingOut = parameters.volume === 0 ? true : false;
+					
+					parameters.onUpdate = $.proxy( UpdateVolumeSound, this );
+					// wrap on complete
+					var onComplete = parameters.onComplete;
+					parameters.onComplete = function () {
+						
+						me.fadingOut = false;
+						
+						if ( typeof onComplete === 'function' ) {
+							
+							onComplete();
+						
+						}
+						
+					}
+					
+					TweenMax.to( this, parameters.duration, parameters );
+					
+				}
+				
+			}
+			
+		}
+		
+	}
+	
+	function UpdateVolume ( parameters ) {
+		
+		this.ForData( parameters, UpdateVolumeSound );
+		
+	}
+	
+	function UpdateVolumeSound () {
+		
+		var sound = this.sound;
+		
+		if ( sound ) {
+			
+			sound.setVolume( Math.round( this.volume * ( _volume / 100 ) ) );
+			
+		}
+		
+	}
+	
+	function Mute ( parameters ) {
 		
 		parameters = parameters || {};
-		parameters.volume = parameters.volume || datum.volume || 100,
-		parameters.onUpdate = function () {
-			sound.setVolume( from.volume );
-		};
+		parameters.volume = parameters.volume || 0;
 		
-		if ( parameters.fromZero !== false ) sound.setVolume( 0 );
+		this.ForData( parameters, SetVolumeSound );
 		
-		var durationFade = ( sound.durationEstimate / _durationSoundBase ) * ( parameters.duration || datum.fade || _durationFade );
+	}
+	
+	function Unmute ( parameters ) {
 		
-		TweenMax.to( from, durationFade, parameters );
+		this.ForData( parameters, UnmuteSound );
+		
+	}
+	
+	function UnmuteSound ( parameters ) {
+		
+		var sound = this.sound;
+		
+		if ( sound ) {
+			
+			parameters = parameters || {};
+			parameters.volume = parameters.volume || this.volumeLast;
+			
+			SetVolumeSound.call( this, parameters );
+			
+		}
+		
+	}
+	
+	function FadeIn ( parameters ) {
+		
+		parameters = parameters || {};
+		parameters.toBase = true;
+		
+		this.ForData( parameters, FadeSound );
 		
 	}
 	
 	function FadeOut ( parameters ) {
 		
-		this.ForData( parameters, FadeOutSound, this );
+		this.ForData( parameters, FadeSound );
 		
 	}
 	
-	function FadeOutSound ( datum, parameters ) {
+	function FadeSound ( parameters ) {
 		
-		SoundCheck( datum );
+		var sound = this.sound;
 		
-		var sound = datum.sound;
-		var from = { volume: sound.volume };
+		if ( sound ) {
+			
+			parameters = parameters || {};
+			
+			if ( parameters.toBase === true ) {
+				
+				parameters.volume = this.volumeBase;
+				
+			}
+			else {
+				
+				parameters.volume = _utils.IsNumber( parameters.volume ) ? parameters.volume : 0;
+				
+			}
+			
+			parameters.duration = _utils.Clamp( Math.round( ( sound.durationEstimate / _durationSoundBase ) * ( ( parameters && parameters.duration ) || ( _utils.IsNumber( this.fade ) && this.fade ) || _durationFade ) ), _durationFade, _durationFadeMax ) / 1000;
+			
+			SetVolumeSound.call( this, parameters );
+			
+		}
 		
-		parameters = parameters || {};
-		parameters.volume = parameters.volume || 0,
-		parameters.onUpdate = function () {
-			sound.setVolume( from.volume );
-		};
-		
-		var durationFade = ( sound.durationEstimate / _durationSoundBase ) * ( parameters.duration || datum.fade || _durationFade );
-		
-		TweenMax.to( from, durationFade, parameters );
-		
-	}*/
+	}
 	
 	/*===================================================
 	
@@ -452,14 +655,18 @@ function ( $, _s, _utils ) {
 	
 	=====================================================*/
 	
-	function ForData ( parameters, callback, context ) {
+	function ForData ( parameters, callback ) {
 		
-		var i, il;
-		var data = this.GetData( parameters );
-		
-		for ( i = 0, il = data.length; i < il; i++ ) {
+		if ( this.data.length > 0 ) {
 			
-			callback.call( context, data[ i ], parameters );
+			var i, il;
+			var data = this.GetData( parameters );
+			
+			for ( i = 0, il = data.length; i < il; i++ ) {
+				
+				callback.call( data[ i ], parameters );
+				
+			}
 			
 		}
 		
@@ -521,11 +728,15 @@ function ( $, _s, _utils ) {
 		
 		if ( typeof datum.sound === 'undefined' ) {
 			
-			datum.sound = new buzz.sound( _s.pathToAssets + datum.file, {
-				formats: [ "mp3", "ogg", "wav" ],
-				preload: true
-			} )
-			.load();
+			datum.sound = soundManager.createSound( {
+				id: datum.id,
+				url: [ 
+					_s.pathToAssets + datum.file + '.mp3',
+					_s.pathToAssets + datum.file + '.ogg',
+					_s.pathToAssets + datum.file + '.wav'
+				],
+				autoLoad:true
+			} );
 			
 		}
 		
@@ -535,25 +746,96 @@ function ( $, _s, _utils ) {
 	
 	/*===================================================
 	
-	volume
+	global
 	
 	=====================================================*/
 	
-	function Mute () {
+	function AddFiller ( handler ) {
 		
-		_snd.volume = 0;
+		_utils.ArrayCautiousAdd( _fillers, handler );
 		
-		_de.$toggleSound.removeClass( 'on' );
+		if ( _fillersActive === true ) {
+			
+			ActivateFillers();
+			
+		}
 		
 	}
 	
-	function Unmute () {
+	function RemoveFiller ( handler ) {
 		
-		if ( _volume !== _volumeLast ) {
+		handler.Stop();
+		
+		_utils.ArrayCautiousRemove( _fillers, handler );
+		
+	}
+	
+	function ActivateFillers () {
+		
+		_fillersActive = true;
+		
+		ForAll( { handlers: _fillers }, Play );
+		
+	}
+	
+	function DeactivateFillers () {
+		
+		_fillersActive = false;
+		
+		ForAll( { handlers: _fillers }, Pause );
+		
+	}
+	
+	function Playing () {
+		
+		if ( _fillersActive === true && _utils.IndexOfValue( _fillers, this ) === -1 ) {
 			
-			_snd.volume = _volumeLast;
+			DeactivateFillers();
 			
-			_de.$toggleSound.addClass( 'on' );
+		}
+		
+		_utils.ArrayCautiousAdd( _playing, this );
+		
+	}
+	
+	function NotPlaying () {
+		
+		_utils.ArrayCautiousRemove( _playing, this );
+		
+		if ( _playing.length === 0 && _utils.IndexOfValue( _fillers, this ) === -1 ) {
+			
+			ActivateFillers();
+			
+		}
+		
+	}
+	
+	function MuteAll ( parameters ) {
+		
+		_de.$toggleSound.removeClass( 'on' );
+		
+		_snd.volume = 0;
+		
+	}
+	
+	function UnmuteAll ( parameters ) {
+		
+		_de.$toggleSound.addClass( 'on' );
+		
+		_snd.volume = _volumeLast;
+		
+	}
+	
+	function ForAll ( parameters, callback ) {
+		
+		var i, il, handler;
+		var handlers = parameters && parameters.handlers ? _utils.ToArray( parameters.handlers ) : _handlers;
+		
+		for ( i = 0, il = handlers.length; i < il; i++ ) {
+			
+			handler = handlers[ i ];
+			
+			callback.call( handler, parameters );
 			
 		}
 		
@@ -561,7 +843,7 @@ function ( $, _s, _utils ) {
 	
 	/*===================================================
 	
-	ui
+	init
 	
 	=====================================================*/
 	
@@ -605,12 +887,12 @@ function ( $, _s, _utils ) {
 				
 				if ( $element.hasClass( 'on' ) ) {
 					
-					Mute();
+					MuteAll();
 					
 				}
 				else {
 					
-					Unmute();
+					UnmuteAll();
 					
 				}
 				
@@ -621,13 +903,13 @@ function ( $, _s, _utils ) {
 			
 			$toggleOn.on( 'tap', function () {
 				
-				Unmute();
+				UnmuteAll();
 				
 			} );
 			
 			$toggleOff.on( 'tap', function () {
 				
-				Mute();
+				MuteAll();
 				
 			} );
 			
@@ -638,7 +920,7 @@ function ( $, _s, _utils ) {
 	
 	// start muted
 	
-	Mute();
+	MuteAll();
 	
 	/*===================================================
 	
@@ -659,8 +941,16 @@ function ( $, _s, _utils ) {
 	_snd.SoundHandler.prototype.ForData = ForData;
 	_snd.SoundHandler.prototype.GetData = GetData;
 	
-	_snd.Mute = Mute;
-	_snd.Unmute = Unmute;
+	_snd.SoundHandler.prototype.SetVolume = SetVolume;
+	_snd.SoundHandler.prototype.Mute = Mute;
+	_snd.SoundHandler.prototype.Unmute = Unmute;
+	_snd.SoundHandler.prototype.FadeIn = FadeIn;
+	_snd.SoundHandler.prototype.FadeOut = FadeOut;
+	
+	_snd.AddFiller = AddFiller;
+	_snd.RemoveFiller = RemoveFiller;
+	_snd.MuteAll = MuteAll;
+	_snd.UnmuteAll = UnmuteAll;
 	
 	return _snd;
 	

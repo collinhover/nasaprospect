@@ -1,0 +1,80 @@
+/* sound
+-------------------------------------------------------------------------------*/
+
+.toggle-sound {
+	position: relative;
+	display: inline-block;
+	margin-left: @uiPanePaddingLeft;
+	opacity: 0.2;
+	.transition(e('opacity .3s linear'));
+	
+	.state-on, .state-off {
+		display: inline-block;
+	}
+	
+	.slider-volume {
+		position: relative;
+		padding: 0;
+		margin: 0 0 0 10px;
+		opacity: 0;
+		-webkit-user-select: none;
+		-webkit-tap-highlight-color: rgba(0,0,0,0);
+		-webkit-text-size-adjust: none;
+		-webkit-touch-callout: none;
+		
+		.track {
+			position: absolute;
+			top: 40%;
+			left: 0;
+			right: 0;
+			height: 10%;
+			min-height: 6px;
+			background-color: lighten( @logoDark, 50% );
+			background-color: rgba( 255, 255, 255, 0.5 );
+			z-index: -1;
+		}
+
+		.knob {
+			cursor: pointer;
+			position: absolute;
+			width: 15%;
+			min-width: 10px;
+			height: 30%;
+			min-height: 20px;
+			top: 25%;
+			background-color: #FFFFFF;
+			.border-radius( 25% );
+			.flush;
+		}
+		
+	}
+	
+	&.on {
+		.slider-volume {
+			opacity: 1;
+			.transition(e('opacity .3s linear'));
+		}
+	}
+	
+	&:hover {
+		opacity: 0.6;
+	}
+	
+}
+
+/* sound manager
+-------------------------------------------------------------------------------*/
+
+#sm2-container {
+	position: absolute;
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	
+	&.swf_loaded {
+		z-index: -1;
+		top: auto;
+		bottom: 100%;
+	}
+	
+}

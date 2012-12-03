@@ -20,8 +20,8 @@ function ( $, _s ) {
 	
 	=====================================================*/
 	
-	var scrollbarV = $( '<div></div>' ).addClass( 'jspVerticalBar' ).appendTo( _de.$body );
-	var scrollbarH = $( '<div></div>' ).addClass( 'jspHorizontalBar' ).appendTo( _de.$body );
+	var scrollbarV = $( '<div></div>' ).addClass( 'jspVerticalBar' ).appendTo( _de.$main );
+	var scrollbarH = $( '<div></div>' ).addClass( 'jspHorizontalBar' ).appendTo( _de.$main );
 	
 	var scrollSettings = {
 		verticalGutter : -scrollbarV.width(),
@@ -34,7 +34,7 @@ function ( $, _s ) {
 	
 	_de.$scrollable.jScrollPane( scrollSettings );
 	
-	_s.navigator = _de.$body.data( 'jsp' );
+	_s.navigator = _de.$main.data( 'jsp' );
 	
 	/*===================================================
 	
@@ -67,11 +67,11 @@ function ( $, _s ) {
 				handlePosition: false
 			};
 			
-			// if target empty, assume body
+			// if target empty, assume main
 			
 			if ( $target.length === 0 ) {
 				
-				$target = _de.$body;
+				$target = _de.$main;
 				stickyParameters.scrollTop = function () {
 					
 					return _s.navigator.getContentPositionY();

@@ -182,9 +182,9 @@ function ( $ ) {
 	
 	function IndexOfValues( array, values ) {
 		
-		for ( var i = 0, l = array.length; i < l; i++ ) {
+		for ( var i = 0, l = values.length; i < l; i++ ) {
 			
-			if ( IndexOfValue( values, array[ i ] ) !== -1 ) {
+			if ( IndexOfValue( array, values[ i ] ) !== -1 ) {
 				
 				return i;
 				
@@ -263,6 +263,18 @@ function ( $ ) {
 	
 	/*===================================================
     
+    math
+    
+    =====================================================*/
+	
+	function Clamp ( number, min, max ) {
+		
+		return Math.max( min, Math.min( max, number ) );
+		
+	}
+	
+	/*===================================================
+    
     public
     
     =====================================================*/
@@ -286,6 +298,8 @@ function ( $ ) {
 	_utils.IndexOfProperty = IndexOfProperty;
 	_utils.IndicesOfProperty = IndicesOfProperty;
 	_utils.IndexOfProperties = IndexOfProperties;
+	
+	_utils.Clamp = Clamp;
 	
 	return _utils;
 	
