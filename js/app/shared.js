@@ -49,7 +49,7 @@ function ( $, Signal ) {
 	_de.$navPlanets = $( ".nav-planets" );
 	
 	_de.$solarSystem = $( "#solar-system" );
-	_de.$section = _de.$solarSystem.find( "section" );
+	_de.$section = $( ".system-section" );
 	
 	/*===================================================
 	

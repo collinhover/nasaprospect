@@ -7,20 +7,23 @@
 	background-size: 25%;
 }
 
-#solar-system, section {
+#solar-system, .system-section {
     .fillMinHack;
-    .inline-block;
 }
 
 /* sections
 -------------------------------------------------------------------------------*/
 
-section {
+.system-section {
 	overflow: hidden;
 	position: relative;
+	
+	&.no-crop {
+		overflow: visible;
+	}
 }
 
-section, .container-fill, .orbit, .land, .explore, .foreground, .middleground, .background {
+.system-section, .container-fill, .orbit, .land, .explore, .foreground, .middleground, .background {
     .ignore-pointer;
 }
 
@@ -133,10 +136,3 @@ section, .container-fill, .orbit, .land, .explore, .foreground, .middleground, .
 .explore {
 	background-color: rgba( 51, 51, 51, 1 );
 }
-
-/* planetoids
--------------------------------------------------------------------------------*/
-
-@import "planetoids/sun.less";
-@import "planetoids/earth.less";
-@import "planetoids/mars.less";

@@ -351,40 +351,6 @@ function ( $, _s, _ui, _snd, Signal ) {
 	
 	/*===================================================
 	
-	resize
-	
-	=====================================================*/
-	
-	function Resize ( w, h ) {
-		/*
-		w = w || _s.w;
-		h = h || _s.h;
-		
-		// orbit is always as big as user screen x1
-        
-		this.$orbit.css( {
-            "width": w,
-            "height": h
-        } );
-		
-		// land is at least as big as user screen x1, but can expand
-		
-        this.$land.css( {
-            "width": w,
-            "min-height": h
-        } );
-		
-		// explore is at least as big as user screen x1, but can expand
-		
-		this.$explore.css( {
-            "width": w,
-            "min-height": h
-        } );
-		*/
-	}
-	
-	/*===================================================
-	
 	public
 	
 	=====================================================*/
@@ -402,7 +368,6 @@ function ( $, _s, _ui, _snd, Signal ) {
 	_section.Instance.prototype.StopLanding = StopLanding;
 	_section.Instance.prototype.StartExploring = StartExploring;
 	_section.Instance.prototype.StopExploring = StopExploring;
-	_section.Instance.prototype.Resize = Resize;
 	
 	return _section;
 	

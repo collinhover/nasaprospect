@@ -71,24 +71,6 @@ function ( $, _s, _snd, _section ) {
 	
 	/*===================================================
 	
-	resize
-	
-	=====================================================*/
-	
-	function OnWindowResized () {
-		
-		var i, il, section;
-		
-		for ( i = 0, il = _sections.length; i < il; i++ ) {
-			
-			_sections[ i ].Resize();
-			
-		}
-		
-	}
-	
-	/*===================================================
-	
 	init
 	
 	=====================================================*/
@@ -106,12 +88,60 @@ function ( $, _s, _snd, _section ) {
 		
 	} );
 	
+	// section specific methods
+	
+	// TODO: resize section only while in view
+	// refer to stellar or https://github.com/protonet/jquery.inview
+	/*
+	// ui
+	
+	_s.signals.onResized.add( function () {
+		
+		// keep nav at correct width
+		
+		var $items = _de.$navPlanets.find( 'li' );
+		var navHeight = _de.$navPlanets.height();
+		var numItems = $items.length;
+		var heightPerItem = navHeight / numItems;
+		
+		_de.$navbarPlanets.css( 'width', heightPerItem );
+		
+	} );
+	
+	// sun
+	
+	_s.signals.onResized.add( function () {
+		
+		// keep logo type filling space
+		
+		var lnHeight = _de.$logoName.height();
+		
+		_de.$logoName.find( '[class^="letter"]' ).each( function () {
+			
+			var $element = $( this );
+			var elWidth = $element.width();
+			var $h1 = $element.find( "h1" );
+			var $h2 = $element.find( "h2" );
+			
+			$h2.css( 'font-size', '' );
+			
+			var h2Width = $h2.width();
+			
+			if ( h2Width > elWidth ) {
+				
+				$h2.css( 'font-size', elWidth / 4 );
+				
+			}
+			
+			$h1.css( 'font-size', Math.min( lnHeight - $h2.height(), elWidth ) * 1.3 );
+			
+		} );
+		
+	} );
+	*/
 	// add system sound as filler for when no other sounds are playing
 	
 	_snd.AddFiller( _sound );
-	
-	_s.signals.onResized.add( OnWindowResized );
-	_de.$window.trigger( 'resize' );
 	
 	/*===================================================
 	
