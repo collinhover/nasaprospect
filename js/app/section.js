@@ -9,6 +9,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 	
 	var _de = _s.domElements;
 	var _section = {};
+	var _sectionCount = 0;
 	
 	/*===================================================
 	
@@ -22,12 +23,14 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		parameters = parameters || {};
 		
-		this.orbiting = false;
-		this.landing = false;
-		this.exploring = false;
+		this.id = _sectionCount++;
 		
 		this.$element = $( element );
 		this.$element.data( 'section', this );
+		
+		this.name = this.$element.attr( 'id' );
+		
+		this.whenInside = {};
 		
 		// triggers
 		
@@ -79,12 +82,16 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		this.triggersPersistent.push( {
 			element: this.$element,
-			callback: this.Activate,
-			context: this
+			callback: this.Enter,
+			callbackLeave: this.Exit,
+			callbackCenter: this.Activate,
+			contextAll: this
 		} );
 		
 		// signals
 		
+		this.onEntered = new Signal();
+		this.onExited = new Signal();
 		this.onActivated = new Signal();
 		this.onDeactivated = new Signal();
 		this.onOrbitingStarted = new Signal();
@@ -118,6 +125,53 @@ function ( $, _s, _ui, _snd, Signal ) {
 	
 	/*===================================================
 	
+	enter
+	
+	=====================================================*/
+	
+	function Enter () {
+		
+		if ( this.inside !== true ) {
+			console.log( this.name, 'entered' );
+			this.inside = true;
+			
+			this.onEntered.dispatch( this );
+			
+			_s.signals.onUpdated.add( update, this );
+			
+			if ( typeof this.whenInside.Resize === 'function' ) {
+				
+				_s.signals.onResized.add( this.whenInside.Resize, this );
+				this.whenInside.Resize();
+				
+			}
+			
+		}
+		
+	}
+	
+	function Exit () {
+		
+		if ( this.inside !== false ) {
+			console.log( this.name, 'exited' );
+			this.inside = false;
+			
+			_s.signals.onUpdated.remove( update, this );
+			
+			if ( typeof this.whenInside.Resize === 'function' ) {
+				
+				_s.signals.onResized.remove( this.whenInside.Resize, this );
+				
+			}
+			
+			this.onExited.dispatch( this );
+			
+		}
+		
+	}
+	
+	/*===================================================
+	
 	active
 	
 	=====================================================*/
@@ -138,8 +192,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 			this.$orbit.each( function () {
 				
 				me.triggers.push( _s.navigator.addTrigger( {
-					callback: me.StartOrbiting,
-					context: me,
+					callbackCenter: me.StartOrbiting,
+					contextCenter: me,
 					element: this,
 					once: true
 				} ) );
@@ -209,8 +263,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 			this.$land.each( function () {
 				
 				me.triggers.push( _s.navigator.addTrigger( {
-					callback: me.StartLanding,
-					context: me,
+					callbackCenter: me.StartLanding,
+					contextCenter: me,
 					element: this,
 					once: true
 				} ) );
@@ -262,8 +316,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 			this.$explore.each( function () {
 				
 				me.triggers.push( _s.navigator.addTrigger( {
-					callback: me.StartExploring,
-					context: me,
+					callbackCenter: me.StartExploring,
+					contextCenter: me,
 					element: this,
 					once: true
 				} ) );
@@ -319,8 +373,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 			this.$land.each( function () {
 				
 				me.triggers.push( _s.navigator.addTrigger( {
-					callback: me.StartLanding,
-					context: me,
+					callbackCenter: me.StartLanding,
+					contextCenter: me,
 					element: this,
 					once: true
 				} ) );
@@ -351,6 +405,18 @@ function ( $, _s, _ui, _snd, Signal ) {
 	
 	/*===================================================
 	
+	update
+	
+	=====================================================*/
+	
+	function update () {
+		
+		
+		
+	}
+	
+	/*===================================================
+	
 	public
 	
 	=====================================================*/
@@ -359,6 +425,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 	_section.Instance.prototype.constructor = _section.Instance;
 	
 	_section.Instance.prototype.StopAll = StopAll;
+	_section.Instance.prototype.Enter = Enter;
+	_section.Instance.prototype.Exit = Exit;
 	_section.Instance.prototype.Activate = Activate;
 	_section.Instance.prototype.Deactivate = Deactivate;
 	_section.Instance.prototype.ToOrbit = ToOrbit;

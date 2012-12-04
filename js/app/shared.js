@@ -21,6 +21,7 @@ function ( $, Signal ) {
 	=====================================================*/
 	
 	_s.signals = {
+		onUpdated: new Signal(),
 		onResized: new Signal()
 	};
 	
@@ -43,13 +44,14 @@ function ( $, Signal ) {
 	
 	_de.$containerFill = $( ".container-fill" );
 	
-	_de.$logoName = $( ".prospect-name" );
+	_de.$logo = $( ".logo" );
+	_de.$logoName = _de.$logo.find( ".prospect-name" );
 	
 	_de.$navbarPlanets = $( "#navbarPlanets" );
 	_de.$navPlanets = $( ".nav-planets" );
 	
 	_de.$solarSystem = $( "#solar-system" );
-	_de.$section = $( ".system-section" );
+	_de.$sections = $( ".system-section" );
 	
 	/*===================================================
 	

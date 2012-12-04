@@ -18,11 +18,24 @@ soundManager.onready( function () {
 		"app/shared",
 		"app/ui",
 		"app/solarSystem",
-		"overthrow"
+		"overthrow",
+		"RequestAnimationFrame"
 	],
 	function ( $, _s, _ui, _solarSystem ) {
 		
 		var _de = _s.domElements;
+		
+		// main update loop
+		
+		function Update () {
+			
+			_s.signals.onUpdated.dispatch();
+			
+			window.requestAnimationFrame( Update );
+			
+		}
+		
+		Update();
 		
 	} );
 	

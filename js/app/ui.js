@@ -67,19 +67,19 @@ function ( $, _s ) {
 		
 		// update section parts
 		
-		_de.$orbit = _de.$section.find( ".orbit" );
-		_de.$land = _de.$section.find( ".land" );
-		_de.$explore = _de.$section.find( ".explore" );
+		_de.$orbits = _de.$sections.find( ".orbit" );
+		_de.$lands = _de.$sections.find( ".land" );
+		_de.$explores = _de.$sections.find( ".explore" );
 		
-		_de.$foreground = $( ".foreground" );
-		_de.$middleground = $( ".middleground" );
-		_de.$background = $( ".background" );
+		_de.$foregrounds = $( ".foreground" );
+		_de.$middlegrounds = $( ".middleground" );
+		_de.$backgrounds = $( ".background" );
 		
 		// update parallax
 		
-		_de.$foreground.attr( "data-stellar-ratio", _s.parallaxForeground );
-		_de.$middleground.attr( "data-stellar-ratio", _s.parallaxMiddleground );
-		_de.$background.attr( "data-stellar-ratio", _s.parallaxBackground );
+		_de.$foregrounds.attr( "data-stellar-ratio", _s.parallaxForeground );
+		_de.$middlegrounds.attr( "data-stellar-ratio", _s.parallaxMiddleground );
+		_de.$backgrounds.attr( "data-stellar-ratio", _s.parallaxBackground );
 		
 		_s.navigator.getContentPane().stellar( 'refresh' );
 		

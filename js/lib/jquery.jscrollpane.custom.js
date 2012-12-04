@@ -1419,10 +1419,14 @@ function ( $ ){
 				
 				if ( ( contentPosition.x !== contentPositionLast.x || contentPosition.y !== contentPositionLast.y ) && suppressTriggers !== true ) {
 					
+					var minX = contentPosition.x;
+					var minY = contentPosition.y;
+					var maxX = minX + paneWidth;
+					var maxY = minY + paneHeight;
 					var paneWidthHalf = paneWidth * 0.5;
 					var paneHeightHalf = paneHeight * 0.5;
-					var cx = contentPosition.x + paneWidthHalf;
-					var cy = contentPosition.y + paneHeightHalf;
+					var cx = minX + paneWidthHalf;
+					var cy = minY + paneHeightHalf;
 					var lcx = contentPositionLast.x + paneWidthHalf;
 					var lcy = contentPositionLast.y + paneHeightHalf;
 					var i, trigger;
@@ -1431,29 +1435,65 @@ function ( $ ){
 						
 						trigger = triggers[ i ];
 						
-						if ( isInsideTriggerArea( cx, cy, lcx, lcy, trigger ) ) {
+						// any overlap with trigger
+						
+						if ( isInsideTriggerArea( minX, minY, maxX, maxY, trigger ) ) {
 							
-							if ( trigger.ignore !== true ) {
+							trigger.ignoreLeave = false;
+							
+							if ( trigger.once === true ) {
 								
-								if ( trigger.once === true ) {
-									
-									removeTriggerByIndex( i );
-									
-								}
-								else if ( trigger.continuous !== true ) {
-									
-									trigger.ignore = true;
-									
-								}
-								
-								trigger.callback.call( trigger.context );
+								removeTriggerByIndex( i );
 								
 							}
 							
+							if ( typeof trigger.callbackContinuous === 'function' ) {
+								
+								trigger.callbackContinuous.call( trigger.contextContinuous || trigger.contextAll );
+								
+							}
+							
+							if ( trigger.ignore !== true ) {
+								
+								trigger.ignore = true;
+								
+								if ( typeof trigger.callback === 'function' ) {
+									
+									trigger.callback.call( trigger.context || trigger.contextAll );
+									
+								}
+								
+							}
+							
+							// screen center inside trigger
+							
+							if ( typeof trigger.callbackCenter === 'function' && isInsideTriggerArea( lcx, lcy, cx, cy, trigger ) ) {
+							
+								if ( trigger.ignoreCenter !== true ) {
+									
+									trigger.ignoreCenter = true;
+									trigger.callbackCenter.call( trigger.contextCenter || trigger.contextAll );
+									
+								}
+								
+							}
+							else {
+								
+								trigger.ignoreCenter = false;
+								
+							}
+						
 						}
 						else {
 							
-							trigger.ignore = false;
+							trigger.ignore = trigger.ignoreCenter = false;
+							
+							if ( trigger.ignoreLeave !== true && typeof trigger.callbackLeave === 'function' ) {
+								
+								trigger.ignoreLeave = true;
+								trigger.callbackLeave.call( trigger.contextLeave || trigger.contextAll );
+								
+							}
 							
 						}
 						
@@ -1463,7 +1503,7 @@ function ( $ ){
 				
 			}
 			
-			function isInsideTriggerArea ( maxX, maxY, minX, minY, trigger ) {
+			function isInsideTriggerArea ( minX, minY, maxX, maxY, trigger ) {
 				
 				var bounds = trigger.bounds;
 				

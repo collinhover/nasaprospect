@@ -11,6 +11,7 @@ function ( $, _s, _snd, _section ) {
 	var _$element = _de.$solarSystem;
 	var _sound = new _snd.SoundHandler( { element: _$element } );
 	var _sections = [];
+	var _sectionsByName = {};
 	var _active;
 	
 	/*===================================================
@@ -77,7 +78,7 @@ function ( $, _s, _snd, _section ) {
 	
 	// init all sections
 	
-	_de.$section.each( function () {
+	_de.$sections.each( function () {
 		
 		var $element = $( this );
 		var section = new _section.Instance( $element );
@@ -86,16 +87,19 @@ function ( $, _s, _snd, _section ) {
 		
 		_sections.push( section );
 		
+		if ( typeof section.name === 'string' ) {
+			
+			_sectionsByName[ section.name ] = section;
+			
+		}
+		
 	} );
 	
 	// section specific methods
 	
-	// TODO: resize section only while in view
-	// refer to stellar or https://github.com/protonet/jquery.inview
-	/*
 	// ui
 	
-	_s.signals.onResized.add( function () {
+	_sectionsByName[ 'ui' ].whenInside.Resize = function () {
 		
 		// keep nav at correct width
 		
@@ -106,11 +110,13 @@ function ( $, _s, _snd, _section ) {
 		
 		_de.$navbarPlanets.css( 'width', heightPerItem );
 		
-	} );
+	};
 	
 	// sun
 	
-	_s.signals.onResized.add( function () {
+	var _sctSun = _sectionsByName[ 'sun' ];
+	
+	_sctSun.whenInside.Resize = function () {
 		
 		// keep logo type filling space
 		
@@ -137,8 +143,18 @@ function ( $, _s, _snd, _section ) {
 			
 		} );
 		
+	};
+	_sctSun.onEntered.add( function () {
+		
+		_sctSun.$element.find( _de.$logo ).show();
+	
 	} );
-	*/
+	_sctSun.onExited.add( function () {
+		
+		_sctSun.$element.find( _de.$logo ).hide();
+	
+	} );
+	
 	// add system sound as filler for when no other sounds are playing
 	
 	_snd.AddFiller( _sound );
