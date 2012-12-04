@@ -34,9 +34,9 @@
 					text-indent: -200%;
 					overflow: hidden;
 					border-radius: 50%;
-					background-color: lighten( @logoDark, 10% );
-					background-color: rgba( 255, 255, 255, 0.1 );
-					.box-shadow( 0 0 10px rgba( 0, 0, 0, 0.2 ) );
+					background-color: lighten( @logoDark, 40% );
+					background-color: rgba( 255, 255, 255, 0.4 );
+					.box-shadow( 0 0 10px rgba( 0, 0, 0, 0.4 ) );
 				}
 				
 				h2 {
@@ -50,8 +50,8 @@
 					margin: auto 0;
 					line-height: 100%;
 					padding: 0 10px 0 20px;
-					color: lighten( @logoDark, 20% );
-					color: rgba( 255, 255, 255, 0.2 );
+					color: lighten( @logoDark, 30% );
+					color: rgba( 255, 255, 255, 0.3 );
 					opacity: 0;
 					.transition(e('opacity .3s linear'));
 				}
@@ -59,14 +59,14 @@
 				&:hover {
 					
 					.aspect-shape {
-						background-color: lighten( @logoDark, 50% );
-						background-color: rgba( 255, 255, 255, 0.5 );
+						background-color: lighten( @logoDark, 80% );
+						background-color: rgba( 255, 255, 255, 0.8 );
 					}
 					
 					h2 {
 						opacity: 1;
-						color: lighten( @logoDark, 40% );
-						color: rgba( 255, 255, 255, 0.4 );
+						color: lighten( @logoDark, 60% );
+						color: rgba( 255, 255, 255, 0.6 );
 						.transition-delay( e('.5s') );
 					}
 					
@@ -132,6 +132,14 @@
 			}
 		}
 		
+	}
+	
+	.toggle-sound {
+		margin-left: @uiPanePaddingLeft;
+		
+		.state-on, .state-off {
+			position: relative;
+		}
 	}
 	
 }

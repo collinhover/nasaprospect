@@ -44,23 +44,59 @@
 		
 		<div id="sm2-container"></div>
 		
+		<div id="preloader" class="container-center">
+			
+			<div class="header">
+				<h3 class="sidekick-type dim">Hold on, we're</h3>
+				<h1>unpacking the solar-system</h1>
+				<p class="sidekick-type dim">( less than a parsec to go! )</p>
+			</div>
+			
+		</div>
+		<!-- /preloader -->
+		
 		<div id="main" class="scrollable">
 			
-			<div id="preloader" class="container-center">
-				
-				<div class="header animation-pulse">
-					<h3 class="sidekick-type">Hold on, we're</h3>
-					<h1>building our solar-system</h1>
-					<p class="sidekick-type">( less than a parsec to go! )</p>
-				</div>
-				
-			</div>
-				
-			<div id="solar-system" class="unselectable" data-sound="space" data-sound-loops="true" data-sound-fade="true">
+			<div id="solar-system" class="unselectable" data-sound="twilight_by_stellardrone" data-sound-loops="true" data-sound-fade="true">
 				
 				<section id="setup" class="system-section">
 					
 					<div class="container-fill">
+						
+						<div class="ui-pane-column-middle">
+							<div class="ui-pane-body container-center">
+								
+								<div class="row-fluid">
+									<div class="span2 offset5">
+										<div class="toggle toggle-sound">
+											
+											<div class="aspect-enforcer"></div>
+											<div class="aspect-shape">
+												
+												<div class="state-off">
+													<img src="img/sound_off_white.svg" class="iconk-fillMajority-heightFollow toggle-on">
+												</div>
+												
+												<div class="state-on">
+													<img src="img/sound_on_white.svg" class="iconk-fillMajority-heightFollow toggle-off">
+													
+													<div class="iconk-large-fill slider slider-volume">
+														<div class="track"></div>
+														<div class="knob"></div>
+													</div>
+												</div>
+												
+											</div>
+											
+										</div>
+									</div>
+								</div>
+								<h1>Pump up the volume!</h1>
+								<h3 class="sidekick-type dim">( and start scrolling down )</h3>
+								<p class="dim hidden-desktop">mobile users: audio may be blocked to save your data</p>
+								
+							</div>
+						</div>
 						
 					</div>
 					
@@ -77,7 +113,7 @@
 				<!-- /intro -->
 				
 				<section id="ui" class="system-section">
-						
+					
 					<div class="container-fill stickyme">
 						
 						<div class="ui-pane-column-left">
@@ -182,7 +218,9 @@
 				</section>
 				<!-- /ui -->
 				
-				<section id="sun" class="system-section no-crop" data-sound="wind" data-sound-loops="true" data-sound-fade="true">
+				<section id="sun" class="system-section no-crop" data-sound="the_illness_by_dub_terminator" data-sound-loops="true" data-sound-fade="true">
+					
+					<div class="container-fill"></div>
 					
 					<div class="orbit orbit-top container-fill">
 						
@@ -523,7 +561,7 @@
     		} )();
     	</script>
         
-		<!--<script data-main="js/main.js" src="js/lib/require-jquery.js"></script>-->
+		<script data-main="js/main.js" src="js/lib/require-jquery.js"></script>
         
     </body>
     

@@ -4,12 +4,18 @@
 .toggle-sound {
 	position: relative;
 	display: inline-block;
-	margin-left: @uiPanePaddingLeft;
-	opacity: 0.2;
+	width: 100%;
+	opacity: 0.4;
 	.transition(e('opacity .3s linear'));
 	
 	.state-on, .state-off {
-		display: inline-block;
+		position: absolute;
+		left: 0;
+		right: 0;
+	}
+	
+	.toggle-on, .toggle-off {
+		margin: 0 auto;
 	}
 	
 	.slider-volume {
@@ -58,7 +64,7 @@
 	}
 	
 	&:hover {
-		opacity: 0.6;
+		opacity: 1;
 	}
 	
 }

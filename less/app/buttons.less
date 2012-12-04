@@ -9,26 +9,23 @@
 	
 	.state-off {
 		position: relative;
-		opacity: 1;
 		z-index: @zInteractive + 1;
 	}
 	
 	.state-on {
 		position: relative;
-		opacity: 0;
 		z-index: @zInteractive;
+		display: none;
 	}
 	
 	&.on {
 		
 		.state-off {
-			.hidden;
-			opacity: 0;
-			.transition( none );
+			display: none;
 		}
 		
 		.state-on {
-			opacity: 1;
+			display: block;
 		}
 		
 	}

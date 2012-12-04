@@ -213,7 +213,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 			
 			this.StopAll();
 			
-			this.soundHandlers.element.Stop();
+			this.soundHandlers.element.Pause();
 			
 			_s.navigator.removeTriggers( this.triggers );
 			this.triggers = [];

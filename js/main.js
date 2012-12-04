@@ -46,7 +46,8 @@ soundManager.onready( function () {
 		// fade preloader
 		
 		_utils.FadeDOM( {
-			element: _de.$preloader
+			element: _de.$preloader,
+			duration: 1500
 		} );
 		
 	} );

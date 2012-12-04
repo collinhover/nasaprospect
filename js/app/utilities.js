@@ -409,7 +409,7 @@ function ( $, _s ) {
 			
 			$element.stop( true ).removeClass( 'invisible hiding hidden collapsed' );
 			
-			$ignore = $element.find( 'a, button' ).add( $element );
+			$ignore = $element.find( 'a, button, .btn' ).add( $element );
 			
 			// if should start at 0 opacity
 			
@@ -525,7 +525,7 @@ function ( $, _s ) {
 				
 				$element.stop( true ).removeClass( 'invisible hiding hidden collapsed' );
 				
-				$ignore = $element.find( 'a, button' ).add( $element );
+				$ignore = $element.find( 'a, button, .btn' ).add( $element );
 				
 				if ( show === true ) {
 					

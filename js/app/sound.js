@@ -49,7 +49,7 @@ function ( $, _s, _utils ) {
 					
 					sliderAPI = $slider.data( 'sliderAPI' );
 					
-					if ( sliderAPI instanceof MobileRangeSlider && sliderAPI.value !== _volume ) {
+					if ( sliderAPI instanceof MobileRangeSlider ) {
 						
 						sliderAPI.setValue( _volume );
 						
@@ -822,7 +822,7 @@ function ( $, _s, _utils ) {
 		
 		_de.$toggleSound.addClass( 'on' );
 		
-		_snd.volume = _volumeLast;
+		_snd.volume = parameters && _utils.IsNumber( parameters.volume ) ? parameters.volume : _volumeLast;
 		
 	}
 	
@@ -918,9 +918,9 @@ function ( $, _s, _utils ) {
 		
 	} );
 	
-	// start muted
+	// start unmuted and at 0 volume
 	
-	MuteAll();
+	UnmuteAll( { volume: 0 } );
 	
 	/*===================================================
 	
@@ -936,6 +936,7 @@ function ( $, _s, _utils ) {
 	_snd.SoundHandler.prototype.Remove = Remove;
 	
 	_snd.SoundHandler.prototype.Play = Play;
+	_snd.SoundHandler.prototype.Pause = Pause;
 	_snd.SoundHandler.prototype.Stop = Stop;
 	
 	_snd.SoundHandler.prototype.ForData = ForData;
