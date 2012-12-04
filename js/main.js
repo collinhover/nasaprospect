@@ -16,12 +16,13 @@ soundManager.onready( function () {
 	[
 		"jquery",
 		"app/shared",
+		"app/utilities",
 		"app/ui",
 		"app/solarSystem",
 		"overthrow",
 		"RequestAnimationFrame"
 	],
-	function ( $, _s, _ui, _solarSystem ) {
+	function ( $, _s, _utils, _ui, _solarSystem ) {
 		
 		var _de = _s.domElements;
 		
@@ -36,6 +37,17 @@ soundManager.onready( function () {
 		}
 		
 		Update();
+		
+		// resize once on start
+		
+		_de.$window.trigger( 'resize' );
+		_s.navigator.checkTriggers( true );
+		
+		// fade preloader
+		
+		_utils.FadeDOM( {
+			element: _de.$preloader
+		} );
 		
 	} );
 	

@@ -45,7 +45,7 @@ function ( $, _s, _snd, _section ) {
 				
 				_active = target;
 				
-				// for all non active, ensure they are orbiting
+				// for all non active, deactivate
 				
 				for ( i = 0, il = _sections.length; i < il; i++ ) {
 					
@@ -60,8 +60,9 @@ function ( $, _s, _snd, _section ) {
 				}
 				
 			}
-			
+				
 		}
+			
 	}
 	
 	function GetActiveSection () {
@@ -144,16 +145,8 @@ function ( $, _s, _snd, _section ) {
 		} );
 		
 	};
-	_sctSun.onEntered.add( function () {
-		
-		_sctSun.$element.find( _de.$logo ).show();
 	
-	} );
-	_sctSun.onExited.add( function () {
-		
-		_sctSun.$element.find( _de.$logo ).hide();
-	
-	} );
+	_sctSun.$element.find( _de.$logo ).removeClass( 'hidden' );
 	
 	// add system sound as filler for when no other sounds are playing
 	

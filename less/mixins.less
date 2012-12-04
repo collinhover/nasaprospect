@@ -736,7 +736,42 @@
     -o-animation: @animation;
     animation: @animation;
 }
+/*
+.animation-keyframes ( @name, @from, @mid, @to ) {
+    @keyframes @name {
+        .animation-keyframes ( @from, @mid, @to );
+    }
+    @-webkit-keyframes @name {
+        .animation-keyframes ( @from, @mid, @to );
+    }
+    @-moz-keyframes @name {
+        .animation-keyframes ( @from, @mid, @to );
+    }
+    @-o-keyframes @name {
+        .animation-keyframes ( @from, @mid, @to );
+    }
+}
 
+.animation-keyframes ( @from, @mid, @to ) {
+	from { @from }
+	50% { @mid }
+	to { @to }
+}
+    
+.animation-loop {
+	-webkit-animation-iteration-count: infinite;
+	-moz-animation-iteration-count: infinite;
+	-o-animation-iteration-count: infinite;
+	animation-iteration-count: infinite;
+}
+
+.animation-pulse {
+		.animation( pulse 1s ease );
+		.animation-keyframes( pulse, ~"opacity: 0.25;", ~"opacity: 0.75;", ~"opacity: 0.25;" );
+		.animation-loop;
+	}
+}
+*/
 #gradient-transparent {
 	.vertical(@startColor: #555, @endColor: #333) {
 		background-color: transparent;

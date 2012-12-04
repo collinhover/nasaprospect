@@ -50,16 +50,16 @@
 
 // Typography
 // -------------------------
-@sansFontFamily:       "Sansation", "Helvetica Neue", Helvetica, Arial, sans-serif;
+@sansFontFamily:       "Helvetica Neue", Helvetica, Arial, sans-serif;
 @serifFontFamily:       Georgia, "Times New Roman", Times, serif;
 @monoFontFamily:        Monaco, Menlo, Consolas, "Courier New", monospace;
 
 @baseFontSize:          16px;
-@baseFontFamily:        @sansFontFamily;
+@baseFontFamily:        @serifFontFamily;
 @baseLineHeight:        22px;
 @altFontFamily:         @sansFontFamily;
 
-@headingsFontFamily:    'BebasNeue', @baseFontFamily; // empty to use BS default, @baseFontFamily
+@headingsFontFamily:    'BebasNeue', @sansFontFamily; // empty to use BS default, @baseFontFamily
 @headingsFontWeight:    normal;    // instead of browser default, bold
 @headingsColor:         inherit; // empty to use BS default, @textColor
 
@@ -297,3 +297,18 @@
 @uiPanePaddingRight: @uiPanePaddingLeft;
 @uiPanePaddingTop: @uiPanePaddingLeft;
 @uiPanePaddingBottom: @uiPanePaddingTop;
+
+
+// Z Sorting
+// -----------------------------
+@zBackground: 100;
+@zMiddleground: 200;
+@zForeground: 300;
+@zInteractive: 1000;
+@zMaxBlockable: 9997;
+@zBlock: 9998;
+@zMax: 9999;
+
+@zBGtoMG: 150;
+@zMGtoFG: 250;
+@zFGtoMax: 350;

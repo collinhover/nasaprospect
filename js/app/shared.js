@@ -1,6 +1,7 @@
 define( [ 
 	"jquery",
-	"signals"
+	"signals",
+	"jquery.easing"
 ],
 function ( $, Signal ) {
 	
@@ -37,6 +38,7 @@ function ( $, Signal ) {
 	_de.$document = $( document );
 	_de.$body = _de.$document.find( "body" );
 	_de.$main = $( "#main" );
+	_de.$preloader = $( "#preloader" );
 	
 	_de.$scrollable = $( ".scrollable" );
 	_de.$stickable = $( ".stickyme, .is-sticky" );
@@ -65,12 +67,21 @@ function ( $, Signal ) {
 	_s.throttleTimeLong = 250;
 	_s.throttleTimeLong = 250;
 	
+	_s.fadeDuration = 500;
+	_s.collapseDuration = 500;
+	_s.fadeEasing = 'easeInOutCubic';
+	_s.collapseEasing = 'easeInOutCubic';
+	
 	_s.parallaxBackground = 1.25;
 	_s.parallaxMiddleground = 1.6;
 	_s.parallaxForeground = 2.1;
 	
 	_s.w = _de.$window.width();
     _s.h = _de.$window.height();
+	
+	_s.supports = {
+		pointerEvents: Modernizr.testProp('pointerEvents')
+	};
 	
 	return _s;
 	

@@ -1,7 +1,9 @@
 define( [ 
-	"jquery"
+	"jquery",
+	"app/shared",
+	"jquery.placeholdme"
 ],
-function ( $ ) {
+function ( $, _s ) {
 	
 	var _utils = {};
 	
@@ -275,6 +277,300 @@ function ( $ ) {
 	
 	/*===================================================
     
+    dom effects
+    
+    =====================================================*/
+	
+	function IgnorePointerDOM ( $element, state ) {
+		
+		// use native pointer-events when available
+		
+		if ( _s.supports.pointerEvents ) {
+			
+			if ( state === true ) {
+				
+				$element.addClass( 'ignore-pointer-temporary' );
+				
+			}
+			else {
+				
+				$element.removeClass( 'ignore-pointer-temporary' );
+			
+			}
+			
+		}
+		else {
+			
+			// fallback in-case browser does not support pointer-events property
+			// this method is incredibly slow, as it has to hide element, retrigger event to find what is under, then show again
+			
+			if ( state === true ) {
+				
+				$element.on( 'tap.pointer doubletap.pointer hold.pointer dragstart.pointer drag.pointer, dragend.pointer', 
+					function ( e ) { 
+						
+						e.preventDefault();
+						e.stopPropagation();
+						
+						$element.stop( true ).addClass( 'invisible' );
+						
+						$( document.elementFromPoint( e.clientX, e.clientY ) ).trigger( e );
+						
+						$element.stop( true ).removeClass( 'invisible' );
+						
+						return false;
+						
+					}
+				);
+				
+			}
+			else {
+				
+				$element.off( '.pointer' );
+				
+			}
+			
+		}
+		
+	}
+	
+	function FadeDOM ( parameters ) {
+		
+		var $elements,
+			duration,
+			opacity,
+			easing,
+			callback,
+			makeInvisible;
+		
+		// handle parameters
+		
+		parameters = parameters || {};
+		
+		$elements = $( parameters.element );
+		duration = IsNumber( parameters.duration ) ? parameters.duration : _s.fadeDuration;
+		opacity = IsNumber( parameters.opacity ) ? parameters.opacity : 0;
+		easing = typeof parameters.easing === 'string' ? parameters.easing : _s.fadeEasing;
+		callback = parameters.callback;
+		
+		// for each element
+		
+		$elements.each( function () {
+			
+			var $element = $( this ),
+				$ignore,
+				isCollapsed,
+				isHidden,
+				isInvisible,
+				makeInvisible,
+				fadeComplete = function () {
+					
+					$element.removeClass( 'hiding' );
+					
+					// if faded out completely, hide
+					
+					if ( opacity === 0 ) {
+						
+						$element.addClass( makeInvisible ? 'invisible' : 'hidden' ).css( 'opacity', '' ).trigger( 'hidden' );
+						
+						// reenable all buttons and links
+						
+						IgnorePointerDOM( $ignore, false );
+						
+					}
+					else {
+						
+						$element.trigger( 'shown' );
+						
+						if ( opacity === 1 ) {
+							
+							$element.css( 'opacity', '' );
+							
+						}
+						
+					}
+					
+					// do callback
+					
+					if ( typeof callback === 'function' ) {
+						
+						callback();
+						
+					}
+					
+				};
+			
+			isInvisible = $element.is( '.invisible' );
+			isHidden = $element.is( '.hiding, .hidden' ) || isInvisible;
+			isCollapsed = $element.is( '.collapsed' );
+			makeInvisible = isInvisible || parameters.invisible;
+			
+			// stop animations
+			
+			$element.stop( true ).removeClass( 'invisible hiding hidden collapsed' );
+			
+			$ignore = $element.find( 'a, button' ).add( $element );
+			
+			// if should start at 0 opacity
+			
+			if ( isHidden === true || isCollapsed === true || parameters.initHidden === true ) {
+				
+				$element.fadeTo( 0, 0 ).css( 'height', '' );
+				
+			}
+			
+			// handle opacity
+			
+			if ( opacity === 0 ) {
+				
+				$element.addClass( 'hiding' ).trigger( 'hide' );
+				
+				// temporarily disable all buttons and links
+				
+				IgnorePointerDOM( $ignore, true );
+				
+			}
+			else {
+				
+				IgnorePointerDOM( $ignore, false );
+				
+				$element.trigger( 'show' );
+				
+			}
+			
+			$element.animate( { opacity: opacity }, { duration: duration, easing: easing, complete: fadeComplete } );
+				
+		} );
+		
+	}
+	
+	function CollapseDOM ( parameters ) {
+		
+		var $elements,
+			duration,
+			show,
+			easing,
+			callback;
+		
+		// handle parameters
+		
+		parameters = parameters || {};
+		
+		$elements = $( parameters.element );
+		show = typeof parameters.show === 'boolean' ? parameters.show : false;
+		duration = IsNumber( parameters.duration ) ? parameters.duration : _s.collapseDuration;
+		easing = typeof parameters.easing === 'string' ? parameters.easing : _s.collapseEasing;
+		callback = parameters.callback;
+		
+		// for each element
+		
+		$elements.each( function () {
+			
+			var $element = $( this ),
+				$ignore,
+				isCollapsed,
+				isHidden,
+				isInvisible,
+				makeInvisible,
+				heightCurrent,
+				heightTarget = 0,
+				collapseComplete = function () {
+					
+					// if shown or hidden
+					
+					if ( show === true ) {
+						
+						$element.css( 'height', '' ).trigger( 'shown' );
+						
+					}
+					else {
+						
+						$element.addClass( makeInvisible ? 'invisible' : 'hidden' ).trigger( 'hidden' );
+						
+						// enable pointer
+						
+						IgnorePointerDOM( $ignore, false );
+						
+					}
+					
+					// do callback
+					
+					if ( typeof callback === 'function' ) {
+						
+						callback();
+						
+					}
+					
+				};
+			
+			// if should start from hidden
+			
+			isInvisible = $element.is( '.invisible' );
+			isHidden = $element.is( '.hiding, .hidden' ) || isInvisible;
+			isCollapsed = $element.is( '.collapsed' );
+			makeInvisible = isInvisible || parameters.invisible;
+			
+			if ( isCollapsed !== true && ( isHidden === true || parameters.initHidden === true ) ) {
+				
+				$element.css( 'height', 0 ).css( 'opacity', '' );
+				isCollapsed = true;
+				
+			}
+			
+			// if valid element and not already collapsing / collapsed to same state
+			
+			if ( isCollapsed === show ) {
+				
+				// stop any previous animation
+				
+				$element.stop( true ).removeClass( 'invisible hiding hidden collapsed' );
+				
+				$ignore = $element.find( 'a, button' ).add( $element );
+				
+				if ( show === true ) {
+					
+					// find correct current height and target height
+					
+					$element.placeholdme().appendTo( 'body' );
+					
+					heightCurrent = $element.height();
+					$element.css( 'height', '' );
+					heightTarget = $element.height();
+					$element.css( 'height', heightCurrent );
+					
+					$element.placeholdme( 'revert' );
+					
+					// enable pointer
+					
+					IgnorePointerDOM( $ignore, false );
+					
+					// show
+					
+					$element.trigger( 'show' );
+					
+				}
+				else {
+					
+					// temporarily ignore pointer
+					
+					IgnorePointerDOM( $ignore, true );
+					
+					$element.addClass( 'collapsed' ).trigger( 'hide' );
+					
+				}
+				
+				// animate
+				
+				$element.animate( { height: heightTarget }, { duration: duration, easing: easing, complete: collapseComplete } );
+				
+			}
+			
+		} );
+		
+	}
+	
+	/*===================================================
+    
     public
     
     =====================================================*/
@@ -300,6 +596,10 @@ function ( $ ) {
 	_utils.IndexOfProperties = IndexOfProperties;
 	
 	_utils.Clamp = Clamp;
+	
+	_utils.FadeDOM = FadeDOM;
+	_utils.CollapseDOM = CollapseDOM;
+	_utils.IgnorePointerDOM = IgnorePointerDOM;
 	
 	return _utils;
 	

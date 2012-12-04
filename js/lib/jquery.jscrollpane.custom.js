@@ -199,7 +199,8 @@ function ( $ ){
 					elem.removeClass('jspScrollable');
 					pane.css({
 						top: 0,
-						width: container.width() - originalPaddingTotalWidth
+						width: '',//container.width() - originalPaddingTotalWidth,
+						height: ''
 					});
 					
 					removeMousewheel();
@@ -209,6 +210,11 @@ function ( $ ){
 					
 				}
 				else {
+					
+					pane.css( {
+						width: 'auto',
+						height: 'auto'
+					} );
 					
 					elem.addClass('jspScrollable');
 					
@@ -781,7 +787,7 @@ function ( $ ){
 						.trigger( 'jsp-scroll-y', [destTop, isAtTop, isAtBottom] )
 						.trigger( 'scroll' );
 					
-					handleTriggers();
+					checkTriggers();
 					
 				}
 				
@@ -864,7 +870,7 @@ function ( $ ){
 						.trigger('jsp-scroll-x', [destLeft, isAtLeft, isAtRight])
 						.trigger('scroll');
 					
-					handleTriggers();
+					checkTriggers();
 					
 				}
 				
@@ -1415,9 +1421,9 @@ function ( $ ){
 				
 			}
 			
-			function handleTriggers () {
+			function checkTriggers ( force ) {
 				
-				if ( ( contentPosition.x !== contentPositionLast.x || contentPosition.y !== contentPositionLast.y ) && suppressTriggers !== true ) {
+				if ( force === true || ( suppressTriggers !== true && ( contentPosition.x !== contentPositionLast.x || contentPosition.y !== contentPositionLast.y ) ) ) {
 					
 					var minX = contentPosition.x;
 					var minY = contentPosition.y;
@@ -1711,6 +1717,10 @@ function ( $ ){
 					},
 					removeTriggers: function ( list ) {
 						removeTriggers( list );
+						return this;
+					},
+					checkTriggers: function ( force ) {
+						checkTriggers( force );
 						return this;
 					},
 					// Returns the current x position of the viewport with regards to the content pane.

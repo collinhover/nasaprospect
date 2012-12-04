@@ -152,10 +152,7 @@ function ( $, _s ) {
 	}
 	);
 	
-	// resize once on start
-	
 	_de.$window.on( 'resize', $.throttle( _s.throttleTimeLong, OnWindowResized ) );
-	_de.$window.trigger( 'resize' );
 	
 	/*===================================================
 	

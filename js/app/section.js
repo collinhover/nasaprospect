@@ -103,9 +103,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		this.$planet.on( 'tap', $.proxy( this.ToOrbit, this ) );
 		
-		// deactivate
-		
 		this.Deactivate();
+		this.Exit();
 		
 	}
 	
