@@ -1,5 +1,5 @@
 /* containers 
--------------------------*/
+-------------------------------------------------------------------------------*/
 
 .container-center {
 	text-align: center;
@@ -93,46 +93,25 @@
 }
 
 /* panes 
--------------------------*/
+-------------------------------------------------------------------------------*/
 
-.ui-pane, [class^="ui-pane-"], [class*=" ui-pane-"] {
+.ui-pane,
+[class^="ui-pane-"],
+[class*=" ui-pane-"] {
 	position: absolute;
 	min-width: @uiPaneMinWidth;
 	min-height: @uiPaneMinHeight;
 }
 
-.ui-pane-column, [class^="ui-pane-column"], [class*=" ui-pane-column"] {
+.ui-pane-column,
+[class^="ui-pane-column"],
+[class*=" ui-pane-column"] {
 	height: 100%;
 	top: 0;
-	
-	.ui-pane-header, .ui-pane-footer, .ui-pane-body, .ui-pane-body-top, .ui-pane-body-bottom {
-		width: 100%;
-	}
-	
-	.ui-pane-header, .ui-pane-footer {
-		min-height: @uiPaneMinHeight;
-	}
-	
-	.ui-pane-header {
-		top: 0;
-	}
-	
-	.ui-pane-footer {
-		bottom: 0;
-	}
-	
-	.ui-pane-body {
-		top: @uiPaneMinHeight;
-		bottom: @uiPaneMinHeight;
-		
-		.ui-pane-body-top, .ui-pane-body-bottom {
-			height: 50%;
-		}
-	}
-	
 }
 
-.ui-pane-column-left, .ui-pane-column-right {
+.ui-pane-column-left,
+.ui-pane-column-right {
 	min-width: @uiPaneColumnSidesWidth;
 }
 
@@ -157,8 +136,76 @@
 	
 }
 
+.ui-pane-section,
+[class^="ui-pane-section"],
+[class*=" ui-pane-section"]  {
+	width: 100%;
+	
+	&.expandable {
+		height: auto;
+	}
+}
+
+.ui-pane-section-header,
+.ui-pane-section-footer {
+	min-height: @uiPaneMinHeight;
+}
+
+.ui-pane-section-header {
+	top: 0;
+}
+
+.ui-pane-section-footer {
+	bottom: 0;
+}
+
+.ui-pane-section-body {
+	top: @uiPaneMinHeight;
+	bottom: @uiPaneMinHeight;
+}
+
+.ui-pane-section-half-top,
+.ui-pane-section-half-bottom {
+	height: 50%;
+}
+
+.ui-pane-section-third-top,
+.ui-pane-section-third-middle,
+.ui-pane-section-third-bottom {
+	height: 33%;
+}
+
+.ui-pane-section-quarter-top,
+.ui-pane-section-quarter-top-middle,
+.ui-pane-section-quarter-bottom-middle,
+.ui-pane-section-quarter-bottom {
+	height: 25%;
+}
+
+.ui-pane-section-half-bottom,
+.ui-pane-section-third-bottom,
+.ui-pane-section-quarter-bottom {
+	bottom: 0;
+}
+
+.ui-pane-section-third-middle {
+	top: 33%;
+}
+
+.ui-pane-section-third-bottom {
+	bottom: 0;
+}
+
+.ui-pane-section-quarter-top-middle {
+	top: 25%;
+}
+
+.ui-pane-section-quarter-bottom-middle {
+	bottom: 25%;
+}
+
 /* sticky 
--------------------------*/
+-------------------------------------------------------------------------------*/
 
 .sticky-wrapper {
 	width: 100%;

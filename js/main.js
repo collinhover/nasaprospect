@@ -47,7 +47,8 @@ soundManager.onready( function () {
 		
 		_utils.FadeDOM( {
 			element: _de.$preloader,
-			duration: 1500
+			easing: 'easeInCubic',
+			duration: 1000
 		} );
 		
 	} );

@@ -40,6 +40,7 @@
 // --------------------------
 @logoDark: #061B2B;
 @logoLight: #F9DF8D;
+@logoLightAlt: #77B9EC; // lighten( @logoDark, 60% );
 
 
 // Links
@@ -59,11 +60,11 @@
 @baseLineHeight:        22px;
 @altFontFamily:         @sansFontFamily;
 
-@headingsFontFamily:    'BebasNeue', @sansFontFamily; // empty to use BS default, @baseFontFamily
+@headingsFontFamily:    @sansFontFamily; // empty to use BS default, @baseFontFamily
 @headingsFontWeight:    normal;    // instead of browser default, bold
 @headingsColor:         inherit; // empty to use BS default, @textColor
 
-@logoFontFamily: @headingsFontFamily;
+@logoFontFamily: 'BebasNeue', @headingsFontFamily;
 @logoAltFontFamily: "Copperplate", @logoFontFamily;
 
 // Tables
