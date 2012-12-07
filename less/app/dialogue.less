@@ -13,10 +13,17 @@
 		display: inline;
 		font-size: 400%;
 		line-height: 100%;
-		color: @logoLight;
 		
 		&.important-type {
 			font-size: 625%;
+		}
+		
+		&.astronaut {
+			color: @logoLight;
+		}
+		
+		&.robot {
+			color: @logoLightAlt;
 		}
 	}
 	
@@ -43,7 +50,13 @@
 		bottom: 100%;
 		left: 0;
 		margin-bottom: 10px;
-		opacity: 0.6;
+	}
+	
+	.origin-bottom {
+		top: 100%;
+		bottom: auto;
+		margin-bottom: 0;
+		margin-top: 10px;
 	}
 	
 	.separator {
@@ -71,14 +84,6 @@
 	.origin {
 		left: auto;
 		right: 0;
-	}
-	
-}
-
-.dialogue-secondary {
-	
-	h1 {
-		color: @logoLightAlt;
 	}
 	
 }

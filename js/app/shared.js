@@ -75,6 +75,7 @@ function ( $, Signal ) {
 	_s.parallaxBackground = 1.25;
 	_s.parallaxMiddleground = 1.6;
 	_s.parallaxForeground = 2.1;
+	_s.parallaxMaxground = 2.7;
 	
 	_s.w = _de.$window.width();
     _s.h = _de.$window.height();

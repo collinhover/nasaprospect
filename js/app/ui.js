@@ -71,12 +71,14 @@ function ( $, _s ) {
 		_de.$lands = _de.$sections.find( ".land" );
 		_de.$explores = _de.$sections.find( ".explore" );
 		
+		_de.$maxgrounds = $( ".maxground" );
 		_de.$foregrounds = $( ".foreground" );
 		_de.$middlegrounds = $( ".middleground" );
 		_de.$backgrounds = $( ".background" );
 		
 		// update parallax
 		
+		_de.$maxgrounds.attr( "data-stellar-ratio", _s.parallaxMaxground );
 		_de.$foregrounds.attr( "data-stellar-ratio", _s.parallaxForeground );
 		_de.$middlegrounds.attr( "data-stellar-ratio", _s.parallaxMiddleground );
 		_de.$backgrounds.attr( "data-stellar-ratio", _s.parallaxBackground );
