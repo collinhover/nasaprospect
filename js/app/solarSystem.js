@@ -115,38 +115,7 @@ function ( $, _s, _snd, _section ) {
 	
 	// sun
 	
-	var _sctSun = _sectionsByName[ 'sun' ];
-	
-	_sctSun.whenInside.Resize = function () {
-		
-		// keep logo type filling space
-		
-		var lnHeight = _de.$logoName.height();
-		
-		_de.$logoName.find( '[class^="letter"]' ).each( function () {
-			
-			var $element = $( this );
-			var elWidth = $element.width();
-			var $h1 = $element.find( "h1" );
-			var $h2 = $element.find( "h2" );
-			
-			$h2.css( 'font-size', '' );
-			
-			var h2Width = $h2.width();
-			
-			if ( h2Width > elWidth ) {
-				
-				$h2.css( 'font-size', elWidth / 4 );
-				
-			}
-			
-			$h1.css( 'font-size', Math.min( lnHeight - $h2.height(), elWidth ) * 1.3 );
-			
-		} );
-		
-	};
-	
-	_sctSun.$element.find( _de.$logo ).removeClass( 'hidden' );
+	_sectionsByName[ 'sun' ].$element.find( _de.$logo ).removeClass( 'hidden' );
 	
 	// add system sound as filler for when no other sounds are playing
 	

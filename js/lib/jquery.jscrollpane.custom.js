@@ -454,6 +454,7 @@ function ( $ ){
 			}
 
 			function sizeHorizontalScrollbar() {
+				// TODO: subtract corner width if present?
 				container.find('>.jspHorizontalBar>.jspCap:visible,>.jspHorizontalBar>.jspArrow').each(
 					function() {
 						horizontalTrackWidth -= $(this).outerWidth();
@@ -465,7 +466,7 @@ function ( $ ){
 			}
 
 			function resizeScrollbars() {
-				if (isScrollableH && isScrollableV) {
+				if ( isScrollableH && isScrollableV ) {
 					var horizontalTrackHeight = horizontalTrack.outerHeight(),
 						verticalTrackWidth = verticalTrack.outerWidth();
 					verticalTrackHeight -= horizontalTrackHeight;
@@ -478,9 +479,13 @@ function ( $ ){
 					horizontalTrackWidth -= verticalTrackWidth;
 					paneHeight -= verticalTrackWidth;
 					paneWidth -= horizontalTrackHeight;
-					horizontalTrack.parent().append(
-						$('<div class="jspCorner" />').css('width', horizontalTrackHeight + 'px')
-					);
+					horizontalTrack.parent()
+						.find( '.jspCorner' )
+						.remove()
+						.end()
+						.append(
+							$('<div class="jspCorner" />').css('width', horizontalTrackHeight + 'px')
+						);
 					sizeVerticalScrollbar();
 					sizeHorizontalScrollbar();
 				}

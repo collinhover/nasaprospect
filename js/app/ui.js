@@ -1,6 +1,7 @@
 define( [ 
 	"jquery",
 	"app/shared",
+	"app/utilities",
 	"hammer.custom",
 	"bootstrap",
 	"mwheelIntent",
@@ -9,7 +10,7 @@ define( [
 	"jquery.jscrollpane.custom",
 	"jquery.stellar.custom"
 ],
-function ( $, _s ) {
+function ( $, _s, _utils ) {
 	
 	var _de = _s.domElements;
 	var _ui = {};
@@ -33,6 +34,33 @@ function ( $, _s ) {
             "width": _s.w,
             "height": _s.h
         } );
+		
+		// handle type size by screen size
+		console.log( 'resize font ', _s.w / _s.wBase, _s.h / _s.hBase );
+		_de.$body.css( 'font-size', _utils.Clamp( Math.min( _s.w / _s.wBase, _s.h / _s.hBase ), _s.fontSizeMin, _s.fontSizeMax ) * 100 + "%" );
+		/*
+		var lnHeight = _de.$logoName.height();
+		
+		_de.$logoName.find( '[class^="letter"]' ).each( function () {
+			
+			var $element = $( this );
+			var elWidth = $element.width();
+			var $h1 = $element.find( "h1" );
+			var $h2 = $element.find( "h2" );
+			
+			$h2.css( 'font-size', '' );
+			
+			var h2Width = $h2.width();
+			
+			if ( h2Width > elWidth ) {
+				
+				$h2.css( 'font-size', elWidth / 4 );
+				
+			}
+			
+			$h1.css( 'font-size', Math.min( lnHeight - $h2.height(), elWidth ) * 1.3 );
+			
+		} );*/
 		
 		// refresh scroll panes
 		

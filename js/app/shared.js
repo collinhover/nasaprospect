@@ -67,6 +67,13 @@ function ( $, Signal ) {
 	_s.throttleTimeLong = 250;
 	_s.throttleTimeLong = 250;
 	
+	_s.wMin = 950;
+	_s.hMin = 550;
+	_s.wBase = 1920;
+	_s.hBase = 1080;
+	_s.fontSizeMin = 0.8;
+	_s.fontSizeMax = 1.2;
+	
 	_s.fadeDuration = 500;
 	_s.collapseDuration = 500;
 	_s.fadeEasing = 'easeInOutCubic';
