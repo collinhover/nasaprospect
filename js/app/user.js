@@ -15,6 +15,7 @@ function ( $, _s, _utils, _ss, _section ) {
 	var _sectionActive;
 	var _sectionTriggers;
 	var _sectionOptions;
+	var _sectionOptionsById = {};
 	
 	/*===================================================
 	
@@ -38,13 +39,17 @@ function ( $, _s, _utils, _ss, _section ) {
 		
 			// record original inline styles and init options
 			
-			$element.data( 'options', {
-				base: {
-					widthCSS: $element.prop("style")[ 'width' ],
-					heightCSS: $element.prop("style")[ 'height' ]
-				},
-				adjust: {}
-			} );
+			var hide = $element.hasClass( 'hidden' );
+			
+			$element
+				.removeClass( 'hidden' )
+				.data( 'options', {
+					base: {
+						widthCSS: $element.prop("style")[ 'width' ],
+						heightCSS: $element.prop("style")[ 'height' ]
+					},
+					adjust: {}
+				} );
 			
 			var options = $element.data( 'options' );
 			options.base.width = options.width = parseFloat( options.base.widthCSS );
@@ -98,6 +103,14 @@ function ( $, _s, _utils, _ss, _section ) {
 			// store
 			
 			_charactersById[ id ] = $element;
+			
+			// shrink after init complete
+			
+			if ( hide === true ) {
+				
+				Shrink( id );
+				
+			}
 			
 		}
 		
@@ -180,45 +193,13 @@ function ( $, _s, _utils, _ss, _section ) {
 			
 			_s.navigator.removeTriggers( _sectionTriggers );
 			_sectionTriggers = [];
-			_sectionOptions = {};
+			_sectionOptions = _sectionOptionsById[ _sectionActive.id ] = _sectionOptionsById[ _sectionActive.id ] || {};
 			
 			if ( _sectionActive instanceof _section.Instance ) {
 				
 				// if will be resizing characters while in section
 				
-				_sectionOptions.$resizers = _sectionActive.$element.find( '[data-resize]' );
-				
-				_sectionOptions.$resizers.each( function () {
-					
-					var $element = $( this );
-					var type = $element.attr( 'data-resize' );
-					var direction = $element.attr( 'data-resize-direction' );
-					
-					_sectionTriggers.push( _s.navigator.addTrigger( {
-						callbackCenterContinuous: function ( trigger ) {
-							
-							if ( type === 'shrink' ) {
-								
-								ShrinkCharacter( 'astronaut', { 
-									element: $element,
-									bounds: trigger.bounds,
-									direction: direction
-								} );
-								//GrowCharacter( 'robot' );
-								
-							}
-							// default to grow type
-							else {
-								
-								// TODO
-								
-							}
-							
-						},
-						element: $element
-					} ) );
-					
-				} );
+				InitSectionResizers( _sectionActive );
 				
 			}
 			
@@ -232,8 +213,158 @@ function ( $, _s, _utils, _ss, _section ) {
 	
 	=====================================================*/
 	
-	function ShrinkCharacter ( id, parameters ) {
+	function InitSectionResizers ( section ) {
+		
+		var types = [ 'shrink', 'grow' ];
+		
+		for ( var i = 0, il = types.length; i < il; i++ ) {
+			
+			InitSectionResizerType( section, types[ i ] );
+			
+		}
+		
+	}
+	
+	function InitSectionResizerType ( section, type ) {
+		
+		var typeSearch = type.toLowerCase();
+		var typeDataName = 'data-' + typeSearch;
+		var typeCallbackName = type.charAt( 0 ).toUpperCase() + type.slice( 1 );
+		
+		if ( _sectionOptions[ '$' + typeSearch ] instanceof $ !== true ) {
+			
+			_sectionOptions[ '$' + typeSearch ] = section.$element.find( '[' + typeDataName + ']' );
+			
+		}
+		
+		_sectionOptions[ '$' + typeSearch ].each( function () {
+			
+			var $element = $( this );
+			var direction = $element.attr( typeDataName );
+			var characters = $.trim( $element.attr( typeDataName + '-characters' ) ).split( /[ \t\r]+/g );
+			var triggerParameters = {
+				callbackCenterContinuous: function ( trigger ) {
+					
+					for ( var i = 0, il = characters.length; i < il; i++ ) {
+						
+						_user[ typeCallbackName ]( characters[ i ], { 
+							element: $element,
+							bounds: trigger.bounds,
+							direction: direction
+						} );
+						
+					}
+					
+				},
+				element: $element
+			};
+			
+			// make sure that we do resize one last time upon leaving trigger area
+			
+			triggerParameters.callbackCenterLeave = triggerParameters.callbackCenterContinuous;
+			
+			_sectionTriggers.push( _s.navigator.addTrigger( triggerParameters ) );
+			
+		} );
+		
+	}
+	
+	function Shrink ( id, parameters ) {
 		console.log( 'SHRINK', id );
+		parameters = parameters || {};
+		var $element = $( parameters.element );
+		
+		// based on scroll
+		
+		if ( $element.length > 0 ) {
+			
+			var scrollPositionCenterY = _s.navigator.getScrollPositionCenterY();
+			var bounds = parameters.bounds || _utils.DOMBounds( $element );
+			var direction = parameters.direction;
+			
+			// get pct by direction
+			
+			if ( direction === 'up' ) {
+				
+				var boundsDeltaV = bounds.bottom - bounds.top;
+				parameters.pct = _utils.Clamp( ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
+				
+			}
+			// default to down
+			else {
+				
+				var boundsDeltaV = bounds.bottom - bounds.top;
+				parameters.pct = _utils.Clamp( 1 - ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
+				
+			}
+			
+		}
+		// for tween
+		else {
+			
+			if ( _utils.IsNumber( parameters.width ) !== true ) parameters.width = 0;
+			if ( _utils.IsNumber( parameters.height ) !== true ) parameters.height = 0;
+			
+		}
+		
+		ResizeCharacter( id, parameters );
+		
+	}
+	
+	function Grow ( id, parameters ) {
+		console.log( 'GROW', id );
+		parameters = parameters || {};
+		var $element = $( parameters.element );
+		
+		// based on scroll
+		
+		if ( $element.length > 0 ) {
+			
+			var scrollPositionCenterY = _s.navigator.getScrollPositionCenterY();
+			var bounds = parameters.bounds || _utils.DOMBounds( $element );
+			var direction = parameters.direction;
+			
+			// get pct by direction
+			
+			if ( direction === 'up' ) {
+				
+				var boundsDeltaV = bounds.bottom - bounds.top;
+				parameters.pct = _utils.Clamp( 1 - ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
+				
+			}
+			// default to down
+			else {
+				
+				var boundsDeltaV = bounds.bottom - bounds.top;
+				parameters.pct = _utils.Clamp( ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
+				
+			}
+			
+			ResizeCharacter( id, parameters );
+			
+		}
+		// for tween
+		else {
+			
+			var $character = _charactersById[ id ];
+			
+			if ( $character instanceof $ ) {
+				
+				var options = $character.data( 'options' );
+				
+				if ( _utils.IsNumber( parameters.width ) !== true ) parameters.width = options.base.width;
+				if ( _utils.IsNumber( parameters.height ) !== true ) parameters.height = options.base.height;
+				
+				ResizeCharacter( id, parameters );
+				
+			}
+			
+		}
+		
+	}
+	
+	function ResizeCharacter ( id, parameters ) {
+		console.log( ' > Resize', id );
 		var $character = _charactersById[ id ];
 		
 		if ( $character instanceof $ ) {
@@ -241,76 +372,31 @@ function ( $, _s, _utils, _ss, _section ) {
 			var options = $character.data( 'options' );
 			
 			parameters = parameters || {};
-			var $element = $( parameters.element );
+			var pct = parameters.pct;
 			
 			TweenMax.killTweensOf( options );
 			
 			// shrink based on position relative to element
 			
-			if ( $element.length > 0 ) {
+			if ( _utils.IsNumber( pct ) ) {
 				
-				var scrollPositionCenterY = _s.navigator.getScrollPositionCenterY();
-				var bounds = parameters.bounds || _utils.DOMBounds( $element );
-				var direction = parameters.direction;
-				var pct;
+				if ( options.adjust.width === true ) options.width = options.base.width * pct;
+				if ( options.adjust.height === true ) options.height = options.base.height * pct;
 				
-				// get pct by direction
-				
-				if ( direction === 'up' ) {
-					
-					var boundsDeltaV = bounds.bottom - bounds.top;
-					pct = _utils.Clamp( ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
-					
-				}
-				// default to down
-				else {
-					
-					var boundsDeltaV = bounds.bottom - bounds.top;
-					pct = _utils.Clamp( 1 - ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
-					
-				}
-				
-				if ( options.adjust.width === true ) {
-					
-					options.width = options.base.width * pct;
-					
-				}
-				
-				if ( options.adjust.height === true ) {
-					
-					options.height = options.base.height * pct;
-					
-				}
-				console.log( ' > direction', direction || '(default to down)', ' scrollPositionCenterY', scrollPositionCenterY, ' pct ', pct );
-				UpdateCharacter( id );
+				UpdateResizeCharacter( $character );
 				
 			}
 			// tween to
 			else {
 				
-				// width to
-				
-				if ( options.adjust.width !== true ) {
-					delete parameters.width;
-				}
-				else if ( _utils.IsNumber( parameters.width ) !== true ) {
-					parameters.width = 0;
-				}
-				
-				// height to
-				
-				if ( options.adjust.height !== true ) {
-					delete parameters.height;
-				}
-				else if ( _utils.IsNumber( parameters.height ) !== true ) {
-					parameters.height = 0;
-				}
+				if ( options.adjust.width !== true ) delete parameters.width;
+				if ( options.adjust.height !== true ) delete parameters.height;
 				
 				var duration = _utils.IsNumber( parameters.duration ) ? parameters.duration : 0;
 				parameters.easing = parameters.easing || Strong.easeIn;
 				parameters.onUpdate = function () {
 					
-					UpdateCharacter( id );
+					UpdateResizeCharacter( $character );
 					
 				};
 				
@@ -322,86 +408,45 @@ function ( $, _s, _utils, _ss, _section ) {
 		
 	}
 	
-	function GrowCharacter ( id, parameters ) {
-		console.log( 'GROW', id );
-		return;
-		/*
-		var $character = _charactersById[ id ];
-		var options;
-		var $element;
-		var duration;
+	function UpdateResizeCharacter ( $character ) {
 		
-		if ( $character instanceof $ ) {
+		var options = $character.data( 'options' );
+		
+		if ( options.adjust.width === true && options.widthLast !== options.width ) {
 			
-			options = $character.data( 'options' );
+			options.widthLast = options.width;
 			
-			parameters = parameters || {};
+			$character.css( 'width', options.width + '%' );
 			
-			// width to
-			
-			if ( options.adjust.width !== true ) {
-				delete parameters.width;
-			}
-			else if ( _utils.IsNumber( parameters.width ) !== true ) {
-				parameters.width = 0;
-			}
-			
-			// height to
-			
-			if ( options.adjust.height !== true ) {
-				delete parameters.height;
-			}
-			else if ( _utils.IsNumber( parameters.height ) !== true ) {
-				parameters.height = 0;
+			if ( options.adjust.left === true ) {
+				
+				$character.css( 'left', ( 100 - options.width ) * 0.5 + '%' );
+				
 			}
 			
-			$element = $( parameters.element );
+			if ( options.adjust.right === true ) {
+				
+				$character.css( 'right', ( 100 - options.width ) * 0.5 + '%' );
+				
+			}
 			
 		}
-		*/
-	}
-	
-	function UpdateCharacter ( id ) {
 		
-		var $character = _charactersById[ id ];
-		
-		if ( $character instanceof $ ) {
+		if ( options.adjust.height === true && options.heightLast !== options.height ) {
 			
-			var options = $character.data( 'options' );
+			options.heightLast = options.height;
 			
-			if ( options.adjust.width === true ) {
+			$character.css( 'height', options.height + '%' );
+			
+			if ( options.adjust.top === true ) {
 				
-				$character.css( 'width', options.width + '%' );
-				
-				if ( options.adjust.left === true ) {
-					
-					$character.css( 'left', ( 100 - options.width ) * 0.5 + '%' );
-					
-				}
-				
-				if ( options.adjust.right === true ) {
-					
-					$character.css( 'right', ( 100 - options.width ) * 0.5 + '%' );
-					
-				}
+				$character.css( 'top', ( 100 - options.height ) * 0.5 + '%' );
 				
 			}
 			
-			if ( options.adjust.height === true ) {
-				console.log( 'update shrink', options.height );
-				$character.css( 'height', options.height + '%' );
+			if ( options.adjust.bottom === true ) {
 				
-				if ( options.adjust.top === true ) {
-					
-					$character.css( 'top', ( 100 - options.height ) * 0.5 + '%' );
-					
-				}
-				
-				if ( options.adjust.bottom === true ) {
-					
-					$character.css( 'bottom', ( 100 - options.height ) * 0.5 + '%' );
-					
-				}
+				$character.css( 'bottom', ( 100 - options.height ) * 0.5 + '%' );
 				
 			}
 			
@@ -435,8 +480,8 @@ function ( $, _s, _utils, _ss, _section ) {
 	
 	=====================================================*/
 	
-	_user.ShrinkCharacter = ShrinkCharacter;
-	_user.GrowCharacter = GrowCharacter;
+	_user.Shrink = Shrink;
+	_user.Grow = Grow;
 	
 	return _user;
 	

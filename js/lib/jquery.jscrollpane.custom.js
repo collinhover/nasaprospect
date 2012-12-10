@@ -1376,7 +1376,9 @@ function ( $ ){
 				
 				if ( $element.length > 0 ) {
 					
-					// ensure trigger does not already exist
+					// find if element already has trigger
+					// trying to detect duplicates seems to have false positives
+					// instead, combine triggers
 					
 					var i, il, trigger;
 					
@@ -1384,9 +1386,29 @@ function ( $ ){
 						
 						trigger = triggers[ i ];
 						
-						if ( trigger.$element.is( $element ) && ( trigger.callback === callback || trigger.callbackContinuous === triggerNew.callbackContinuous || trigger.callbackCenter === triggerNew.callbackCenter || trigger.callbackCenterContinuous === triggerNew.callbackCenterContinuous || trigger.callbackLeave === triggerNew.callbackLeave ) ) {
+						if ( trigger.$element.is( $element ) ) {
+							console.log( 'add duplicate trigger', trigger, triggerNew );
 							
-							trigger = $.extend( trigger, triggerNew );
+							// add new callbacks to existing
+							
+							var j, jl, callbackType;
+							var callbackTypes = [
+									'callback',
+									'callbackContinuous',
+									'callbackCenter',
+									'callbackCenterContinuous',
+									'callbackCenterLeave',
+									'callbackLeave'
+								];
+							
+							for ( j = 0, jl = callbackTypes.length; j < jl; j++ ) {
+								
+								callbackType = callbackTypes[ j ];
+								if ( triggerNew[ callbackType ] ) trigger[ callbackType ] = [].concat( trigger[ callbackType ], triggerNew[ callbackType ] );
+								
+							}
+							
+							trigger.once = triggerNew.once;
 							
 							return trigger;
 							
@@ -1545,7 +1567,6 @@ function ( $ ){
 					var lcx = triggerCheckPosition.x + paneWidthHalf;
 					var lcy = triggerCheckPosition.y + paneHeightHalf;
 					var triggerList = triggers;
-					var i, trigger;
 					var triggerSortDirection, dxAbs, dyAbs;
 					
 					// get trigger list
@@ -1609,6 +1630,8 @@ function ( $ ){
 					
 					// for each trigger
 					
+					var i, trigger;
+					
 					for( i = triggerList.length - 1; i >= 0; i-- ) {
 						
 						trigger = triggerList[ i ];
@@ -1617,17 +1640,12 @@ function ( $ ){
 						
 						if ( isInsideTriggerArea( minX, minY, maxX, maxY, trigger ) ) {
 							
-							trigger.ignoreLeave = false;
+							trigger.inside = true;
 							
-							if ( trigger.once === true ) {
+							if ( trigger.callbackContinuous ) {
 								
-								removeTrigger( trigger );
-								
-							}
-							
-							if ( typeof trigger.callbackContinuous === 'function' ) {
-								
-								trigger.callbackContinuous.call( trigger.contextContinuous || trigger.contextAll, trigger );
+								handleTriggerCallbacks( trigger, trigger.callbackContinuous );
+								//trigger.callbackContinuous.call( trigger.contextContinuous || trigger.contextAll, trigger );
 								
 							}
 							
@@ -1635,9 +1653,10 @@ function ( $ ){
 								
 								trigger.ignore = true;
 								
-								if ( typeof trigger.callback === 'function' ) {
+								if ( trigger.callback ) {
 									
-									trigger.callback.call( trigger.context || trigger.contextAll, trigger );
+									handleTriggerCallbacks( trigger, trigger.callback, trigger.context || trigger.contextAll );
+									//trigger.callback.call( trigger.context || trigger.contextAll, trigger );
 									
 								}
 								
@@ -1647,9 +1666,12 @@ function ( $ ){
 							
 							if ( isInsideTriggerArea( lcx, lcy, cx, cy, trigger ) ) {
 								
-								if ( typeof trigger.callbackCenterContinuous === 'function' ) {
+								trigger.ignoreCenterLeave = false;
+								
+								if ( trigger.callbackCenterContinuous ) {
 									
-									trigger.callbackCenterContinuous.call( trigger.contextCenterContinuous || trigger.contextAll, trigger );
+									handleTriggerCallbacks( trigger, trigger.callbackCenterContinuous, trigger.contextCenterContinuous || trigger.contextAll );
+									//trigger.callbackCenterContinuous.call( trigger.contextCenterContinuous || trigger.contextAll, trigger );
 									
 								}
 								
@@ -1657,9 +1679,10 @@ function ( $ ){
 									
 									trigger.ignoreCenter = true;
 									
-									if ( typeof trigger.callbackCenter === 'function' ) {
+									if ( trigger.callbackCenter ) {
 										
-										trigger.callbackCenter.call( trigger.contextCenter || trigger.contextAll, trigger );
+										handleTriggerCallbacks( trigger, trigger.callbackCenter, trigger.contextCenter || trigger.contextAll );
+										//trigger.callbackCenter.call( trigger.contextCenter || trigger.contextAll, trigger );
 										
 									}
 									
@@ -1668,6 +1691,14 @@ function ( $ ){
 							}
 							else {
 								
+								if ( trigger.callbackCenterLeave && trigger.ignoreCenter === true && trigger.ignoreCenterLeave === false ) {
+									
+									trigger.ignoreCenterLeave = true;
+									handleTriggerCallbacks( trigger, trigger.callbackCenterLeave, trigger.contextCenterLeave || trigger.contextAll );
+									//trigger.callbackCenterLeave.call( trigger.contextCenterLeave || trigger.contextAll, trigger );
+									
+								}
+								
 								trigger.ignoreCenter = false;
 								
 							}
@@ -1675,14 +1706,15 @@ function ( $ ){
 						}
 						else {
 							
-							trigger.ignore = trigger.ignoreCenter = false;
-							
-							if ( trigger.ignoreLeave !== true && typeof trigger.callbackLeave === 'function' ) {
+							if ( trigger.callbackLeave && trigger.ignore === true && trigger.ignoreLeave === false ) {
 								
 								trigger.ignoreLeave = true;
-								trigger.callbackLeave.call( trigger.contextLeave || trigger.contextAll, trigger );
+								handleTriggerCallbacks( trigger, trigger.callbackLeave, trigger.contextLeave || trigger.contextAll );
+								//trigger.callbackLeave.call( trigger.contextLeave || trigger.contextAll, trigger );
 								
 							}
+							
+							trigger.ignore = trigger.ignoreCenter = false;
 							
 						}
 						
@@ -1692,6 +1724,38 @@ function ( $ ){
 					
 					triggerCheckPosition.x = contentPosition.x;
 					triggerCheckPosition.y = contentPosition.y;
+					
+				}
+				
+			}
+			
+			function handleTriggerCallbacks ( trigger, callbacks, contextFallback ) {
+				
+				var i, il, callbackData;
+				
+				if ( callbacks.length > 0 ) {
+					
+					for ( i = 0, il = callbacks.length; i < il; i++ ) {
+						
+						callbackData = callbacks[ i ];
+						
+						if ( typeof callbackData === 'function' ) {
+							
+							callbackData.call( contextFallback, trigger );
+							
+						}
+						else {
+							
+							callbackData.callback.call( callbackData.context || contextFallback, trigger );
+							
+						}
+						
+					}
+					
+				}
+				else {
+					
+					callbacks.call( contextFallback, trigger );
 					
 				}
 				

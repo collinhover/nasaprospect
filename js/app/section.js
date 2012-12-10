@@ -23,12 +23,11 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		parameters = parameters || {};
 		
-		this.id = _sectionCount++;
-		
 		this.$element = $( element );
 		this.$element.data( 'section', this );
 		
-		this.name = this.$element.attr( 'id' );
+		_sectionCount++;
+		this.id = this.$element.attr( 'id' ) || String( _sectionCount );
 		
 		this.whenInside = {};
 		
@@ -88,6 +87,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 			contextAll: this
 		} );
 		
+		_s.navigator.addTriggers( this.triggersPersistent );
+		
 		// signals
 		
 		this.onEntered = new Signal();
@@ -131,7 +132,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 	function Enter () {
 		
 		if ( this.inside !== true ) {
-			console.log( this.name, 'entered' );
+			console.log( this.id, 'entered' );
 			this.inside = true;
 			
 			this.onEntered.dispatch( this );
@@ -152,7 +153,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 	function Exit () {
 		
 		if ( this.inside !== false ) {
-			console.log( this.name, 'exited' );
+			console.log( this.id, 'exited' );
 			this.inside = false;
 			
 			_s.signals.onUpdated.remove( update, this );
@@ -217,8 +218,6 @@ function ( $, _s, _ui, _snd, Signal ) {
 			
 			_s.navigator.removeTriggers( this.triggers );
 			this.triggers = [];
-			
-			_s.navigator.addTriggers( this.triggersPersistent );
 			
 			this.onDeactivated.dispatch( this );
 			

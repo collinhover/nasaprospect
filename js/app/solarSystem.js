@@ -12,7 +12,7 @@ function ( $, _s, _snd, _section, Signal ) {
 	var _$element = _de.$solarSystem;
 	var _sound = new _snd.SoundHandler( { element: _$element } );
 	var _sections = [];
-	var _sectionsByName = {};
+	var _sectionsById = {};
 	var _sectionActive;
 	
 	/*===================================================
@@ -31,12 +31,7 @@ function ( $, _s, _snd, _section, Signal ) {
 		section.onActivated.add( SetActiveSection );
 		
 		_sections.push( section );
-		
-		if ( typeof section.name === 'string' ) {
-			
-			_sectionsByName[ section.name ] = section;
-			
-		}
+		_sectionsById[ section.id ] = section;
 		
 	} );
 	
@@ -44,7 +39,7 @@ function ( $, _s, _snd, _section, Signal ) {
 	
 	// sun
 	
-	_sectionsByName[ 'sun' ].$element.find( _de.$logo ).removeClass( 'hidden' );
+	_sectionsById[ 'sun' ].$element.find( _de.$logo ).removeClass( 'hidden' );
 	
 	// add system sound as filler for when no other sounds are playing
 	
