@@ -19,10 +19,11 @@ soundManager.onready( function () {
 		"app/utilities",
 		"app/ui",
 		"app/solarSystem",
+		"app/user",
 		"overthrow",
 		"RequestAnimationFrame"
 	],
-	function ( $, _s, _utils, _ui, _solarSystem ) {
+	function ( $, _s, _utils, _ui, _solarSystem, _user ) {
 		
 		var _de = _s.domElements;
 		
@@ -37,6 +38,10 @@ soundManager.onready( function () {
 		}
 		
 		Update();
+		
+		// ready
+		
+		_s.signals.onReady.dispatch();
 		
 		// resize once on start
 		

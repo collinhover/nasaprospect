@@ -26,8 +26,6 @@ function ( $, _s, _utils ) {
 		_s.w = _de.$window.width();
         _s.h = _de.$window.height();
 		
-		_s.signals.onResized.dispatch( _s.w, _s.h );
-		
 		// fill container elements
 		
 		_de.$containerFill.css( {
@@ -36,31 +34,21 @@ function ( $, _s, _utils ) {
         } );
 		
 		// handle type size by screen size
-		console.log( 'resize font ', _s.w / _s.wBase, _s.h / _s.hBase );
-		_de.$body.css( 'font-size', _utils.Clamp( Math.min( _s.w / _s.wBase, _s.h / _s.hBase ), _s.fontSizeMin, _s.fontSizeMax ) * 100 + "%" );
-		/*
-		var lnHeight = _de.$logoName.height();
 		
-		_de.$logoName.find( '[class^="letter"]' ).each( function () {
-			
-			var $element = $( this );
-			var elWidth = $element.width();
-			var $h1 = $element.find( "h1" );
-			var $h2 = $element.find( "h2" );
-			
-			$h2.css( 'font-size', '' );
-			
-			var h2Width = $h2.width();
-			
-			if ( h2Width > elWidth ) {
-				
-				$h2.css( 'font-size', elWidth / 4 );
-				
-			}
-			
-			$h1.css( 'font-size', Math.min( lnHeight - $h2.height(), elWidth ) * 1.3 );
-			
-		} );*/
+		_de.$body.css( 'font-size', _utils.Clamp( Math.min( _s.w / _s.wBase, _s.h / _s.hBase ), _s.fontSizeMin, _s.fontSizeMax ) * 100 + "%" );
+		
+		// keep nav at correct width
+		
+		var $items = _de.$navPlanets.find( 'li' );
+		var navHeight = _de.$navPlanets.height();
+		var numItems = $items.length;
+		var heightPerItem = navHeight / numItems;
+		
+		_de.$navbarPlanets.css( 'width', heightPerItem );
+		
+		// signal
+		
+		_s.signals.onResized.dispatch( _s.w, _s.h );
 		
 		// refresh scroll panes
 		
@@ -113,6 +101,8 @@ function ( $, _s, _utils ) {
 		
 		_s.navigator.getContentPane().stellar( 'refresh' );
 		
+		_s.signals.onScrollRefreshed.dispatch();
+		
 	}
 	
 	/*===================================================
@@ -127,13 +117,15 @@ function ( $, _s, _utils ) {
 	var scrollSettings = {
 		verticalGutter : -scrollbarV.width(),
 		horizontalGutter: -scrollbarH.height(),
-		hijackInternalLinks: true
+		hijackInternalLinks: true,
+		triggerSort: true,
+		triggerSortDirection: 'vertical'
 	};
 	
 	scrollbarV.remove();
 	scrollbarH.remove();
 	
-	_de.$scrollable.jScrollPane( scrollSettings );
+	_de.$scrollable.removeClass( 'unscrollable' ).jScrollPane( scrollSettings );
 	
 	_s.navigator = _de.$main.data( 'jsp' );
 	

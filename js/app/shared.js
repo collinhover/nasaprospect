@@ -22,8 +22,10 @@ function ( $, Signal ) {
 	=====================================================*/
 	
 	_s.signals = {
+		onReady: new Signal(),
 		onUpdated: new Signal(),
-		onResized: new Signal()
+		onResized: new Signal(),
+		onScrollRefreshed: new Signal()
 	};
 	
 	/*===================================================
@@ -39,6 +41,7 @@ function ( $, Signal ) {
 	_de.$body = _de.$document.find( "body" );
 	_de.$main = $( "#main" );
 	_de.$preloader = $( "#preloader" );
+	_de.$user = $( "#user" );
 	
 	_de.$scrollable = $( ".scrollable" );
 	_de.$stickable = $( ".stickyme, .is-sticky" );
@@ -69,10 +72,10 @@ function ( $, Signal ) {
 	
 	_s.wMin = 950;
 	_s.hMin = 550;
-	_s.wBase = 1920;
-	_s.hBase = 1080;
+	_s.wBase = 1600;
+	_s.hBase = 800;
 	_s.fontSizeMin = 0.8;
-	_s.fontSizeMax = 1.2;
+	_s.fontSizeMax = 1;
 	
 	_s.fadeDuration = 500;
 	_s.collapseDuration = 500;

@@ -277,9 +277,25 @@ function ( $, _s ) {
 	
 	/*===================================================
     
-    dom effects
+    dom
     
     =====================================================*/
+	
+	function DOMBounds ( $element ) {
+		
+		var bounds = {};
+		var offset = $element.offset();
+		var width = $element.width();
+		var height = $element.height();
+		
+		bounds.left = offset.left;
+		bounds.right = bounds.left + width;
+		bounds.top = offset.top;
+		bounds.bottom = bounds.top + height;
+		
+		return bounds;
+		
+	}
 	
 	function IgnorePointerDOM ( $element, state ) {
 		
@@ -597,9 +613,10 @@ function ( $, _s ) {
 	
 	_utils.Clamp = Clamp;
 	
+	_utils.DOMBounds = DOMBounds;
+	_utils.IgnorePointerDOM = IgnorePointerDOM;
 	_utils.FadeDOM = FadeDOM;
 	_utils.CollapseDOM = CollapseDOM;
-	_utils.IgnorePointerDOM = IgnorePointerDOM;
 	
 	return _utils;
 	

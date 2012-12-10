@@ -61,7 +61,7 @@
 		</div>
 		<!-- /preloader -->
 		
-		<div id="main" class="scrollable">
+		<div id="main" class="scrollable unscrollable">
 			
 			<div id="solar-system" class="unselectable" data-sound="twilight_by_stellardrone" data-sound-loops="true" data-sound-fade="true">
 				
@@ -87,7 +87,7 @@
 													<div class="state-on">
 														<img src="img/sound_on_white.svg" class="iconk-fillMajority-heightFollow toggle-off">
 														
-														<div class="iconk-large-fill slider slider-volume">
+														<div class="iconk-large-fillWidth slider slider-volume">
 															<div class="track"></div>
 															<div class="knob"></div>
 														</div>
@@ -99,8 +99,8 @@
 										</div>
 									</div>
 									<h1 class="logo-type-spaced">Pump up the volume!</h1>
-									<h3 class="sidekick-type dim">( and start scrolling down )</h3>
 									<p class="dim hidden-desktop">mobile users: audio may be blocked to save your data</p>
+									<h3 class="sidekick-type dim">( and start scrolling down )</h3>
 									
 								</div>
 								
@@ -114,11 +114,122 @@
 				
 				<section id="intro" class="system-section no-crop">
 					
-					<div id="intro1" class="container-fill">
+					<section id="user" class="container-fill">
 						
-						<div class="container-fill characterground stickyme">
-							<img src="img/character_astronaut.svg" class="character" style="height:70%; top: 15%;">
+						<div id="userCharacters" class="characterground">
+							
+							<img src="img/character_astronaut.svg" id="astronaut" class="character" style="height:70%; top: 15%;">
+							
 						</div>
+						<!-- /characters -->
+						
+						<div id="userUI">
+							
+							<div class="ui-pane-column-left">
+								
+								<div class="ui-pane-section-body">
+									
+									<div id="navbarPlanets" class="hidden">
+										<ul class="nav-planets">
+											<li> 
+												<a href="#sun" class="nav-planet-sun">
+													<div class="aspect-enforcer"></div>
+													<div class="aspect-shape">Sun</div>
+													<h2 class="logo-type">Sun</h2>
+												</a>
+											</li>
+											<li>
+												<a href="#mercury" class="nav-planet-mercury">
+													<div class="aspect-enforcer"></div>
+													<div class="aspect-shape">Mercury</div>
+													<h2 class="logo-type">Mercury</h2>
+												</a>
+											</li>
+											<li>
+												<a href="#venus" class="nav-planet-venus">
+													<div class="aspect-enforcer"></div>
+													<div class="aspect-shape">Venus</div>
+													<h2 class="logo-type">Venus</h2>
+												</a>
+											</li>
+											<li>
+												<a href="#earth" class="nav-planet-earth">
+													<div class="aspect-enforcer"></div>
+													<div class="aspect-shape">Earth</div>
+													<h2 class="logo-type">Earth</h2>
+												</a>
+											</li>
+											<li>
+												<a href="#mars" class="nav-planet-mars">
+													<div class="aspect-enforcer"></div>
+													<div class="aspect-shape">Mars</div>
+													<h2 class="logo-type">Mars</h2>
+												</a>
+											</li>
+											<li>
+												<a href="#jupiter" class="nav-planet-jupiter">
+													<div class="aspect-enforcer"></div>
+													<div class="aspect-shape">Jupiter</div>
+													<h2 class="logo-type">Jupiter</h2>
+												</a>
+											</li>
+											<li>
+												<a href="#saturn" class="nav-planet-saturn">
+													<div class="aspect-enforcer"></div>
+													<div class="aspect-shape">Saturn</div>
+													<h2 class="logo-type">Saturn</h2>
+												</a>
+											</li>
+											<li>
+												<a href="#uranus" class="nav-planet-uranus">
+													<div class="aspect-enforcer"></div>
+													<div class="aspect-shape">Uranus</div>
+													<h2 class="logo-type">Uranus</h2>
+												</a>
+											</li>
+											<li>
+												<a href="#neptune" class="nav-planet-neptune">
+													<div class="aspect-enforcer"></div>
+													<div class="aspect-shape">Neptune</div>
+													<h2 class="logo-type">Neptune</h2>
+												</a>
+											</li>
+										</ul>
+									</div>
+									<!-- /navbarPlanets -->
+								
+								</div>
+								
+								<div class="ui-pane-section-footer">
+									
+									<div class="toggle toggle-sound">
+										
+										<div class="state-off">
+											<img src="img/sound_off_white.svg" class="iconk-large toggle-on">
+										</div>
+										
+										<div class="state-on">
+											<img src="img/sound_on_white.svg" class="iconk-large toggle-off">
+											
+											<div class="iconk-large slider slider-volume">
+												<div class="track"></div>
+												<div class="knob"></div>
+											</div>
+										</div>
+										
+									</div>
+									
+								</div>
+								
+							</div>
+								
+						</div>
+						<!-- /ui -->
+						
+					</section>
+					<!-- /user -->
+					
+					<div id="intro1" class="container-fill">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -128,11 +239,10 @@
 										<div class="offset9 span3">
 											
 											<div class="dialogue">
-												<p>Every kid wants to be an astronaut. Spaceships, planets, stars, black holes; more than you could ever fit in before dinner, and definitely more than you could be curious about in a life time. Become a Planet-Walker like me? Damn, most people don't even remember when they wanted to be an astronaut.</p>
-												<p class="note">Oxygen: 37 %<br>Pressure: Safe<br></p>
+												<p>Every kid wants to be an astronaut. Spaceships, planets, stars, black holes; more than you could ever fit in before dinner, and definitely more than you could be curious about in a life time. But become a Planet-Walker like me? Damn, most people don't even remember when they wanted to be an astronaut.</p>
 												<div class="separator"></div>
-												<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-												<h1 class="logo-type robot">...Robb?</h1>
+												<h1 class="logo-type">...Ro...b...gfzb</h1>
+												<h3 class="sidekick-type dim">what was that?</h3>
 											</div>
 											
 										</div>
@@ -156,12 +266,19 @@
 											
 											<div class="dialogue dialogue-left">
 												<img src="img/character_robot_icon_white.svg" class="origin iconk-medium dim">
-												<h1 class="logo-type robot">Yo-</h1>
+												<h1 class="robot logo-type">Yo-</h1>
 												<div class="separator"></div>
-												<p>Step off Earth and out here you're in something so wide you couldn't find a Yo Mama joke fat enough even if you had an eternity. And no one tells you about the music. Tweak some systems, turn up the volume and space is suddenly one beast of an electromagnetic beat...</p>
+												<p>Everyone likes to say there isn't any sound in space, so no one expected to hear what we're hearing right now. Tweak some systems, turn up the volume and space is suddenly one beast of an electromagnetic beat...</p>
+											</div>
+											
+										</div>
+										<div class="offset6 span3">
+											
+											<div class="dialogue">
+												<p>At first, we didn't think much of the strange music. But when we couldn't trace the source back to Earth, people started to get curious. All that curiousity ended in NASA shooting me n' Prospect out here to find it.</p>
 												<div class="separator"></div>
-												<h1 class="logo-type robot">-Robb!</h1>
-												<h3 class="sidekick-type dim">the greeting came in loudly</h3>
+												<h1 class="robot logo-type">-Robb!</h1>
+												<h3 class="sidekick-type dim">Prospect's greeting came through clearly this time</h3>
 											</div>
 											
 										</div>
@@ -174,7 +291,7 @@
 					</div>
 					<!-- /intro2 -->
 					
-					<div class="container-fill">
+					<div id="intro3" class="container-fill">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -184,13 +301,11 @@
 										<div class="span3">
 											
 											<div class="dialogue dialogue-left">
-												<p>Oxygen is getting low... I must have been drifting for hours. Surrounded by endless space and sound, its easy to see why some people swear by meditation.</p>
-												<div class="separator"></div>
 												<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-												<h1 class="logo-type important-type astronaut">Where are we?</h1>
+												<h1 class="astronaut logo-type important-type">Where are we?</h1>
 												<h3 class="sidekick-type dim">I radioed to Prospect</h3>
 												<div class="separator"></div>
-												<p class="note">Solar winds seem to carry vibrations... gotta find out what makes the sound change.</p>
+												<p>Oxygen in the suit feels thin... I must have been drifting for hours. Surrounded by all this space and sound, its easy to see why some people swear by meditation.</p>
 											</div>
 											
 										</div>
@@ -198,10 +313,10 @@
 											
 											<div class="dialogue dialogue-secondary">
 												<img src="img/character_robot_icon_white.svg" class="origin iconk-medium dim">
-												<h1 class="logo-type robot">Wrong side of the sun</h1>
-												<h3 class="sidekick-type dim">he replied patiently</h3>
+												<h1 class="robot logo-type">Wrong side of the sun</h1>
+												<h3 class="sidekick-type dim">she replied patiently</h3>
 												<div class="separator"></div>
-												<p>Sometimes Prospect'd say something that seemed sarcastic, or even catty, but he always sounded cheerful. I never could get used to it.</p>
+												<p>Sometimes Prospect'd say something that seemed sarcastic, or even mean, but she always sounded cheerful and it made for some bizarre conversations. Sure, I was talking to a spaceship, but I never could get used to it.</p>
 											</div>
 											
 										</div>
@@ -212,115 +327,67 @@
 						</div>
 										
 					</div>
+					<!-- /intro3 -->
 					
-				</section>
-				<!-- /intro -->
-				
-				<section id="ui" class="system-section">
-					
-					<div class="container-fill stickyme">
+					<div id="intro4" class="container-fill" data-resize="shrink" data-resize-direction="down">
 						
-						<div class="ui-pane-column-left">
-							
+						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
-								
-								<div id="navbarPlanets">
-									<ul class="nav-planets">
-										<li> 
-											<a href="#sun" class="nav-planet-sun">
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">Sun</div>
-												<h2 class="logo-type">Sun</h2>
-											</a>
-										</li>
-										<li>
-											<a href="#mercury" class="nav-planet-mercury">
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">Mercury</div>
-												<h2 class="logo-type">Mercury</h2>
-											</a>
-										</li>
-										<li>
-											<a href="#venus" class="nav-planet-venus">
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">Venus</div>
-												<h2 class="logo-type">Venus</h2>
-											</a>
-										</li>
-										<li>
-											<a href="#earth" class="nav-planet-earth">
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">Earth</div>
-												<h2 class="logo-type">Earth</h2>
-											</a>
-										</li>
-										<li>
-											<a href="#mars" class="nav-planet-mars">
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">Mars</div>
-												<h2 class="logo-type">Mars</h2>
-											</a>
-										</li>
-										<li>
-											<a href="#jupiter" class="nav-planet-jupiter">
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">Jupiter</div>
-												<h2 class="logo-type">Jupiter</h2>
-											</a>
-										</li>
-										<li>
-											<a href="#saturn" class="nav-planet-saturn">
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">Saturn</div>
-												<h2 class="logo-type">Saturn</h2>
-											</a>
-										</li>
-										<li>
-											<a href="#uranus" class="nav-planet-uranus">
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">Uranus</div>
-												<h2 class="logo-type">Uranus</h2>
-											</a>
-										</li>
-										<li>
-											<a href="#neptune" class="nav-planet-neptune">
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">Neptune</div>
-												<h2 class="logo-type">Neptune</h2>
-											</a>
-										</li>
-									</ul>
-								</div>
-							
-							</div>
-							
-							<div class="ui-pane-section-footer">
-								
-								<div class="toggle toggle-sound">
+								<div class="ui-pane-section-quarter-top-middle expandable">
 									
-									<div class="state-off">
-										<img src="img/sound_off_white.svg" class="iconk-large toggle-on">
-									</div>
-									
-									<div class="state-on">
-										<img src="img/sound_on_white.svg" class="iconk-large toggle-off">
-										
-										<div class="iconk-large slider slider-volume">
-											<div class="track"></div>
-											<div class="knob"></div>
+									<div class="row-fluid">
+										<div class="offset9 span3">
+											
+											<div class="dialogue">
+												<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
+												<h1 class="astronaut logo-type">You alright?</h1>
+												<h3 class="sidekick-type dim">I asked her, concerned</h3>
+												<div class="separator"></div>
+												<p>Unconsciously, I tried to check on Prospect while I waited for the all clear in the airlock, but my internal interface was down. Better reboot it.</p>
+												<p class="note">Internal Interface ready!<br>Welcome Planet-Walker (PW) Robb<br>Please say a command: _<br><br>--- STATUS CHECK ---<br>[ PW ] Robb<br>Oxygen: 37 %<br>Pressure: Safe<br>Injuries Detected!<br>...</p>
+											</div>
+											
 										</div>
 									</div>
 									
 								</div>
-								
 							</div>
-							
 						</div>
-						
+										
 					</div>
+					<!-- /intro4 -->
+					
+					<div id="intro5" class="container-fill" data-resize="grow">
 						
+						<div class="ui-pane-column-middle">
+							<div class="ui-pane-section-body">
+								<div class="ui-pane-section-quarter-top-middle expandable">
+									
+									<div class="row-fluid">
+										<div class="span3">
+											
+											<div class="dialogue dialogue-left">
+												<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
+												<h1 class="robot logo-type">I...</h1>
+												<h3 class="sidekick-type dim">her reply was careful</h3>
+												<h1 class="robot logo-type important-type">think so!</h1>
+												<h3 class="sidekick-type dim"> but cheery all the same</h3>
+												<div class="separator"></div>
+												<p class="note">[PW LOG] Robb<br>[2042 / March / 01 09:18:51]<br><br>Arm is sore but otherwise I feel normal, and Prospect says she's okay. Last log is dated yesterday... but I made that in Earth's orbit, 92 million miles away from here.</p>
+											</div>
+											
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+										
+					</div>
+					<!-- /intro5 -->
+					
 				</section>
-				<!-- /ui -->
+				<!-- /intro -->
 				
 				<section id="sun" class="system-section no-crop" data-sound="the_illness_by_dub_terminator" data-sound-loops="true" data-sound-fade="true">
 					
@@ -380,7 +447,11 @@
 										<h1 data-stellar-ratio="1.25">T</h1>
 									</div>
 								</div>
-								<img src="img/logo_nasa_color_light.svg" class="nasa">
+								<div class="sponsors">
+									<img src="img/logo_nasa_color_light.svg" class="iconk-fillHeight">
+									<img src="img/logo_dlr_color_light.png" class="iconk-fillHeight">
+									<img src="img/logo_usra_color_light.png" class="iconk-fillHeight">
+								</div>
 							</div>
 							
 						</div>

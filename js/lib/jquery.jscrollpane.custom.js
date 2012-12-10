@@ -9,6 +9,7 @@
  */
 define( [
     'jquery',
+	"jquery.throttle-debounce.custom",
     "TweenMax"
 ],
 function ( $ ){
@@ -43,6 +44,14 @@ function ( $ ){
 				contentPositionLast = { x: 0, y: 0 },
 				suppressTriggers = false,
 				triggers = [],
+				triggersSorted = {
+					top: [],
+					bottom: [],
+					left: [],
+					right: []
+				},
+				triggerCheckPosition = { x: 0, y: 0 },
+				throttledCheckTriggers,
 				verticalBar,
 				verticalTrack,
 				scrollbarWidth,
@@ -80,6 +89,12 @@ function ( $ ){
 						maintainAtBottom = false, maintainAtRight = false;
 
 				settings = s;
+				
+				// throttle trigger check
+				
+				throttledCheckTriggers = $.throttle( settings.triggerThrottleDuration, checkTriggers );
+				
+				// init pane
 				
 				if (pane === undefined) {
 					originalScrollTop = elem.scrollTop();
@@ -148,8 +163,7 @@ function ( $ ){
 					pane.css('width', '');
 					elem.width(paneWidth);
 					
-					// remove bars on reinit always?
-					//container.find('>.jspVerticalBar,>.jspHorizontalBar').remove();
+					container.find('>.jspVerticalBar,>.jspHorizontalBar').remove();
 					
 				}
 				
@@ -170,8 +184,6 @@ function ( $ ){
 
 				percentInViewH = contentWidth / paneWidth;
 				percentInViewV = contentHeight / paneHeight;
-				isScrollableVLast = isScrollableV;
-				isScrollableHLast = isScrollableH;
 				isScrollableV = percentInViewV > 1;
 				isScrollableH = percentInViewH > 1;
 				
@@ -229,8 +241,8 @@ function ( $ ){
 					resizeScrollbars();
 					
 					if (isMaintainingPositon) {
-						//scrollToX(maintainAtRight  ? (contentWidth  - paneWidth ) : contentPositionLastX, 0 );
-						//scrollToY(maintainAtBottom ? (contentHeight - paneHeight) : contentPositionLastY, 0 );
+						scrollToX(maintainAtRight  ? (contentWidth  - paneWidth ) : contentPositionLastX, 0 );
+						scrollToY(maintainAtBottom ? (contentHeight - paneHeight) : contentPositionLastY, 0 );
 					}
 
 					initFocusHandler();
@@ -276,26 +288,22 @@ function ( $ ){
 				
 				if (isScrollableV) {
 					
-					if ( isScrollableVLast !== true ) {
-						
-						container.append(
-							$('<div class="jspVerticalBar" />').append(
-								$('<div class="jspCap jspCapTop" />'),
-								$('<div class="jspTrack" />').append(
-									$('<div class="jspDrag" />').append(
-										$('<div class="jspDragTop" />'),
-										$('<div class="jspDragBottom" />')
-									)
-								),
-								$('<div class="jspCap jspCapBottom" />')
-							)
-						);
+					container.append(
+						$('<div class="jspVerticalBar" />').append(
+							$('<div class="jspCap jspCapTop" />'),
+							$('<div class="jspTrack" />').append(
+								$('<div class="jspDrag" />').append(
+									$('<div class="jspDragTop" />'),
+									$('<div class="jspDragBottom" />')
+								)
+							),
+							$('<div class="jspCap jspCapBottom" />')
+						)
+					);
 
-						verticalBar = container.find('>.jspVerticalBar');
-						verticalTrack = verticalBar.find('>.jspTrack');
-						verticalDrag = verticalTrack.find('>.jspDrag');
-						
-					}
+					verticalBar = container.find('>.jspVerticalBar');
+					verticalTrack = verticalBar.find('>.jspTrack');
+					verticalDrag = verticalTrack.find('>.jspDrag');
 
 					if (settings.showArrows) {
 						arrowUp = $('<a class="jspArrow jspArrowUp" />').on(
@@ -360,7 +368,7 @@ function ( $ ){
 
 			function sizeVerticalScrollbar() {
 				verticalTrack.height(verticalTrackHeight + 'px');
-				//scrollPosition.y = 0;
+				
 				scrollbarWidth = settings.verticalGutter + verticalTrack.outerWidth();
 
 				// Make the pane thinner to allow for the vertical scrollbar
@@ -379,27 +387,23 @@ function ( $ ){
 			function initialiseHorizontalScroll() {
 				
 				if (isScrollableH) {
-					
-					if ( isScrollableHLast !== true ) {
 						
-						container.append(
-							$('<div class="jspHorizontalBar" />').append(
-								$('<div class="jspCap jspCapLeft" />'),
-								$('<div class="jspTrack" />').append(
-									$('<div class="jspDrag" />').append(
-										$('<div class="jspDragLeft" />'),
-										$('<div class="jspDragRight" />')
-									)
-								),
-								$('<div class="jspCap jspCapRight" />')
-							)
-						);
+					container.append(
+						$('<div class="jspHorizontalBar" />').append(
+							$('<div class="jspCap jspCapLeft" />'),
+							$('<div class="jspTrack" />').append(
+								$('<div class="jspDrag" />').append(
+									$('<div class="jspDragLeft" />'),
+									$('<div class="jspDragRight" />')
+								)
+							),
+							$('<div class="jspCap jspCapRight" />')
+						)
+					);
 
-						horizontalBar = container.find('>.jspHorizontalBar');
-						horizontalTrack = horizontalBar.find('>.jspTrack');
-						horizontalDrag = horizontalTrack.find('>.jspDrag');
-						
-					}
+					horizontalBar = container.find('>.jspHorizontalBar');
+					horizontalTrack = horizontalBar.find('>.jspTrack');
+					horizontalDrag = horizontalTrack.find('>.jspDrag');
 
 					if (settings.showArrows) {
 						arrowLeft = $('<a class="jspArrow jspArrowLeft" />').on(
@@ -454,7 +458,7 @@ function ( $ ){
 			}
 
 			function sizeHorizontalScrollbar() {
-				// TODO: subtract corner width if present?
+				
 				container.find('>.jspHorizontalBar>.jspCap:visible,>.jspHorizontalBar>.jspArrow').each(
 					function() {
 						horizontalTrackWidth -= $(this).outerWidth();
@@ -466,9 +470,11 @@ function ( $ ){
 			}
 
 			function resizeScrollbars() {
+				
 				if ( isScrollableH && isScrollableV ) {
 					var horizontalTrackHeight = horizontalTrack.outerHeight(),
 						verticalTrackWidth = verticalTrack.outerWidth();
+					
 					verticalTrackHeight -= horizontalTrackHeight;
 					$(horizontalBar).find('>.jspCap:visible,>.jspArrow').each(
 						function()
@@ -477,21 +483,15 @@ function ( $ ){
 						}
 					);
 					horizontalTrackWidth -= verticalTrackWidth;
-					paneHeight -= verticalTrackWidth;
-					paneWidth -= horizontalTrackHeight;
-					horizontalTrack.parent()
-						.find( '.jspCorner' )
-						.remove()
-						.end()
-						.append(
-							$('<div class="jspCorner" />').css('width', horizontalTrackHeight + 'px')
-						);
+					//paneHeight -= verticalTrackWidth;
+					//paneWidth -= horizontalTrackHeight;
+					horizontalTrack.parent().append( $('<div class="jspCorner" />').css('width', horizontalTrackHeight + 'px') );
 					sizeVerticalScrollbar();
 					sizeHorizontalScrollbar();
 				}
 				// reflow content
 				if (isScrollableH) {
-					pane.width((container.outerWidth() - originalPaddingTotalWidth) + 'px');
+					pane.width( (container.outerWidth() - originalPaddingTotalWidth) + 'px' );
 				}
 				contentHeight = pane.outerHeight();
 				percentInViewV = contentHeight / paneHeight;
@@ -501,7 +501,7 @@ function ( $ ){
 				repositionTriggers();
 
 				if (isScrollableH) {
-					horizontalDragWidth = Math.ceil(1 / percentInViewH * horizontalTrackWidth);
+					horizontalDragWidth = Math.ceil( ( 1 / percentInViewH ) * horizontalTrackWidth );
 					if (horizontalDragWidth > settings.horizontalDragMaxWidth) {
 						horizontalDragWidth = settings.horizontalDragMaxWidth;
 					} else if (horizontalDragWidth < settings.horizontalDragMinWidth) {
@@ -792,7 +792,8 @@ function ( $ ){
 						.trigger( 'jsp-scroll-y', [destTop, isAtTop, isAtBottom] )
 						.trigger( 'scroll' );
 					
-					checkTriggers();
+					throttledCheckTriggers();
+					//checkTriggers();
 					
 				}
 				
@@ -875,6 +876,7 @@ function ( $ ){
 						.trigger('jsp-scroll-x', [destLeft, isAtLeft, isAtRight])
 						.trigger('scroll');
 					
+					throttledCheckTriggers();
 					checkTriggers();
 					
 				}
@@ -1324,83 +1326,21 @@ function ( $ ){
 				);
 			}
 			
-			function addTrigger ( parameters ) {
-				
-				var triggerNew = $.extend( {}, parameters );
-				var $element = triggerNew.$element = $( triggerNew.element );
-				var bounds = triggerNew.bounds = getBounds( $element );
-				var context = parameters.context;
-				var callback = parameters.callback;
-				
-				// ensure trigger does not already exist
-				
-				var i, il, trigger;
-				
-				for( i = 0, il = triggers.length; i < il; i++ ) {
-					
-					trigger = triggers[ i ];
-					
-					if ( trigger.callback === callback && trigger.context === context && trigger.$element.is( $element ) ) {
-						
-						trigger.once = parameters.once;
-						
-						return trigger;
-						
-					}
-					
-				}
-				
-				triggers.push( triggerNew );
-				
-				return triggerNew;
-				
-			}
-			
-			function removeTrigger ( trigger ) {
-				
-				if ( typeof trigger !== 'undefined' ) {
-					
-					var i;
-					
-					for( i = triggers.length - 1; i >= 0; i-- ) {
-						
-						if ( trigger === triggers[ i ] ) {
-							
-							removeTriggerByIndex( i );
-							
-							break;
-							
-						}
-						
-					}
-					
-				}
-				
-			}
-			
-			function removeTriggerByIndex ( index ) {
-				
-				var trigger = triggers[ index ];
-				
-				triggers.splice( index, 1 );
-				
-				if ( typeof trigger.onRemoved === 'function' ) {
-					
-					trigger.onRemoved.call( trigger.context );
-					
-				}
-				
-			}
-			
 			function addTriggers ( list ) {
 				
-				var i, il, added = [];
+				var i, il, added = [], trigger;
 				
 				if ( typeof list !== 'undefined' ) {
 					
 					for( i = 0, il = list.length; i < il; i++ ) {
 						
-						added.push( addTrigger( list[ i ] ) );
+						trigger = addTrigger( list[ i ] );
+						
+						if ( typeof trigger !== 'undefined' ) {
+							
+							added.push( trigger );
+							
+						}
 						
 					}
 					
@@ -1426,9 +1366,173 @@ function ( $ ){
 				
 			}
 			
+			function addTrigger ( parameters ) {
+				
+				var triggerNew = $.extend( {}, parameters );
+				var $element = triggerNew.$element = $( triggerNew.element );
+				var bounds = triggerNew.bounds = getBounds( $element );
+				var context = parameters.context;
+				var callback = parameters.callback;
+				
+				if ( $element.length > 0 ) {
+					
+					// ensure trigger does not already exist
+					
+					var i, il, trigger;
+					
+					for( i = 0, il = triggers.length; i < il; i++ ) {
+						
+						trigger = triggers[ i ];
+						
+						if ( trigger.$element.is( $element ) && ( trigger.callback === callback || trigger.callbackContinuous === triggerNew.callbackContinuous || trigger.callbackCenter === triggerNew.callbackCenter || trigger.callbackCenterContinuous === triggerNew.callbackCenterContinuous || trigger.callbackLeave === triggerNew.callbackLeave ) ) {
+							
+							trigger = $.extend( trigger, triggerNew );
+							
+							return trigger;
+							
+						}
+						
+					}
+					
+					triggers.push( triggerNew );
+					
+					// sorting
+					
+					if ( settings.triggerSort === true ) {
+						
+						addTriggerSorted( triggerNew );
+						
+					}
+					
+					return triggerNew;
+					
+				}
+				
+			}
+			
+			function removeTrigger ( trigger ) {
+				
+				if ( typeof trigger !== 'undefined' ) {
+					
+					// primary trigger
+					
+					removeTriggerFromList( triggers, trigger );
+					
+					if ( typeof trigger.onRemoved === 'function' ) {
+						
+						trigger.onRemoved.call( trigger.context );
+						
+					}
+					
+					// sorting
+					
+					if ( settings.triggerSort === true ) {
+						
+						removeTriggerSorted( trigger );
+						
+					}
+					
+				}
+				
+			}
+			
+			function removeTriggerFromList ( triggerList, trigger ) {
+				
+				var index = findTriggerIndex( triggerList, trigger );
+				
+				if ( index !== -1 ) {
+					
+					triggerList.splice( index, 1 );
+					
+				}
+				
+			}
+			
+			function findTriggerIndex ( triggerList, trigger ) {
+				
+				for( var i = triggerList.length - 1; i >= 0; i-- ) {
+					
+					if ( trigger === triggerList[ i ] ) {
+						
+						return i;
+						
+					}
+					
+				}
+				
+				return -1;
+				
+			}
+			
+			function addTriggerSorted ( trigger ) {
+				
+				if ( settings.triggerSortDirection === 'vertical' || settings.triggerSortDirection === 'both' ) {
+					
+					triggersSorted.top.push( trigger );
+					triggersSorted.bottom.push( trigger );
+					
+				}
+				
+				if ( settings.triggerSortDirection === 'horizontal' || settings.triggerSortDirection === 'both' ) {
+					
+					triggersSorted.left.push( trigger );
+					triggersSorted.right.push( trigger );
+					
+				}
+				
+				sortTriggers();
+				
+			}
+			
+			function removeTriggerSorted ( trigger ) {
+				
+				if ( settings.triggerSortDirection === 'vertical' || settings.triggerSortDirection === 'both' ) {
+					
+					removeTriggerFromList( triggersSorted.top, trigger );
+					removeTriggerFromList( triggersSorted.bottom, trigger );
+					
+				}
+				
+				if ( settings.triggerSortDirection === 'horizontal' || settings.triggerSortDirection === 'both' ) {
+					
+					removeTriggerFromList( triggersSorted.left, trigger );
+					removeTriggerFromList( triggersSorted.right, trigger );
+					
+				}
+				
+			}
+			
+			function sortTriggers () {
+				
+				// sort assuming iteration from end to start
+				
+				if ( settings.triggerSortDirection === 'vertical' || settings.triggerSortDirection === 'both' ) {
+					
+					triggersSorted.top.sort( function ( a, b ) {
+						return b.bounds.top - a.bounds.top;
+					} );
+					triggersSorted.bottom.sort( function ( a, b ) {
+						return a.bounds.bottom - b.bounds.bottom;
+					} );
+					
+				}
+				
+				if ( settings.triggerSortDirection === 'horizontal' || settings.triggerSortDirection === 'both' ) {
+					
+					triggersSorted.left.sort( function ( a, b ) {
+						return b.bounds.left - a.bounds.left;
+					} );
+					triggersSorted.right.sort( function ( a, b ) {
+						return a.bounds.right - b.bounds.right;
+					} );
+					
+				}
+				
+			}
+			
 			function checkTriggers ( force ) {
 				
-				if ( force === true || ( suppressTriggers !== true && ( contentPosition.x !== contentPositionLast.x || contentPosition.y !== contentPositionLast.y ) ) ) {
+				if ( force === true || ( suppressTriggers !== true && ( contentPosition.y !== triggerCheckPosition.y || contentPosition.x !== triggerCheckPosition.x ) ) ) {
 					
 					var minX = contentPosition.x;
 					var minY = contentPosition.y;
@@ -1438,13 +1542,76 @@ function ( $ ){
 					var paneHeightHalf = paneHeight * 0.5;
 					var cx = minX + paneWidthHalf;
 					var cy = minY + paneHeightHalf;
-					var lcx = contentPositionLast.x + paneWidthHalf;
-					var lcy = contentPositionLast.y + paneHeightHalf;
+					var lcx = triggerCheckPosition.x + paneWidthHalf;
+					var lcy = triggerCheckPosition.y + paneHeightHalf;
+					var triggerList = triggers;
 					var i, trigger;
+					var triggerSortDirection, dxAbs, dyAbs;
 					
-					for( i = triggers.length - 1; i >= 0; i-- ) {
+					// get trigger list
+					
+					if ( settings.triggerSort === true ) {
 						
-						trigger = triggers[ i ];
+						triggerSortDirection = settings.triggerSortDirection;
+						
+						if ( triggerSortDirection === 'both' ) {
+							
+							dxAbs = Math.abs( cx - lcx );
+							dyAbs = Math.abs( cy - lcy );
+							
+							if ( dxAbs > dyAbs ) {
+								
+								triggerSortDirection = 'horizontal';
+								
+							}
+							else {
+								
+								triggerSortDirection = 'vertical';
+								
+							}
+							
+						}
+						
+						if ( triggerSortDirection === 'vertical' ) {
+							
+							// scrolling bottom up
+							if ( cy - lcy < 0 ) {
+								
+								triggerList = triggersSorted.bottom;
+								
+							}
+							// scrolling top down
+							else {
+								
+								triggerList = triggersSorted.top;
+								
+							}
+							
+						}
+						else if ( triggerSortDirection === 'horizontal' ) {
+							
+							// scrolling right left
+							if ( cx - lcx < 0 ) {
+								
+								triggerList = triggersSorted.right;
+								
+							}
+							// scrolling left right
+							else {
+								
+								triggerList = triggersSorted.left;
+								
+							}
+							
+						}
+						
+					}
+					
+					// for each trigger
+					
+					for( i = triggerList.length - 1; i >= 0; i-- ) {
+						
+						trigger = triggerList[ i ];
 						
 						// any overlap with trigger
 						
@@ -1454,13 +1621,13 @@ function ( $ ){
 							
 							if ( trigger.once === true ) {
 								
-								removeTriggerByIndex( i );
+								removeTrigger( trigger );
 								
 							}
 							
 							if ( typeof trigger.callbackContinuous === 'function' ) {
 								
-								trigger.callbackContinuous.call( trigger.contextContinuous || trigger.contextAll );
+								trigger.callbackContinuous.call( trigger.contextContinuous || trigger.contextAll, trigger );
 								
 							}
 							
@@ -1470,7 +1637,7 @@ function ( $ ){
 								
 								if ( typeof trigger.callback === 'function' ) {
 									
-									trigger.callback.call( trigger.context || trigger.contextAll );
+									trigger.callback.call( trigger.context || trigger.contextAll, trigger );
 									
 								}
 								
@@ -1478,12 +1645,23 @@ function ( $ ){
 							
 							// screen center inside trigger
 							
-							if ( typeof trigger.callbackCenter === 'function' && isInsideTriggerArea( lcx, lcy, cx, cy, trigger ) ) {
-							
+							if ( isInsideTriggerArea( lcx, lcy, cx, cy, trigger ) ) {
+								
+								if ( typeof trigger.callbackCenterContinuous === 'function' ) {
+									
+									trigger.callbackCenterContinuous.call( trigger.contextCenterContinuous || trigger.contextAll, trigger );
+									
+								}
+								
 								if ( trigger.ignoreCenter !== true ) {
 									
 									trigger.ignoreCenter = true;
-									trigger.callbackCenter.call( trigger.contextCenter || trigger.contextAll );
+									
+									if ( typeof trigger.callbackCenter === 'function' ) {
+										
+										trigger.callbackCenter.call( trigger.contextCenter || trigger.contextAll, trigger );
+										
+									}
 									
 								}
 								
@@ -1502,13 +1680,18 @@ function ( $ ){
 							if ( trigger.ignoreLeave !== true && typeof trigger.callbackLeave === 'function' ) {
 								
 								trigger.ignoreLeave = true;
-								trigger.callbackLeave.call( trigger.contextLeave || trigger.contextAll );
+								trigger.callbackLeave.call( trigger.contextLeave || trigger.contextAll, trigger );
 								
 							}
 							
 						}
 						
 					}
+					
+					// update trigger check position
+					
+					triggerCheckPosition.x = contentPosition.x;
+					triggerCheckPosition.y = contentPosition.y;
 					
 				}
 				
@@ -1736,6 +1919,14 @@ function ( $ ){
 					getContentPositionY: function() {
 						return contentPosition.y;
 					},
+					// Returns the current x position at the center of the viewport with regards to the content pane.
+					getScrollPositionCenterX: function() {
+						return contentPosition.x + paneWidth * 0.5;
+					},
+					// Returns the current y position at the center of the viewport with regards to the content pane.
+					getScrollPositionCenterY: function() {
+						return contentPosition.y + paneHeight * 0.5;
+					},
 					// Returns the width of the content within the scroll pane.
 					getContentWidth: function() {
 						return contentWidth;
@@ -1830,6 +2021,9 @@ function ( $ ){
 		scrollToElementDurationMax: 2,
 		scrollToElementBaseDistance: 500,
 		scrollToElementEase: Strong.easeOut,
+		triggerSort: false,
+		triggerSortDirection: 'both',
+		triggerThrottleDuration: 30,
 		hijackInternalLinks: false,
 		verticalGutter: 4,
 		horizontalGutter: 4,

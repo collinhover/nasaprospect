@@ -1,4 +1,24 @@
-#ui {
+/* user
+-------------------------------------------------------------------------------*/
+
+#user {
+	position: absolute;
+}
+
+/* characters
+-------------------------------------------------------------------------------*/
+
+#userCharacters {
+	.fillTopLeft;
+	.ignore-pointer;
+}
+
+/* ui
+-------------------------------------------------------------------------------*/
+
+#userUI {
+	.fillTopLeft;
+	.ignore-pointer;
 	z-index: @zMaxBlockable;
 	
 	#navbarPlanets {
@@ -140,6 +160,10 @@
 		
 		.state-on, .state-off {
 			position: relative;
+		}
+		
+		.slider-volume {
+			margin: 0;
 		}
 	}
 	
