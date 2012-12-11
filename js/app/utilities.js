@@ -275,23 +275,57 @@ function ( $, _s ) {
 		
 	}
 	
+	function AABBIntersectsAABB ( aMinX, aMinY, aMaxX, aMaxY, bMinX, bMinY, bMaxX, bMaxY ) {
+		
+		if ( aMinX > bMaxX ) return false;
+		if ( aMaxX < bMinX ) return false;
+		if ( aMinY > bMaxY ) return false;
+		if ( aMaxY < bMinY ) return false;
+		
+		return true;
+		
+	}
+	
 	/*===================================================
     
     dom
     
     =====================================================*/
 	
-	function DOMBounds ( $element ) {
+	function DOMBounds ( elements ) {
+
+		var $elements = $( elements );
+		var bounds = {
+			$elements: $elements,
+			left: Number.MAX_VALUE,
+			right: -Number.MAX_VALUE,
+			top: Number.MAX_VALUE,
+			bottom: -Number.MAX_VALUE
+		};
 		
-		var bounds = {};
-		var offset = $element.offset();
-		var width = $element.width();
-		var height = $element.height();
-		
-		bounds.left = offset.left;
-		bounds.right = bounds.left + width;
-		bounds.top = offset.top;
-		bounds.bottom = bounds.top + height;
+		// create total box from all elements
+		// for simplicity, assumes all elements form a rectangle
+
+		$elements.each( function () {
+			
+			var $element = $( this );
+			
+			if ( $element.length > 0 ) {
+				
+				var offset = $element.offset();
+				var left = offset.left;
+				var top = offset.top;
+				var right = left + $element.outerWidth();
+				var bottom = top + $element.outerHeight();
+				
+				if ( right > bounds.right ) bounds.right = right;
+				if ( left < bounds.left ) bounds.left = left;
+				if ( bottom > bounds.bottom ) bounds.bottom = bottom;
+				if ( top < bounds.top ) bounds.top = top;
+				
+			}
+			
+		} );
 		
 		return bounds;
 		
@@ -612,6 +646,7 @@ function ( $, _s ) {
 	_utils.IndexOfProperties = IndexOfProperties;
 	
 	_utils.Clamp = Clamp;
+	_utils.AABBIntersectsAABB = AABBIntersectsAABB;
 	
 	_utils.DOMBounds = DOMBounds;
 	_utils.IgnorePointerDOM = IgnorePointerDOM;

@@ -26,7 +26,6 @@
 		scrollTargetsElements = [],
         sticked = [],
         stickedElements = [],
-		ThrottledUpdate = $.throttle ? $.throttle( 250, OnScrolled ) : OnScrolled,
 		methods = {
             init: function(options) {
 				
@@ -36,6 +35,7 @@
 						data = $.extend( {}, defaults, options ),
 						$element = $(this),
 						scrollEvents = data.scrollEvents,
+						update = $.throttle ? $.throttle( 250, OnScrolled ) : OnScrolled,
 						$scrollTarget = $( data.scrollTarget ),
 						scrollTarget = $scrollTarget[ 0 ] ,
 						scrollTargetIndex,
@@ -78,14 +78,15 @@
 							scrollTargets.push( scrollTarget );
 							scrollTargetIndex = scrollTargets.length - 1;
 							
+							$window.off( '.sticky' ).on( 'resize.sticky', update );
+							
 							// event listeners
-							// attempt to use throttle
 							
 							$scrollTarget.off( '.sticky' );
 							
 							for ( i = 0, il = scrollEvents.length; i < il; i++ ) {
 								
-								$scrollTarget.on( scrollEvents[ i ] + '.sticky', ThrottledUpdate );
+								$scrollTarget.on( scrollEvents[ i ] + '.sticky', update );
 								
 							}
 							
@@ -102,12 +103,15 @@
 						}
 						
 						scrollTargetElements.push( this );
+						
+						// update once
+						
+						update();
                         
                     }
                     
                 });
             },
-            update: OnScrolled,
             stop: function () {
 				
                 return this.each(function() {
@@ -148,6 +152,12 @@
 							
 							scrollTargetsElements.splice( scrollTargetIndex );
 							scrollTargets.splice( scrollTargetIndex );
+							
+							if ( scrollTargets.length === 0 ) {
+								
+								$window.off( '.sticky' );
+								
+							}
 							
 						}
                         
@@ -339,13 +349,5 @@
         }
 		
     };
-	
-    $( function() {
-		
-		$window.on( 'resize.sticky', ThrottledUpdate );
-		
-		ThrottledUpdate();
-		
-    } );
 	
 })(jQuery);

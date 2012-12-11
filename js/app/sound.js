@@ -185,7 +185,7 @@ function ( $, _s, _utils ) {
 				PlaySound( datum );
 				
 			},
-			onRemoved: function () {
+			callbackRemove: function () {
 				
 				PauseSound( datum );
 				

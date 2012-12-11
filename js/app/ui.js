@@ -2,18 +2,55 @@ define( [
 	"jquery",
 	"app/shared",
 	"app/utilities",
+	"app/navigator",
 	"hammer.custom",
 	"bootstrap",
-	"mwheelIntent",
 	"jquery.throttle-debounce.custom",
-	"jquery.mousewheel",
-	"jquery.jscrollpane.custom",
-	"jquery.stellar.custom"
+	"jquery.multi-sticky"
 ],
-function ( $, _s, _utils ) {
+function ( $, _s, _utils, _navi ) {
 	
 	var _de = _s.domElements;
 	var _ui = {};
+	
+	/*===================================================
+	
+	init
+	
+	=====================================================*/
+	
+	// sticky
+	
+	_de.$stickable.each( function () {
+		
+		var $element = $( this );
+		var $target = $( $element.data( "target" ) );
+		var stickyParameters = {
+			handlePosition: false
+		};
+		
+		// if target empty, assume main
+		
+		if ( $target.length === 0 ) {
+			
+			$target = _de.$main;
+			stickyParameters.scrollTop = function () {
+				
+				return _navi.GetScrollPosition().y;
+				
+			};
+			
+		}
+		
+		stickyParameters.scrollTarget = $target;
+		
+		$element.removeClass( 'is-sticky' ).sticky( stickyParameters );
+		
+	} );
+	
+	// resize
+	
+	_de.$window.on( 'resize', $.throttle( _s.throttleTimeLong, OnWindowResized ) );
 	
 	/*===================================================
 	
@@ -26,12 +63,9 @@ function ( $, _s, _utils ) {
 		_s.w = _de.$window.width();
         _s.h = _de.$window.height();
 		
-		// fill container elements
+		// fill container elements to match screen height
 		
-		_de.$containerFill.css( {
-            "width": _s.w,
-            "height": _s.h
-        } );
+		_de.$containerFill.css( "height", _s.h );
 		
 		// handle type size by screen size
 		
@@ -72,109 +106,15 @@ function ( $, _s, _utils ) {
 			
 		}
 		
-		$scrollable.each( function () {
-			
-			var $element = $( this );
-			var scrollAPI = $element.data('jsp');
-			
-			scrollAPI.reinitialise();
-			
-		} );
-		
 		// update section parts
 		
 		_de.$orbits = _de.$sections.find( ".orbit" );
 		_de.$lands = _de.$sections.find( ".land" );
 		_de.$explores = _de.$sections.find( ".explore" );
 		
-		_de.$maxgrounds = $( ".maxground" );
-		_de.$foregrounds = $( ".foreground" );
-		_de.$middlegrounds = $( ".middleground" );
-		_de.$backgrounds = $( ".background" );
-		
-		// update parallax
-		
-		_de.$maxgrounds.attr( "data-stellar-ratio", _s.parallaxMaxground );
-		_de.$foregrounds.attr( "data-stellar-ratio", _s.parallaxForeground );
-		_de.$middlegrounds.attr( "data-stellar-ratio", _s.parallaxMiddleground );
-		_de.$backgrounds.attr( "data-stellar-ratio", _s.parallaxBackground );
-		
-		_s.navigator.getContentPane().stellar( 'refresh' );
-		
-		_s.signals.onScrollRefreshed.dispatch();
+		_s.signals.onContentRefreshed.dispatch();
 		
 	}
-	
-	/*===================================================
-	
-	init
-	
-	=====================================================*/
-	
-	var scrollbarV = $( '<div></div>' ).addClass( 'jspVerticalBar' ).appendTo( _de.$main );
-	var scrollbarH = $( '<div></div>' ).addClass( 'jspHorizontalBar' ).appendTo( _de.$main );
-	
-	var scrollSettings = {
-		verticalGutter : -scrollbarV.width(),
-		horizontalGutter: -scrollbarH.height(),
-		hijackInternalLinks: true,
-		triggerSort: true,
-		triggerSortDirection: 'vertical'
-	};
-	
-	scrollbarV.remove();
-	scrollbarH.remove();
-	
-	_de.$scrollable.removeClass( 'unscrollable' ).jScrollPane( scrollSettings );
-	
-	_s.navigator = _de.$main.data( 'jsp' );
-	
-	// parallax
-	
-	_s.navigator.getContentPane().stellar( {
-		scrollProperty: 'position',
-		horizontalScrolling: false,
-		hideDistantElements: false
-	} );
-	
-	// load sticky late so it can use throttle to improve performance
-	
-	require( [
-		"jquery.multi-sticky"
-	],
-	function () {
-		
-		_de.$stickable.each( function () {
-			
-			var $element = $( this );
-			var $target = $( $element.data( "target" ) );
-			var stickyParameters = {
-				handlePosition: false
-			};
-			
-			// if target empty, assume main
-			
-			if ( $target.length === 0 ) {
-				
-				$target = _de.$main;
-				stickyParameters.scrollTop = function () {
-					
-					return _s.navigator.getContentPositionY();
-					
-				};
-				
-			}
-			
-			stickyParameters.scrollTarget = $target;
-			
-			$element.removeClass( 'is-sticky' ).sticky( stickyParameters );
-			
-		} );
-		
-	}
-	);
-	
-	_de.$window.on( 'resize', $.throttle( _s.throttleTimeLong, OnWindowResized ) );
 	
 	/*===================================================
 	

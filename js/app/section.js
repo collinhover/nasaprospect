@@ -2,10 +2,11 @@ define( [
 	"jquery",
 	"app/shared",
 	"app/ui",
+	"app/navigator",
 	"app/sound",
 	"signals"
 ],
-function ( $, _s, _ui, _snd, Signal ) {
+function ( $, _s, _ui, _navi, _snd, Signal ) {
 	
 	var _de = _s.domElements;
 	var _section = {};
@@ -35,6 +36,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		this.triggers = [];
 		this.triggersSound = [];
+		this.triggersPersistentParameters = [];
 		this.triggersPersistent = [];
 		
 		// areas
@@ -79,15 +81,17 @@ function ( $, _s, _ui, _snd, Signal ) {
 		
 		// persistent triggers
 		
-		this.triggersPersistent.push( {
-			element: this.$element,
-			callback: this.Enter,
-			callbackLeave: this.Exit,
-			callbackCenter: this.Activate,
-			contextAll: this
-		} );
-		
-		_s.navigator.addTriggers( this.triggersPersistent );
+		this.triggersPersistent = [
+			{
+				element: this.$element,
+				callback: this.Enter,
+				callbackOutside: this.Exit,
+				callbackCenter: this.Activate,
+				callbackCenterOutside: this.Deactivate,
+				contextAll: this
+			}
+		];
+		_navi.AddTriggers( this.triggersPersistent );
 		
 		// signals
 		
@@ -137,14 +141,9 @@ function ( $, _s, _ui, _snd, Signal ) {
 			
 			this.onEntered.dispatch( this );
 			
-			_s.signals.onUpdated.add( update, this );
-			
-			if ( typeof this.whenInside.Resize === 'function' ) {
-				
-				_s.signals.onResized.add( this.whenInside.Resize, this );
-				this.whenInside.Resize();
-				
-			}
+			_s.signals.onUpdated.add( this.Update, this );
+			_s.signals.onResized.add( this.Resize, this );
+			this.Resize();
 			
 		}
 		
@@ -156,13 +155,8 @@ function ( $, _s, _ui, _snd, Signal ) {
 			console.log( this.id, 'exited' );
 			this.inside = false;
 			
-			_s.signals.onUpdated.remove( update, this );
-			
-			if ( typeof this.whenInside.Resize === 'function' ) {
-				
-				_s.signals.onResized.remove( this.whenInside.Resize, this );
-				
-			}
+			_s.signals.onUpdated.remove( this.Update, this );
+			_s.signals.onResized.remove( this.Resize, this );
 			
 			this.onExited.dispatch( this );
 			
@@ -184,14 +178,16 @@ function ( $, _s, _ui, _snd, Signal ) {
 			
 			this.active = true;
 			
+			this.onActivated.dispatch( this );
+			console.log( this.id, ' activate' );
 			this.soundHandlers.element.Play();
 			
-			_s.navigator.removeTriggers( this.triggers );
+			_navi.RemoveTriggers( this.triggers );
 			this.triggers = [];
 			
 			this.$orbit.each( function () {
 				
-				me.triggers.push( _s.navigator.addTrigger( {
+				me.triggers.push( _navi.AddTrigger( {
 					callbackCenter: me.StartOrbiting,
 					contextCenter: me,
 					element: this,
@@ -200,8 +196,6 @@ function ( $, _s, _ui, _snd, Signal ) {
 				
 			} );
 			
-			this.onActivated.dispatch( this );
-			
 		}
 		
 	}
@@ -209,17 +203,20 @@ function ( $, _s, _ui, _snd, Signal ) {
 	function Deactivate () {
 		
 		if ( this.active !== false ) {
-			
 			this.active = false;
 			
+			this.onDeactivated.dispatch( this );
+			console.log( this.id, ' deactivate' );
 			this.StopAll();
 			
 			this.soundHandlers.element.Pause();
 			
-			_s.navigator.removeTriggers( this.triggers );
+			_navi.RemoveTriggers( this.triggers );
 			this.triggers = [];
 			
-			this.onDeactivated.dispatch( this );
+			// reset persistent triggers on navigation direction reverse to ensure they activate correctly
+			
+			_navi.ReverseResetTriggers( this.triggersPersistent, this.id );
 			
 		}
 		
@@ -233,7 +230,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 	
 	function ToOrbit () {
 		
-		_s.navigator.scrollToElement( this.$orbit, true, 1, {
+		_navi.scrollToElement( this.$orbit, true, 1, {
 			ease: Cubic.easeOut,
 			onComplete: $.proxy( this.StartOrbiting, this )
 		} );
@@ -255,12 +252,12 @@ function ( $, _s, _ui, _snd, Signal ) {
 			
 			// cycle triggers
 			
-			_s.navigator.removeTriggers( this.triggers );
+			_navi.RemoveTriggers( this.triggers );
 			this.triggers = [];
 			
 			this.$land.each( function () {
 				
-				me.triggers.push( _s.navigator.addTrigger( {
+				me.triggers.push( _navi.AddTrigger( {
 					callbackCenter: me.StartLanding,
 					contextCenter: me,
 					element: this,
@@ -308,12 +305,12 @@ function ( $, _s, _ui, _snd, Signal ) {
 			
 			// triggers
 			
-			_s.navigator.removeTriggers( this.triggers );
+			_navi.RemoveTriggers( this.triggers );
 			this.triggers = [];
 			
 			this.$explore.each( function () {
 				
-				me.triggers.push( _s.navigator.addTrigger( {
+				me.triggers.push( _navi.AddTrigger( {
 					callbackCenter: me.StartExploring,
 					contextCenter: me,
 					element: this,
@@ -324,7 +321,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 			
 			// sounds as triggers
 			
-			this.triggers = this.triggers.concat( _s.navigator.addTriggers( this.soundHandlers.land.triggers ) );
+			this.triggers = this.triggers.concat( _navi.AddTriggers( this.soundHandlers.land.triggers ) );
 			
 			this.onLandingStarted.dispatch( this );
 			
@@ -365,12 +362,12 @@ function ( $, _s, _ui, _snd, Signal ) {
 			
 			// cycle triggers
 			
-			_s.navigator.removeTriggers( this.triggers );
+			_navi.RemoveTriggers( this.triggers );
 			this.triggers = [];
 			
 			this.$land.each( function () {
 				
-				me.triggers.push( _s.navigator.addTrigger( {
+				me.triggers.push( _navi.AddTrigger( {
 					callbackCenter: me.StartLanding,
 					contextCenter: me,
 					element: this,
@@ -407,9 +404,25 @@ function ( $, _s, _ui, _snd, Signal ) {
 	
 	=====================================================*/
 	
-	function update () {
+	function Update () {
 		
 		
+		
+	}
+	
+	/*===================================================
+	
+	resize
+	
+	=====================================================*/
+	
+	function Resize () {
+		
+		if ( typeof this.whenInside.Resize === 'function' ) {
+			
+			this.whenInside.Resize();
+			
+		}
 		
 	}
 	
@@ -427,6 +440,7 @@ function ( $, _s, _ui, _snd, Signal ) {
 	_section.Instance.prototype.Exit = Exit;
 	_section.Instance.prototype.Activate = Activate;
 	_section.Instance.prototype.Deactivate = Deactivate;
+	
 	_section.Instance.prototype.ToOrbit = ToOrbit;
 	_section.Instance.prototype.StartOrbiting = StartOrbiting;
 	_section.Instance.prototype.StopOrbiting = StopOrbiting;
@@ -434,6 +448,9 @@ function ( $, _s, _ui, _snd, Signal ) {
 	_section.Instance.prototype.StopLanding = StopLanding;
 	_section.Instance.prototype.StartExploring = StartExploring;
 	_section.Instance.prototype.StopExploring = StopExploring;
+	
+	_section.Instance.prototype.Update = Update;
+	_section.Instance.prototype.Resize = Resize;
 	
 	return _section;
 	

@@ -18,12 +18,13 @@ soundManager.onready( function () {
 		"app/shared",
 		"app/utilities",
 		"app/ui",
+		"app/navigator",
 		"app/solarSystem",
 		"app/user",
 		"overthrow",
 		"RequestAnimationFrame"
 	],
-	function ( $, _s, _utils, _ui, _solarSystem, _user ) {
+	function ( $, _s, _utils, _ui, _navi, _solarSystem, _user ) {
 		
 		var _de = _s.domElements;
 		
@@ -46,7 +47,7 @@ soundManager.onready( function () {
 		// resize once on start
 		
 		_de.$window.trigger( 'resize' );
-		_s.navigator.checkTriggers( true );
+		_navi.CheckTriggers( true );
 		
 		// fade preloader
 		

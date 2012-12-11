@@ -8,8 +8,7 @@
 }
 
 #solar-system, .system-section {
-	.fill;
-	.fillMin;
+	.fillWidth;
 }
 
 #solar-system, .system-section, .container-fill {
@@ -53,26 +52,6 @@
 	overflow: visible;
 }
 
-.background {
-	z-index: @zBackground;
-}
-
-.middleground {
-	z-index: @zMiddleground;
-}
-
-.foreground {
-	z-index: @zForeground;
-}
-
-.characterground {
-	z-index: @zMGtoFG;
-}
-
-.maxground {
-	z-index: @zMaxground;
-}
-
 /* objects
 -------------------------------------------------------------------------------*/
 
@@ -111,12 +90,6 @@
 	.parallaxable;
 	.full-height;
 	cursor: pointer;
-}
-
-.character {
-	.parallaxable;
-	.center-horizontal;
-	max-width: 50%;
 }
 
 /* orbit

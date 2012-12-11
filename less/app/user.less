@@ -2,7 +2,11 @@
 -------------------------------------------------------------------------------*/
 
 #user {
-	position: absolute;
+	.fillTopLeft;
+}
+
+#user, #userCharacters, #userUI, .character {
+	.ignore-pointer;
 }
 
 /* characters
@@ -10,7 +14,20 @@
 
 #userCharacters {
 	.fillTopLeft;
-	.ignore-pointer;
+	
+	#robot {
+		.characterbackground;
+	}
+	
+	#astronaut {
+		.characterforeground;
+	}
+}
+
+.character {
+	.parallaxable;
+	.center-horizontal;
+	max-width: 50%;
 }
 
 /* ui
@@ -18,7 +35,6 @@
 
 #userUI {
 	.fillTopLeft;
-	.ignore-pointer;
 	z-index: @zMaxBlockable;
 	
 	#navbarPlanets {

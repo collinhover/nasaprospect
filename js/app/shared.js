@@ -23,9 +23,10 @@ function ( $, Signal ) {
 	
 	_s.signals = {
 		onReady: new Signal(),
+		onScrolled: new Signal(),
 		onUpdated: new Signal(),
 		onResized: new Signal(),
-		onScrollRefreshed: new Signal()
+		onContentRefreshed: new Signal()
 	};
 	
 	/*===================================================
@@ -57,6 +58,11 @@ function ( $, Signal ) {
 	
 	_de.$solarSystem = $( "#solar-system" );
 	_de.$sections = $( ".system-section" );
+	
+	_de.$maxgrounds = $( ".maxground" );
+	_de.$foregrounds = $( ".foreground" );
+	_de.$middlegrounds = $( ".middleground" );
+	_de.$backgrounds = $( ".background" );
 	
 	/*===================================================
 	

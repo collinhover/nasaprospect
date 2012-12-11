@@ -10,6 +10,7 @@
 ;(function($, window, document, undefined){
 
 	var pluginName = 'stellar',
+		pluginCount = 0,
 		defaults = {
 			scrollProperty: 'scroll',
 			positionProperty: 'position',
@@ -155,7 +156,7 @@
 
 	Plugin.prototype = {
 		init: function() {
-			this.options.name = pluginName + '_' + Math.floor(Math.random()*10000);
+			this.options.name = pluginName + '_' + pluginCount++;
 
 			this._defineElements();
 			this._defineGetters();
@@ -445,7 +446,7 @@
 
 				this.options.showElement(particle.$element);
 
-				particle.$element.data('stellar-startingLeft', null).data('stellar-elementIsActive', null).data('stellar-backgroundIsActive', null);
+				particle.$element.data('stellar-startingLeft', undefined).data('stellar-elementIsActive', undefined).data('stellar-backgroundIsActive', undefined);
 			}
 
 			for (i = this.backgrounds.length - 1; i >= 0; i--) {
@@ -598,26 +599,71 @@
 		}
 	};
 
-	$.fn[pluginName] = function (options) {
+	$.fn[pluginName] = function ( options ) {
+		
 		var args = arguments;
 		
-		if (options === undefined || typeof options === 'object') {
-			return this.each(function () {
-				if (!$.data(this, 'plugin_' + pluginName)) {
-					$.data(this, 'plugin_' + pluginName, new Plugin(this, options));
-				}
-			});
-		} else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
-			return this.each(function () {
-				var instance = $.data(this, 'plugin_' + pluginName);
-				if (instance instanceof Plugin && typeof instance[options] === 'function') {
-					instance[options].apply(instance, Array.prototype.slice.call(args, 1));
-				}
-				if (options === 'destroy') {
-					$.data(this, 'plugin_' + pluginName, null);
-				}
-			});
+		if ( options === "instance" ) {
+			
+			return this.data( 'plugin_' + pluginName );
+			
 		}
+		else {
+			
+			return this.each(function () {
+				
+				var instance = $.data(this, 'plugin_' + pluginName);
+				
+				// init as needed
+				
+				if ( options !== 'destroy' && instance instanceof Plugin !== true ) {
+					
+					$.data( this, 'plugin_' + pluginName, new Plugin( this, typeof options === 'object' ? options : {} ) );
+					
+				}
+				
+				// do option
+				
+				if ( typeof options === 'string' && instance instanceof Plugin ) {
+					
+					instance[options].apply( instance, Array.prototype.slice.call( args, 1 ) );
+					
+				}
+				
+				// destroy
+				
+				if ( options === 'destroy' ) {
+					
+					$.data( this, 'plugin_' + pluginName, undefined );
+					
+				}
+				
+			} );
+			/*
+			if (options === undefined || typeof options === 'object') {
+				return this.each(function () {
+					if (!$.data(this, 'plugin_' + pluginName)) {
+						$.data(this, 'plugin_' + pluginName, new Plugin(this, options));
+					}
+				});
+			} 
+			else if (typeof options === 'string' && options[0] !== '_' && options !== 'init') {
+				
+				return this.each(function () {
+					var instance = $.data(this, 'plugin_' + pluginName);
+					if (instance instanceof Plugin && typeof instance[options] === 'function') {
+						instance[options].apply(instance, Array.prototype.slice.call(args, 1));
+					}
+					if (options === 'destroy') {
+						$.data(this, 'plugin_' + pluginName, null);
+					}
+				});
+				
+			}
+			*/
+			
+		}
+		
 	};
 
 	$[pluginName] = function(options) {

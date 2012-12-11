@@ -2,18 +2,17 @@ define( [
 	"jquery",
 	"app/shared",
 	"app/utilities",
+	"app/navigator",
 	"app/solarSystem",
 	"app/section",
 	"TweenMax"
 ],
-function ( $, _s, _utils, _ss, _section ) {
+function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	var _de = _s.domElements;
 	var _user = {};
-	var _scrolling = false;
-	var _scrollY = -Number.MAX_VALUE;
 	var _sectionActive;
-	var _sectionTriggers;
+	var _sectionTriggers = [];
 	var _sectionOptions;
 	var _sectionOptionsById = {};
 	
@@ -119,63 +118,13 @@ function ( $, _s, _utils, _ss, _section ) {
 	var _offset = _$element.offset();
 	
 	_s.signals.onResized.add( Resize );
-	_s.signals.onScrollRefreshed.add( ScrollRefresh );
 	_s.signals.onReady.addOnce( function () {
 		
 		_s.signals.onUpdated.add( Update );
-		_de.$main.on( 'scroll', ScrollWith );
 		
 	} );
 	
 	_ss.onSectionActivated.add( SetActiveSection );
-	
-	/*===================================================
-	
-	scrolling
-	
-	=====================================================*/
-	
-	function ScrollWith () {
-		
-		var scrollY = _s.navigator.getContentPositionY();
-		
-		if ( scrollY >= _offset.top ) {
-			
-			if ( _scrollY !== scrollY ) {
-				
-				_scrolling = true;
-				_scrollY = scrollY;
-				
-				_$element.css( 'top', _scrollY - _offset.top );
-				
-			}
-			
-		}
-		else {
-			
-			ScrollStop();
-			
-		}
-		
-	}
-	
-	function ScrollStop () {
-		
-		_scrolling = false;
-		_scrollY = -Number.MAX_VALUE;
-		_$element.css( 'top', '' );
-		
-	}
-	
-	function ScrollRefresh () {
-		
-		ScrollStop();
-		_offset = _$element.offset();
-		_offset.top += _s.navigator.getContentPositionY();
-		
-		ScrollWith();
-		
-	}
 	
 	/*===================================================
 	
@@ -191,7 +140,7 @@ function ( $, _s, _utils, _ss, _section ) {
 			
 			// reset section data
 			
-			_s.navigator.removeTriggers( _sectionTriggers );
+			_navi.RemoveTriggers( _sectionTriggers );
 			_sectionTriggers = [];
 			_sectionOptions = _sectionOptionsById[ _sectionActive.id ] = _sectionOptionsById[ _sectionActive.id ] || {};
 			
@@ -199,7 +148,7 @@ function ( $, _s, _utils, _ss, _section ) {
 				
 				// if will be resizing characters while in section
 				
-				InitSectionResizers( _sectionActive );
+				InitSectionModifiers( _sectionActive );
 				
 			}
 			
@@ -213,44 +162,76 @@ function ( $, _s, _utils, _ss, _section ) {
 	
 	=====================================================*/
 	
-	function InitSectionResizers ( section ) {
+	function InitSectionModifiers ( section ) {
 		
-		var types = [ 'shrink', 'grow' ];
-		
-		for ( var i = 0, il = types.length; i < il; i++ ) {
+		if ( _sectionOptions.$modifiers instanceof $ !== true ) {
 			
-			InitSectionResizerType( section, types[ i ] );
+			_sectionOptions.$modifiers = section.$element.find( '[data-character-modify]' );
+			_sectionOptions.modifiersTriggers = [];
 			
 		}
+		
+		_sectionOptions.$modifiers.each( function ( index ) {
+			
+			var $element = $( this );
+			var modTriggers = _sectionOptions.modifiersTriggers[ index ];
+			var i, il;
+			
+			// generate triggers on first init
+			
+			if ( _utils.IsArray( modTriggers ) !== true ) {
+				
+				var modsString = $.trim( $element.attr( 'data-character-modify' ) );
+				var modsStrings = modsString.split( /[ \t\r]+/g );
+				
+				modTriggers = [];
+				
+				for ( i = 0, il = modsStrings.length; i < il; i++ ) {
+					
+					var modTrigger = GenerateModifierTrigger( $element, modsStrings[ i ] );
+					
+					if ( typeof modTrigger !== 'undefined' ) {
+						
+						modTriggers.push( modTrigger );
+						
+					}
+					
+				}
+				
+				// store
+				
+				_sectionOptions.modifiersTriggers[ index ] = modTriggers;
+				
+			}
+			
+			_sectionTriggers = _sectionTriggers.concat( _navi.AddTriggers( modTriggers ) );
+			
+		} );
 		
 	}
 	
-	function InitSectionResizerType ( section, type ) {
+	function GenerateModifierTrigger ( $element, modString ) {
 		
-		var typeSearch = type.toLowerCase();
-		var typeDataName = 'data-' + typeSearch;
-		var typeCallbackName = type.charAt( 0 ).toUpperCase() + type.slice( 1 );
+		var modParts = $.trim( modString ).split( '.' );
+		var type = modParts[ 0 ];
+		var idsString = modParts[ 1 ];
+		var ids = idsString ? idsString.split( ',' ) : [];
+		var direction = modParts[ 2 ];
+		var optionsString = modParts[ 3 ];
+		var options = optionsString ? optionsString.split( ',' ) : [];
 		
-		if ( _sectionOptions[ '$' + typeSearch ] instanceof $ !== true ) {
+		if ( typeof _user[ type ] === 'function' && ids.length > 0 ) {
 			
-			_sectionOptions[ '$' + typeSearch ] = section.$element.find( '[' + typeDataName + ']' );
-			
-		}
-		
-		_sectionOptions[ '$' + typeSearch ].each( function () {
-			
-			var $element = $( this );
-			var direction = $element.attr( typeDataName );
-			var characters = $.trim( $element.attr( typeDataName + '-characters' ) ).split( /[ \t\r]+/g );
-			var triggerParameters = {
+			var modTrigger = {
 				callbackCenterContinuous: function ( trigger ) {
 					
-					for ( var i = 0, il = characters.length; i < il; i++ ) {
+					for ( var i = 0, il = ids.length; i < il; i++ ) {
 						
-						_user[ typeCallbackName ]( characters[ i ], { 
+						_user[ type ]( ids[ i ], { 
 							element: $element,
 							bounds: trigger.bounds,
-							direction: direction
+							direction: direction,
+							options: options
 						} );
 						
 					}
@@ -259,18 +240,18 @@ function ( $, _s, _utils, _ss, _section ) {
 				element: $element
 			};
 			
-			// make sure that we do resize one last time upon leaving trigger area
+			// make sure that we modify one last time upon leaving area / removing trigger
 			
-			triggerParameters.callbackCenterLeave = triggerParameters.callbackCenterContinuous;
+			modTrigger.callbackCenterOutside = modTrigger.callbackCenterContinuous;
 			
-			_sectionTriggers.push( _s.navigator.addTrigger( triggerParameters ) );
-			
-		} );
+			return modTrigger;
+		
+		}
 		
 	}
 	
 	function Shrink ( id, parameters ) {
-		console.log( 'SHRINK', id );
+		//console.log( 'SHRINK', id );
 		parameters = parameters || {};
 		var $element = $( parameters.element );
 		
@@ -278,7 +259,7 @@ function ( $, _s, _utils, _ss, _section ) {
 		
 		if ( $element.length > 0 ) {
 			
-			var scrollPositionCenterY = _s.navigator.getScrollPositionCenterY();
+			var scrollPositionCenterY = _navi.GetScrollCenterPosition().y;
 			var bounds = parameters.bounds || _utils.DOMBounds( $element );
 			var direction = parameters.direction;
 			
@@ -312,7 +293,7 @@ function ( $, _s, _utils, _ss, _section ) {
 	}
 	
 	function Grow ( id, parameters ) {
-		console.log( 'GROW', id );
+		//console.log( 'GROW', id );
 		parameters = parameters || {};
 		var $element = $( parameters.element );
 		
@@ -320,7 +301,7 @@ function ( $, _s, _utils, _ss, _section ) {
 		
 		if ( $element.length > 0 ) {
 			
-			var scrollPositionCenterY = _s.navigator.getScrollPositionCenterY();
+			var scrollPositionCenterY = _navi.GetScrollCenterPosition().y;
 			var bounds = parameters.bounds || _utils.DOMBounds( $element );
 			var direction = parameters.direction;
 			
@@ -364,7 +345,7 @@ function ( $, _s, _utils, _ss, _section ) {
 	}
 	
 	function ResizeCharacter ( id, parameters ) {
-		console.log( ' > Resize', id );
+		//console.log( ' > Resize', id );
 		var $character = _charactersById[ id ];
 		
 		if ( $character instanceof $ ) {
