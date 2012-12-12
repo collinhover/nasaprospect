@@ -12,6 +12,7 @@ function ( $, _s, _utils ) {
 	var _$navi = _de.$main;
 	var _naviWidth, _naviHeight;
 	var _triggers = [];
+	var _triggersAdded = [];
 	var _triggersSorted = {
 		top: [],
 		bottom: [],
@@ -115,10 +116,10 @@ function ( $, _s, _utils ) {
 		
 	}
 	
-	function AddTrigger ( triggerNew ) {
+	function AddTrigger ( trigger ) {
 		
-		var $element = triggerNew.$element = triggerNew.$element || $( triggerNew.element );
-		var bounds = triggerNew.bounds = GetTriggerBounds( $element );
+		var $element = trigger.$element = trigger.$element || $( trigger.element );
+		var bounds = trigger.bounds = GetTriggerBounds( $element );
 		
 		if ( $element.length > 0 ) {
 			
@@ -126,13 +127,13 @@ function ( $, _s, _utils ) {
 			// trying to detect duplicates seems to have false positives
 			// instead, combine triggers
 			
-			var i, il, trigger;
+			var i, il, triggerExisting;
 			
 			for( i = 0, il = _triggers.length; i < il; i++ ) {
 				
-				trigger = _triggers[ i ];
+				triggerExisting = _triggers[ i ];
 				
-				if ( trigger.$element.is( $element ) ) {
+				if ( triggerExisting.$element.is( $element ) ) {
 					
 					// add new callbacks to existing
 					
@@ -150,23 +151,44 @@ function ( $, _s, _utils ) {
 					for ( j = 0, jl = callbackTypes.length; j < jl; j++ ) {
 						
 						callbackType = callbackTypes[ j ];
-						if ( triggerNew[ callbackType ] ) trigger[ callbackType ] = [].concat( trigger[ callbackType ], triggerNew[ callbackType ] );
+						
+						if ( trigger[ callbackType ] ) {
+							
+							if ( triggerExisting[ callbackType ] ) {
+								
+								triggerExisting[ callbackType ] = [].concat( triggerExisting[ callbackType ], trigger[ callbackType ] );
+								
+							}
+							else {
+								
+								triggerExisting[ callbackType ] = trigger[ callbackType ];
+								
+							}
+							
+						}
 						
 					}
 					
-					return trigger;
+					return triggerExisting;
 					
 				}
 				
 			}
 			
-			_triggers.push( triggerNew );
+			_triggers.push( trigger );
+			_triggersAdded.push( trigger );
 			
 			// sorting
 			
-			AddTriggerSorted( triggerNew );
+			AddTriggerSorted( trigger );
 			
-			return triggerNew;
+			if ( trigger.callbackAdd ) {
+				
+				HandleTriggerCallbacks( trigger, trigger.callbackAdd, trigger.contextAdd || trigger.contextAll );
+				
+			}
+			
+			return trigger;
 			
 		}
 		
@@ -178,7 +200,13 @@ function ( $, _s, _utils ) {
 			
 			// primary trigger
 			
-			RemoveTriggerFromList( _triggers, trigger );
+			_utils.ArrayCautiousRemove( _triggers, trigger );
+			
+			if ( _triggersAdded.length > 0 ) {
+				
+				_utils.ArrayCautiousRemove( _triggersAdded, trigger );
+				
+			}
 			
 			// handle trigger outside in case we've entered trigger area
 			
@@ -198,34 +226,6 @@ function ( $, _s, _utils ) {
 		
 	}
 	
-	function RemoveTriggerFromList ( triggerList, trigger ) {
-		
-		var index = FindTriggerIndex( triggerList, trigger );
-		
-		if ( index !== -1 ) {
-			
-			triggerList.splice( index, 1 );
-			
-		}
-		
-	}
-	
-	function FindTriggerIndex ( triggerList, trigger ) {
-		
-		for( var i = triggerList.length - 1; i >= 0; i-- ) {
-			
-			if ( trigger === triggerList[ i ] ) {
-				
-				return i;
-				
-			}
-			
-		}
-		
-		return -1;
-		
-	}
-	
 	function AddTriggerSorted ( trigger ) {
 		
 		_triggersSorted.top.push( trigger );
@@ -237,8 +237,8 @@ function ( $, _s, _utils ) {
 	
 	function RemoveTriggerSorted ( trigger ) {
 		
-		RemoveTriggerFromList( _triggersSorted.top, trigger );
-		RemoveTriggerFromList( _triggersSorted.bottom, trigger );
+		_utils.ArrayCautiousRemove( _triggersSorted.top, trigger );
+		_utils.ArrayCautiousRemove( _triggersSorted.bottom, trigger );
 		
 	}
 	
@@ -255,24 +255,18 @@ function ( $, _s, _utils ) {
 		
 	}
 	
-	function CheckTriggers ( force ) {
+	function CheckTriggers ( force, triggers ) {
 		
 		if ( force === true || ( _scrollPosition.y !== _triggerCheckPosition.y || _scrollPosition.x !== _triggerCheckPosition.x ) ) {
 			
-			var minX = Math.min( _triggerCheckPosition.x, _scrollPosition.x );
-			var maxX = Math.max( _triggerCheckPosition.x, _scrollPosition.x );
-			var minY = Math.min( _triggerCheckPosition.y, _scrollPosition.y );
-			var maxY = Math.max( _triggerCheckPosition.y, _scrollPosition.y );
-			var left = minX;
-			var right = maxX + _naviWidth;
-			var centerH = left + _naviWidth * 0.5;
-			var top = minY;
-			var bottom = maxY + _naviHeight;
-			var centerV = top + _naviHeight * 0.5;
-			var triggers;
 			var dirX = _scrollPosition.x - _triggerCheckPosition.x;
 			var dirY = _scrollPosition.y - _triggerCheckPosition.y;
 			var resetOnReverse;
+			var minX, maxX, minY, maxY;
+			var left, right, top, bottom;
+			var topC, bottomC;
+			var numTriggersBeforeCheck = _triggers.length;
+			var triggersAdded = _triggersAdded;
 			
 			// direction
 			
@@ -287,19 +281,47 @@ function ( $, _s, _utils ) {
 				
 			}
 			
-			// get trigger list from sorted
 			// scrolling up
 			if ( _scrollDirection.y < 0 ) {
 				
-				triggers = _triggersSorted.bottom;
+				minX = _scrollPosition.x;
+				maxX = _triggerCheckPosition.x;
+				minY = _scrollPosition.y;
+				maxY = _triggerCheckPosition.y;
+				
+				topC = minY + _naviHeight * 0.5;
+				bottomC = maxY + _naviHeight * 0.5;
+				
+				if ( typeof triggers === 'undefined' ) {
+					
+					triggers = _triggersSorted.bottom.slice( 0 );
+					
+				}
 				
 			}
 			// scrolling top down
 			else {
 				
-				triggers = _triggersSorted.top;
+				minX = _triggerCheckPosition.x;
+				maxX = _scrollPosition.x;
+				minY = _triggerCheckPosition.y;
+				maxY = _scrollPosition.y;
+				
+				topC = minY;
+				bottomC = maxY + _naviHeight * 0.5;
+				
+				if ( typeof triggers === 'undefined' ) {
+					
+					triggers = _triggersSorted.top.slice( 0 );
+					
+				}
 				
 			}
+			
+			left = minX;
+			right = maxX + _naviWidth;
+			top = minY;
+			bottom = maxY + _naviHeight;
 			
 			// for each trigger
 			
@@ -337,7 +359,7 @@ function ( $, _s, _utils ) {
 					
 					// screen center inside trigger
 					
-					if ( _utils.AABBIntersectsAABB( left, top, centerH, centerV, bounds.left, bounds.top, bounds.right, bounds.bottom ) ) {
+					if ( _utils.AABBIntersectsAABB( left, topC, right, bottomC, bounds.left, bounds.top, bounds.right, bounds.bottom ) ) {
 						
 						if ( trigger.callbackCenterContinuous ) {
 							
@@ -384,10 +406,24 @@ function ( $, _s, _utils ) {
 				
 			}
 			
-			// update trigger check position
+			// reset triggers added
 			
-			_triggerCheckPosition.x = _scrollPosition.x;
-			_triggerCheckPosition.y = _scrollPosition.y;
+			_triggersAdded = [];
+			
+			// if triggers have been added during this check, check one more time
+			
+			if ( _triggers.length > numTriggersBeforeCheck  ) {
+				
+				CheckTriggers( false, triggersAdded );
+				
+			}
+			// update trigger check position
+			else {
+				
+				_triggerCheckPosition.x = _scrollPosition.x;
+				_triggerCheckPosition.y = _scrollPosition.y;
+				
+			}
 			
 		}
 		
@@ -421,7 +457,7 @@ function ( $, _s, _utils ) {
 		
 		var i, il, callbackData;
 		
-		if ( callbacks.length > 0 ) {
+		if ( _utils.IsArray( callbacks ) ) {
 			
 			for ( i = 0, il = callbacks.length; i < il; i++ ) {
 				

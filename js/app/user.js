@@ -103,11 +103,11 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			
 			_charactersById[ id ] = $element;
 			
-			// shrink after init complete
+			// hide after init complete
 			
 			if ( hide === true ) {
 				
-				Shrink( id );
+				Grow( id, { width: 0, height: 0 } );
 				
 			}
 			
@@ -158,7 +158,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	/*===================================================
 	
-	shrink / grow
+	modifiers
 	
 	=====================================================*/
 	
@@ -212,13 +212,13 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	function GenerateModifierTrigger ( $element, modString ) {
 		
-		var modParts = $.trim( modString ).split( '.' );
+		var modParts = $.trim( modString ).split( /\/|\\/ );
 		var type = modParts[ 0 ];
 		var idsString = modParts[ 1 ];
 		var ids = idsString ? idsString.split( ',' ) : [];
 		var direction = modParts[ 2 ];
-		var optionsString = modParts[ 3 ];
-		var options = optionsString ? optionsString.split( ',' ) : [];
+		var propertiesString = modParts[ 3 ];
+		var properties = propertiesString ? propertiesString.split( ',' ) : [];
 		
 		if ( typeof _user[ type ] === 'function' && ids.length > 0 ) {
 			
@@ -231,7 +231,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 							element: $element,
 							bounds: trigger.bounds,
 							direction: direction,
-							options: options
+							properties: properties
 						} );
 						
 					}
@@ -250,50 +250,112 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		
 	}
 	
-	function Shrink ( id, parameters ) {
-		//console.log( 'SHRINK', id );
-		parameters = parameters || {};
-		var $element = $( parameters.element );
+	function GetModifierPct ( $element, parameters ) {
 		
-		// based on scroll
+		var properties = parameters.properties;
+		var scrollPositionCenterY = _navi.GetScrollCenterPosition().y;
+		var bounds = parameters.bounds || _utils.DOMBounds( $element );
+		var top = bounds.top;
+		var bottom = bounds.bottom;
+		var boundsDistanceV = bottom - top;
+		var pctEnd, pctStart, pctTotal;
+		var pct;
 		
-		if ( $element.length > 0 ) {
+		if ( properties.length > 0 ) {
 			
-			var scrollPositionCenterY = _navi.GetScrollCenterPosition().y;
-			var bounds = parameters.bounds || _utils.DOMBounds( $element );
-			var direction = parameters.direction;
+			pctStart = parseFloat( properties[ 0 ] );
+			pctEnd = parseFloat( properties[ 1 ] );
 			
-			// get pct by direction
+			if ( isNaN( pctStart ) ) pctStart = 0;
+			else pctStart = _utils.Clamp( pctStart, 0, 1 );
 			
-			if ( direction === 'up' ) {
-				
-				var boundsDeltaV = bounds.bottom - bounds.top;
-				parameters.pct = _utils.Clamp( ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
-				
-			}
-			// default to down
-			else {
-				
-				var boundsDeltaV = bounds.bottom - bounds.top;
-				parameters.pct = _utils.Clamp( 1 - ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
-				
-			}
+			if ( isNaN( pctEnd ) ) pctEnd = 1;
+			else pctEnd = _utils.Clamp( pctEnd, pctStart, 1 );
+			
+			pctTotal = pctEnd - pctStart;
+			
+			top += boundsDistanceV *  pctStart;
+			boundsDistanceV *= pctTotal;
+			bottom = top + boundsDistanceV;
 			
 		}
-		// for tween
 		else {
 			
-			if ( _utils.IsNumber( parameters.width ) !== true ) parameters.width = 0;
-			if ( _utils.IsNumber( parameters.height ) !== true ) parameters.height = 0;
+			pctEnd = 1;
+			pctStart = 0;
 			
 		}
 		
-		ResizeCharacter( id, parameters );
+		var distanceV = scrollPositionCenterY - top;
+		
+		// get pct by direction
+		
+		if ( parameters.direction === 'up' ) {
+			
+			// special case for total pct of 0
+			
+			if ( pctTotal <= 0 ) {
+				
+				if ( scrollPositionCenterY < bottom ) {
+					
+					pct = 0;
+					
+				}
+				else {
+					
+					pct = 1;
+					
+				}
+				
+			}
+			// default pct
+			else {
+				
+				pct = _utils.Clamp( 1 - distanceV / boundsDistanceV, 0, 1 );
+				
+			}
+			
+		}
+		// default to down
+		else {
+			
+			// special case for total pct of 0
+			
+			if ( pctTotal <= 0 ) {
+				
+				if ( scrollPositionCenterY < top ) {
+					
+					pct = 0;
+					
+				}
+				else {
+					
+					pct = 1;
+					
+				}
+				
+			}
+			// default pct
+			else {
+				
+				pct = _utils.Clamp( distanceV / boundsDistanceV, 0, 1 );
+				
+			}
+			
+		}
+		console.log( 'pct ', pct, ' pctEnd', pctEnd, 'pctStart', pctStart, 'top', top, bounds.top, 'bottom', bottom, bounds.bottom, 'scrollPositionCenterY', scrollPositionCenterY, ' distanceV', distanceV );
+		return pct;
 		
 	}
 	
+	/*===================================================
+	
+	resize
+	
+	=====================================================*/
+	
 	function Grow ( id, parameters ) {
-		//console.log( 'GROW', id );
+		//console.log( 'Grow', id );
 		parameters = parameters || {};
 		var $element = $( parameters.element );
 		
@@ -301,25 +363,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		
 		if ( $element.length > 0 ) {
 			
-			var scrollPositionCenterY = _navi.GetScrollCenterPosition().y;
-			var bounds = parameters.bounds || _utils.DOMBounds( $element );
-			var direction = parameters.direction;
-			
-			// get pct by direction
-			
-			if ( direction === 'up' ) {
-				
-				var boundsDeltaV = bounds.bottom - bounds.top;
-				parameters.pct = _utils.Clamp( 1 - ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
-				
-			}
-			// default to down
-			else {
-				
-				var boundsDeltaV = bounds.bottom - bounds.top;
-				parameters.pct = _utils.Clamp( ( scrollPositionCenterY - bounds.top ) / boundsDeltaV, 0, 1 );
-				
-			}
+			parameters.pct = GetModifierPct( $element, parameters );
 			
 			ResizeCharacter( id, parameters );
 			
@@ -345,7 +389,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	}
 	
 	function ResizeCharacter ( id, parameters ) {
-		//console.log( ' > Resize', id );
+		//console.log( ' > ResizeCharacter', id );
 		var $character = _charactersById[ id ];
 		
 		if ( $character instanceof $ ) {
@@ -357,7 +401,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			
 			TweenMax.killTweensOf( options );
 			
-			// shrink based on position relative to element
+			// resize based on pct
 			
 			if ( _utils.IsNumber( pct ) ) {
 				
@@ -461,7 +505,6 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	=====================================================*/
 	
-	_user.Shrink = Shrink;
 	_user.Grow = Grow;
 	
 	return _user;
