@@ -3,7 +3,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="512px" height="512px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-<rect x="0" display="none" fill="#071C2C" width="512" height="2107"/>
+<rect x="0" display="none" fill="#071C2C" width="512" height="2661"/>
 <polygon fill="#C4C4C3" points="313.5,119.073 256,119.073 198.5,119.073 191,125.051 191.614,279.115 198.5,284.616 256,284.616 
 	313.5,284.616 320.387,279.115 321,125.051 "/>
 <path fill="#EEEEEE" d="M357.383,179.103c0-19.392-17.474-29.643-33.998-35.001c-14.824-4.807-28.885-5.677-28.885-5.677
@@ -73,26 +73,18 @@
 	<polygon clip-path="url(#SVGID_2_)" fill="#282828" points="315.333,79.571 256,70.728 303,137.193 	"/>
 </g>
 <g>
-	<g>
-		<rect x="221" y="164.737" fill="#C4C4C3" width="35" height="44.333"/>
-		<rect x="223.966" y="168.071" fill="#EEEEEE" width="32.034" height="32.667"/>
-		<polygon fill="#FFFFFF" points="231.541,194.403 241.346,184.405 241.346,194.403 		"/>
-		<polygon fill="#FFFFFF" points="241.346,184.405 231.541,194.403 231.541,184.405 		"/>
-		<polygon fill="#FFFFFF" points="241.346,171.78 231.541,181.778 231.541,171.78 		"/>
-		<polygon fill="#FFFFFF" points="231.541,181.778 241.346,171.78 241.346,181.778 		"/>
-		<polygon fill="#DEDDDD" points="221,209.071 256,272.071 256,209.071 		"/>
-		<polygon fill="#B2B3B3" points="221,209.071 223.966,200.737 256,209.071 		"/>
-		<polygon fill="#A09F9F" points="256,200.737 223.966,200.737 256,209.071 		"/>
-	</g>
-	<g>
-		<rect x="256" y="164.737" fill="#C4C4C3" width="35" height="44.333"/>
-		<rect x="256" y="168.071" fill="#EEEEEE" width="32.034" height="32.667"/>
-		<polygon fill="#FFFFFF" points="280.459,194.403 270.654,184.405 270.654,194.403 		"/>
-		<polygon fill="#FFFFFF" points="270.654,184.405 280.459,194.403 280.459,184.405 		"/>
-		<polygon fill="#DEDDDD" points="291,209.071 256,272.071 256,209.071 		"/>
-		<polygon fill="#B2B3B3" points="291,209.071 288.034,200.737 256,209.071 		"/>
-		<polygon fill="#A09F9F" points="256,200.737 288.034,200.737 256,209.071 		"/>
-	</g>
+	<polygon fill="#C4C4C3" points="256,164.737 221,164.737 221,209.071 256,209.071 291,209.071 291,164.737 	"/>
+	<polygon fill="#DEDDDD" points="256,209.071 221,209.071 256,272.071 291,209.071 	"/>
+	<polygon fill="#EEEEEE" points="256,168.071 223.966,168.071 223.966,200.737 256,200.737 288.034,200.737 288.034,168.071 	"/>
+	<polygon fill="#FFFFFF" points="231.541,194.403 241.346,184.405 241.346,194.403 	"/>
+	<polygon fill="#FFFFFF" points="241.346,184.405 231.541,194.403 231.541,184.405 	"/>
+	<polygon fill="#FFFFFF" points="241.346,171.78 231.541,181.778 231.541,171.78 	"/>
+	<polygon fill="#FFFFFF" points="231.541,181.778 241.346,171.78 241.346,181.778 	"/>
+	<polygon fill="#B2B3B3" points="221,209.071 223.966,200.737 256,209.071 	"/>
+	<polygon fill="#FFFFFF" points="280.459,194.403 270.654,184.405 270.654,194.403 	"/>
+	<polygon fill="#FFFFFF" points="270.654,184.405 280.459,194.403 280.459,184.405 	"/>
+	<polygon fill="#B2B3B3" points="291,209.071 288.034,200.737 256,209.071 	"/>
+	<polygon fill="#A09F9F" points="256,200.737 223.966,200.737 256,209.071 288.034,200.737 	"/>
 	<g>
 		<polygon fill="#A09F9F" points="315.551,139.124 306.691,248.904 291,209.071 		"/>
 		<polygon fill="#B2B3B3" points="304.5,137.193 291,209.071 315.551,139.124 		"/>

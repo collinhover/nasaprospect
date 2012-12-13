@@ -67,8 +67,14 @@
 				
 				<div id="userCharacters">
 					
-					<img src="img/character_robot.svg" id="robot" class="character hidden" style="height:70%; top: 15%;">
-					<img src="img/character_astronaut.svg" id="astronaut" class="character hidden" style="height:70%; top: 15%;">
+					<img src="img/character_robot.svg" id="robot" class="character characterbackground hidden" style="height:70%; top: 15%;">
+					<img src="img/character_robot_open.svg" id="robot_open" class="character characterbackground hidden" style="height:70%; top: 15%;">
+					<img src="img/character_astronaut.svg" id="astronaut" class="character characterforeground hidden" style="height:70%; top: 15%;">
+					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character characterforeground hidden" style="height:70%; top: 15%;">
+					<img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character characterforeground hidden" style="height:70%; top: 15%;">
+					<img src="img/character_astronaut_land.svg" id="astronaut_land" class="character characterforeground hidden" style="height:70%; top: 15%;">
+					<img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character characterforeground hidden" style="height:70%; top: 15%;">
+					<img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character characterforeground hidden" style="height:70%; top: 15%;">
 					
 				</div>
 				<!-- /characters -->
@@ -230,7 +236,7 @@
 				
 				<section id="intro" class="system-section no-crop">
 					
-					<div id="intro1" class="container-fill" data-character-modify="Grow/astronaut/down/0,0.5">
+					<div id="intro1" class="container-fill" data-character-modify="Grow/astronaut_drift/down/0,0.5">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -292,7 +298,7 @@
 					</div>
 					<!-- /intro2 -->
 					
-					<div id="intro3" class="container-fill">
+					<div id="intro3" class="container-fill" data-character-modify="Grow/astronaut_drift/up/0,0 Grow/astronaut_radio/down/0,0">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -330,7 +336,7 @@
 					</div>
 					<!-- /intro3 -->
 					
-					<div id="intro4" class="container-fill" data-character-modify="Grow/astronaut/up Grow/robot/down">
+					<div id="intro4" class="container-fill" data-character-modify="Grow/astronaut_radio/up Grow/character_robot_open/down">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -358,7 +364,7 @@
 					</div>
 					<!-- /intro4 -->
 					
-					<div id="intro5" class="container-fill">
+					<div id="intro5" class="container-fill"data-character-modify="Grow/character_robot_open/up/0,0 Grow/character_robot/down/0,0">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
