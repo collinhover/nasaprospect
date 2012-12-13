@@ -214,6 +214,24 @@ function ( $, _s ) {
 		
 	}
 	
+	function IndexOfPropertyjQuery( array, property, $element ) {
+		
+		for ( var i = 0, l = array.length; i < l; i++ ) {
+			
+			var $potential = array[ i ][ property ];
+			
+			if ( $element.is( $potential ) ) {
+				
+				return i;
+				
+			}
+			
+		}
+		
+		return -1;
+		
+	}
+	
 	function IndicesOfProperty( array, property, value ) {
 		
 		var indices = [];
@@ -642,6 +660,7 @@ function ( $, _s ) {
 	_utils.IndicesOfValue = IndicesOfValue;
 	_utils.IndexOfValues = IndexOfValues;
 	_utils.IndexOfProperty = IndexOfProperty;
+	_utils.IndexOfPropertyjQuery = IndexOfPropertyjQuery;
 	_utils.IndicesOfProperty = IndicesOfProperty;
 	_utils.IndexOfProperties = IndexOfProperties;
 	

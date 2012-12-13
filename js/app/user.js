@@ -135,12 +135,13 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	function SetActiveSection ( section ) {
 		
 		if ( _sectionActive !== section ) {
-			
+			if ( _sectionActive ) console.log( 'REMOVING TRIGGERS FROM', _sectionActive.id, ' user triggers ', _sectionTriggers.length, ' navi triggers', _navi.GetTriggers().length, ' + sorted ', _navi.GetTriggersSorted().top.length, _navi.GetTriggersSorted().bottom.length );
 			_sectionActive = section;
 			
 			// reset section data
 			
 			_navi.RemoveTriggers( _sectionTriggers );
+			console.log( ' > after remove, navi triggers', _navi.GetTriggers().length, ' + sorted ', _navi.GetTriggersSorted().top.length, _navi.GetTriggersSorted().bottom.length );
 			_sectionTriggers = [];
 			_sectionOptions = _sectionOptionsById[ _sectionActive.id ] = _sectionOptionsById[ _sectionActive.id ] || {};
 			

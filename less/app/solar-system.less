@@ -3,16 +3,34 @@
 
 #solar-system, #preloader {
 	background-color: @logoDark;
-    background-image: url( "../img/stars.svg" );
+    background-image: url( "../img/stars_static.png" );
+    background-image: url( "../img/stars_static.svg" );
 	background-size: 25%;
 }
 
-#solar-system, .system-section {
+.interplanet {
+	background: @logoDark;
+	background: -moz-linear-gradient(top, fade( @logoDark, 0% ) 0%, @logoDark 15%, @logoDark 85%, fade( @logoDark, 0% ) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,fade( @logoDark, 0% )), color-stop(15%,@logoDark), color-stop(85%,@logoDark), color-stop(100%,fade( @logoDark, 0% ))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, fade( @logoDark, 0% ) 0%,@logoDark 15%,@logoDark 85%,fade( @logoDark, 0% ) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, fade( @logoDark, 0% ) 0%,@logoDark 15%,@logoDark 85%,fade( @logoDark, 0% ) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, fade( @logoDark, 0% ) 0%,@logoDark 15%,@logoDark 85%,fade( @logoDark, 0% ) 100%); /* IE10+ */
+	background: linear-gradient(to bottom, fade( @logoDark, 0% ) 0%,@logoDark 15%,@logoDark 85%,fade( @logoDark, 0% ) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00061b2b', endColorstr='#00061b2b',GradientType=0 ); /* IE6-9 */
+	
+	.stars {
+		background-image: url( "../img/stars_moving.png" );
+		background-image: url( "../img/stars_moving.svg" );
+		background-size: 25%;
+	}
+}
+
+#solar-system, .interplanet, .system-section {
 	.fillWidth;
 	position: relative;
 }
 
-#solar-system, .system-section, .container-fill {
+#solar-system, .interplanet, .system-section, .container-fill {
 	min-width: @pageWidthMin;
 	min-height: @pageHeightMin;
 }

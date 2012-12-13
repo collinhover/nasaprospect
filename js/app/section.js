@@ -84,11 +84,10 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 		this.triggersPersistent = [
 			{
 				element: this.$element,
-				callback: this.Enter,
-				callbackOutside: this.Exit,
-				callbackCenter: this.Activate,
-				callbackCenterOutside: this.Deactivate,
-				contextAll: this
+				callback: { callback: this.Enter, context: this },
+				callbackOutside: { callback: this.Exit, context: this },
+				callbackCenter: { callback: this.Activate, context: this },
+				callbackCenterOutside: { callback: this.Deactivate, context: this }
 			}
 		];
 		_navi.AddTriggers( this.triggersPersistent );
@@ -188,8 +187,7 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 			this.$orbit.each( function () {
 				
 				me.triggers.push( _navi.AddTrigger( {
-					callbackCenter: me.StartOrbiting,
-					contextCenter: me,
+					callbackCenter: { callback: me.StartOrbiting, context: me },
 					element: this,
 					once: true
 				} ) );
@@ -258,8 +256,7 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 			this.$land.each( function () {
 				
 				me.triggers.push( _navi.AddTrigger( {
-					callbackCenter: me.StartLanding,
-					contextCenter: me,
+					callbackCenter: { callback: me.StartLanding, context: me },
 					element: this,
 					once: true
 				} ) );
@@ -311,8 +308,7 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 			this.$explore.each( function () {
 				
 				me.triggers.push( _navi.AddTrigger( {
-					callbackCenter: me.StartExploring,
-					contextCenter: me,
+					callbackCenter: { callback: me.StartExploring, context: me },
 					element: this,
 					once: true
 				} ) );
@@ -368,8 +364,7 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 			this.$land.each( function () {
 				
 				me.triggers.push( _navi.AddTrigger( {
-					callbackCenter: me.StartLanding,
-					contextCenter: me,
+					callbackCenter: { callback: me.StartLanding, context: me },
 					element: this,
 					once: true
 				} ) );

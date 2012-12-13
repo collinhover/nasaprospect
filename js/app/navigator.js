@@ -12,13 +12,20 @@ function ( $, _s, _utils ) {
 	var _$navi = _de.$main;
 	var _naviWidth, _naviHeight;
 	var _triggers = [];
-	var _triggersAdded = [];
+	var _triggersChanged = [];
 	var _triggersSorted = {
 		top: [],
-		bottom: [],
-		left: [],
-		right: []
+		bottom: []
 	};
+	var _callbackTypes = [
+		'callback',
+		'callbackContinuous',
+		'callbackCenter',
+		'callbackCenterContinuous',
+		'callbackCenterOutside',
+		'callbackOutside',
+		'callbackRemove'
+	];
 	var _scrollPosition = { x: 0, y: 0 };
 	var _scrollCenterPosition = { x: 0, y: 0 };
 	var _scrollDirection = { x: 0, y: 0 };
@@ -51,6 +58,18 @@ function ( $, _s, _utils ) {
 	utility
 	
 	=====================================================*/
+	
+	function GetTriggers () {
+		
+		return _triggers;
+		
+	}
+	
+	function GetTriggersSorted () {
+		
+		return _triggersSorted;
+		
+	}
 	
 	function GetScrollPosition () {
 		
@@ -116,52 +135,128 @@ function ( $, _s, _utils ) {
 		
 	}
 	
-	function AddTrigger ( trigger ) {
+	function AddTrigger ( parameters ) {
 		
-		var $element = trigger.$element = trigger.$element || $( trigger.element );
-		var bounds = trigger.bounds = GetTriggerBounds( $element );
+		parameters = parameters || {};
+		var $element = parameters.$element = parameters.$element || $( parameters.element );
 		
 		if ( $element.length > 0 ) {
 			
-			// find if element already has trigger
-			// trying to detect duplicates seems to have false positives
-			// instead, combine triggers
+			var index = _utils.IndexOfPropertyjQuery( _triggers, '$element', $element );
+			var trigger;
 			
-			var i, il, triggerExisting;
+			// element has trigger
 			
-			for( i = 0, il = _triggers.length; i < il; i++ ) {
+			if ( index !== -1 ) {
 				
-				triggerExisting = _triggers[ i ];
+				trigger = _triggers[ index ];
 				
-				if ( triggerExisting.$element.is( $element ) ) {
+			}
+			// needs new trigger
+			else {
+				
+				trigger = {
+					$element: $element,
+					bounds: GetTriggerBounds( $element )
+				};
+				
+				_triggers.push( trigger );
+				AddTriggerSorted( trigger );
+				
+			}
+			
+			// merge callbacks
+			
+			var i, il, callbackType;
+			
+			for ( i = 0, il = _callbackTypes.length; i < il; i++ ) {
+				
+				callbackType = _callbackTypes[ i ];
+				
+				if ( parameters[ callbackType ] ) {
 					
-					// add new callbacks to existing
-					
-					var j, jl, callbackType;
-					var callbackTypes = [
-							'callback',
-							'callbackContinuous',
-							'callbackCenter',
-							'callbackCenterContinuous',
-							'callbackCenterOutside',
-							'callbackOutside',
-							'callbackRemove'
-						];
-					
-					for ( j = 0, jl = callbackTypes.length; j < jl; j++ ) {
+					if ( trigger[ callbackType ] ) {
 						
-						callbackType = callbackTypes[ j ];
+						trigger[ callbackType ] = [].concat( trigger[ callbackType ], parameters[ callbackType ] );
 						
-						if ( trigger[ callbackType ] ) {
+					}
+					else {
+						
+						trigger[ callbackType ] = parameters[ callbackType ];
+						
+					}
+					
+				}
+				
+			}
+			
+			_triggersChanged.push( trigger );
+			
+			if ( parameters.callbackAdd ) {
+				
+				HandleTriggerCallbacks( trigger, parameters.callbackAdd );
+				
+			}
+			
+		}
+		
+		return parameters;
+		
+	}
+	
+	function RemoveTrigger ( parameters ) {
+		
+		parameters = parameters || {};
+		var $element = parameters.$element = parameters.$element || $( parameters.element );
+		
+		if ( $element.length > 0 ) {
+			
+			var index = _utils.IndexOfPropertyjQuery( _triggers, '$element', $element );
+			var trigger;
+			var triggerEmpty = true;
+			
+			if ( index !== -1 ) {
+				
+				trigger = _triggers[ index ];
+				
+				// remove callbacks
+				
+				var i, il, callbackType, callbackData, triggerCallbackData;
+				
+				for ( i = 0, il = _callbackTypes.length; i < il; i++ ) {
+					
+					callbackType = _callbackTypes[ i ];
+					callbackData = parameters[ callbackType ];
+					triggerCallbackData = trigger[ callbackType ];
+					
+					if ( callbackData ) {
+						
+						if ( callbackData === triggerCallbackData ) {
 							
-							if ( triggerExisting[ callbackType ] ) {
+							delete trigger[ callbackType ];
+							
+						}
+						// trigger callbacks is array
+						else if ( _utils.IsArray( triggerCallbackData ) ) {
+							
+							if ( _utils.IsArray( callbackData ) ) {
 								
-								triggerExisting[ callbackType ] = [].concat( triggerExisting[ callbackType ], trigger[ callbackType ] );
+								for ( var j = 0, jl = callbackData.length; j < jl; j++ ) {
+									
+									_utils.ArrayCautiousRemove( triggerCallbackData, callbackData[ j ] );
+									
+								}
 								
 							}
 							else {
 								
-								triggerExisting[ callbackType ] = trigger[ callbackType ];
+								_utils.ArrayCautiousRemove( triggerCallbackData, callbackData );
+								
+							}
+							
+							if ( triggerCallbackData.length === 0 ) {
+								
+								delete trigger[ callbackType ];
 								
 							}
 							
@@ -169,58 +264,43 @@ function ( $, _s, _utils ) {
 						
 					}
 					
-					return triggerExisting;
+					if ( triggerEmpty !== false ) {
+						
+						triggerEmpty = typeof trigger[ callbackType ] === 'undefined';
+						
+					}
+					
+				}
+				
+				if ( triggerEmpty === true ) {
+					
+					_triggers.splice( index, 1 );
+					
+					// changed
+					
+					if ( _triggersChanged.length > 0 ) {
+						
+						_utils.ArrayCautiousRemove( _triggersChanged, trigger );
+						
+					}
+					
+					// sorting
+					
+					RemoveTriggerSorted( trigger );
+					
+					// handle trigger outside in case we've entered trigger area
+					
+					TriggerOutside( trigger );
+					
+				}
+				
+				if ( parameters.callbackRemove ) {
+					
+					HandleTriggerCallbacks( trigger, parameters.callbackRemove );
 					
 				}
 				
 			}
-			
-			_triggers.push( trigger );
-			_triggersAdded.push( trigger );
-			
-			// sorting
-			
-			AddTriggerSorted( trigger );
-			
-			if ( trigger.callbackAdd ) {
-				
-				HandleTriggerCallbacks( trigger, trigger.callbackAdd, trigger.contextAdd || trigger.contextAll );
-				
-			}
-			
-			return trigger;
-			
-		}
-		
-	}
-	
-	function RemoveTrigger ( trigger ) {
-		
-		if ( typeof trigger !== 'undefined' ) {
-			
-			// primary trigger
-			
-			_utils.ArrayCautiousRemove( _triggers, trigger );
-			
-			if ( _triggersAdded.length > 0 ) {
-				
-				_utils.ArrayCautiousRemove( _triggersAdded, trigger );
-				
-			}
-			
-			// handle trigger outside in case we've entered trigger area
-			
-			TriggerOutside( trigger );
-			
-			if ( trigger.callbackRemove ) {
-				
-				HandleTriggerCallbacks( trigger, trigger.callbackRemove, trigger.contextRemove || trigger.contextAll );
-				
-			}
-			
-			// sorting
-			
-			RemoveTriggerSorted( trigger );
 			
 		}
 		
@@ -266,7 +346,7 @@ function ( $, _s, _utils ) {
 			var left, right, top, bottom;
 			var topC, bottomC;
 			var numTriggersBeforeCheck = _triggers.length;
-			var triggersAdded = _triggersAdded;
+			var triggersAdded = _triggersChanged;
 			
 			// direction
 			
@@ -347,13 +427,13 @@ function ( $, _s, _utils ) {
 					
 					if ( trigger.callbackContinuous ) {
 						
-						HandleTriggerCallbacks( trigger, trigger.callbackContinuous, trigger.contextContinuous || trigger.contextAll );
+						HandleTriggerCallbacks( trigger, trigger.callbackContinuous );
 						
 					}
 					
 					if ( trigger.callback && trigger.inside !== true ) {
 						
-						HandleTriggerCallbacks( trigger, trigger.callback, trigger.context || trigger.contextAll );
+						HandleTriggerCallbacks( trigger, trigger.callback );
 						
 					}
 					
@@ -363,13 +443,13 @@ function ( $, _s, _utils ) {
 						
 						if ( trigger.callbackCenterContinuous ) {
 							
-							HandleTriggerCallbacks( trigger, trigger.callbackCenterContinuous, trigger.contextCenterContinuous || trigger.contextAll );
+							HandleTriggerCallbacks( trigger, trigger.callbackCenterContinuous );
 							
 						}
 						
 						if ( trigger.callbackCenter && trigger.insideCenter !== true ) {
 							
-							HandleTriggerCallbacks( trigger, trigger.callbackCenter, trigger.contextCenter || trigger.contextAll );
+							HandleTriggerCallbacks( trigger, trigger.callbackCenter );
 							
 						}
 						
@@ -380,7 +460,7 @@ function ( $, _s, _utils ) {
 						
 						if ( trigger.callbackCenterOutside && trigger.insideCenter === true ) {
 							
-							HandleTriggerCallbacks( trigger, trigger.callbackCenterOutside, trigger.contextCenterOutside || trigger.contextAll );
+							HandleTriggerCallbacks( trigger, trigger.callbackCenterOutside );
 							
 						}
 						
@@ -408,7 +488,7 @@ function ( $, _s, _utils ) {
 			
 			// reset triggers added
 			
-			_triggersAdded = [];
+			_triggersChanged = [];
 			
 			// if triggers have been added during this check, check one more time
 			
@@ -433,13 +513,13 @@ function ( $, _s, _utils ) {
 		
 		if ( trigger.callbackOutside && trigger.inside === true ) {
 			
-			HandleTriggerCallbacks( trigger, trigger.callbackOutside, trigger.contextOutside || trigger.contextAll );
+			HandleTriggerCallbacks( trigger, trigger.callbackOutside );
 			
 		}
 		
 		if ( trigger.callbackCenterOutside && trigger.insideCenter === true ) {
 			
-			HandleTriggerCallbacks( trigger, trigger.callbackCenterOutside, trigger.contextCenterOutside || trigger.contextAll );
+			HandleTriggerCallbacks( trigger, trigger.callbackCenterOutside );
 			
 		}
 		
@@ -453,33 +533,37 @@ function ( $, _s, _utils ) {
 		
 	}
 	
-	function HandleTriggerCallbacks ( trigger, callbacks, contextFallback ) {
+	function HandleTriggerCallbacks ( trigger, callbacks ) {
 		
-		var i, il, callbackData;
+		var i, il;
 		
 		if ( _utils.IsArray( callbacks ) ) {
 			
 			for ( i = 0, il = callbacks.length; i < il; i++ ) {
 				
-				callbackData = callbacks[ i ];
-				
-				if ( typeof callbackData === 'function' ) {
-					
-					callbackData.call( contextFallback, trigger );
-					
-				}
-				else {
-					
-					callbackData.callback.call( callbackData.context || contextFallback, trigger );
-					
-				}
+				HandleTriggerCallback( trigger, callbacks[ i ] );
 				
 			}
 			
 		}
 		else {
 			
-			callbacks.call( contextFallback, trigger );
+			HandleTriggerCallback( trigger, callbacks );
+			
+		}
+		
+	}
+	
+	function HandleTriggerCallback ( trigger, callback ) {
+		
+		if ( typeof callback === 'function' ) {
+			
+			callback( trigger );
+			
+		}
+		else if ( callback.callback ) {
+			
+			callback.callback.call( callback.context, trigger );
 			
 		}
 		
@@ -581,6 +665,8 @@ function ( $, _s, _utils ) {
 	
 	_navi.$element = _$navi;
 	
+	_navi.GetTriggers = GetTriggers;
+	_navi.GetTriggersSorted = GetTriggersSorted;
 	_navi.GetScrollPosition = GetScrollPosition;
 	_navi.GetScrollCenterPosition = GetScrollCenterPosition;
 	_navi.GetScrollDirection = GetScrollDirection;
