@@ -232,6 +232,27 @@ function ( $, _s ) {
 		
 	}
 	
+	function ValuesWithPropertyjQuery( array, property, $element ) {
+		
+		var values = [];
+		
+		for ( var i = 0, l = array.length; i < l; i++ ) {
+			
+			var value = array[ i ];
+			var $potential = value[ property ];
+			
+			if ( $element.is( $potential ) ) {
+				
+				values.push( value );
+				
+			}
+			
+		}
+		
+		return values;
+		
+	}
+	
 	function IndicesOfProperty( array, property, value ) {
 		
 		var indices = [];
@@ -661,6 +682,7 @@ function ( $, _s ) {
 	_utils.IndexOfValues = IndexOfValues;
 	_utils.IndexOfProperty = IndexOfProperty;
 	_utils.IndexOfPropertyjQuery = IndexOfPropertyjQuery;
+	_utils.ValuesWithPropertyjQuery = ValuesWithPropertyjQuery;
 	_utils.IndicesOfProperty = IndicesOfProperty;
 	_utils.IndexOfProperties = IndexOfProperties;
 	

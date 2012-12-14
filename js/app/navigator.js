@@ -569,25 +569,6 @@ function ( $, _s, _utils ) {
 		
 	}
 	
-	function ReverseResetTriggers ( triggers, id ) {
-		
-		var i, il, trigger;
-		
-		triggers = _utils.ToArray( triggers || _triggers );
-		
-		for ( i = 0, il = triggers.length; i < il; i++ ) {
-			
-			ReverseResetTrigger( triggers[ i ] );
-		}
-		
-	}
-	
-	function ReverseResetTrigger ( trigger ) {
-		
-		trigger.resetOnReverse = true;
-		
-	}
-	
 	function RepositionTriggers () {
 		
 		var i, il, trigger;
@@ -613,6 +594,65 @@ function ( $, _s, _utils ) {
 		bounds.bottom += _scrollPosition.y;
 		
 		return bounds;
+		
+	}
+	
+	function ReverseResetTriggers ( parameters, id ) {
+		
+		var i, il, trigger;
+		var triggers = FindTriggers( parameters );
+		
+		for ( i = 0, il = triggers.length; i < il; i++ ) {
+			
+			triggers[ i ].resetOnReverse = true;
+			
+		}
+		
+	}
+	
+	function FindTriggers ( parameters ) {
+		
+		var i, il, trigger;
+		var $elements;
+		
+		// parameters are elements
+		
+		if ( parameters instanceof $ ) {
+			
+			$elements = parameters;
+			
+		}
+		// from array
+		else if ( _utils.IsArray( parameters ) ) {
+			
+			$elements = $();
+			
+			for ( i = 0, il = parameters.length; i < il; i++ ) {
+				
+				trigger = parameters[ i ];
+				
+				$elements = $elements.add( trigger.$elements || trigger.$element || trigger.elements || trigger.element );
+				
+			}
+			
+		}
+		// from element
+		else if ( typeof parameters !== 'undefined' ) {
+			
+			$elements = parameters.$elements || parameters.$element || $( parameters.elements || parameters.element );
+			
+		}
+		
+		if ( $elements.length > 0 ) {
+			
+			return _utils.ValuesWithPropertyjQuery( _triggers, '$element', $elements );
+			
+		}
+		else {
+			
+			return _triggers;
+			
+		}
 		
 	}
 	
@@ -678,7 +718,6 @@ function ( $, _s, _utils ) {
 	_navi.CheckTriggers = CheckTriggers;
 	_navi.RepositionTriggers = RepositionTriggers;
 	_navi.ReverseResetTriggers = ReverseResetTriggers;
-	_navi.ReverseResetTrigger = ReverseResetTrigger;
 	
 	return _navi;
 	

@@ -63,18 +63,18 @@
 		
 		<div id="main" class="scrollable unscrollable">
 			
-			<section id="user">
+			<section id="user" class="container-fill">
 				
 				<div id="userCharacters">
 					
-					<img src="img/character_robot.svg" id="robot" class="character characterbackground hidden" style="height:70%; top: 15%;">
-					<img src="img/character_robot_open.svg" id="robot_open" class="character characterbackground hidden" style="height:70%; top: 15%;">
-					<img src="img/character_astronaut.svg" id="astronaut" class="character characterforeground hidden" style="height:70%; top: 15%;">
-					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character characterforeground hidden" style="height:70%; top: 15%;">
-					<img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character characterforeground hidden" style="height:70%; top: 15%;">
-					<img src="img/character_astronaut_land.svg" id="astronaut_land" class="character characterforeground hidden" style="height:70%; top: 15%;">
-					<img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character characterforeground hidden" style="height:70%; top: 15%;">
-					<img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character characterforeground hidden" style="height:70%; top: 15%;">
+					<img src="img/character_robot.svg" id="robot" class="character characterbackground hidden" style="height:40%; top: 30%; left: 30%;">
+					<img src="img/character_robot_open.svg" id="robot_open" class="character characterbackground hidden" style="height:40%; top: 30%; left: 30%;">
+					<img src="img/character_astronaut.svg" id="astronaut" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_land.svg" id="astronaut_land" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
 					
 				</div>
 				<!-- /characters -->
@@ -298,7 +298,7 @@
 					</div>
 					<!-- /intro2 -->
 					
-					<div id="intro3" class="container-fill" data-character-modify="Grow/astronaut_drift/up/0,1 Grow/astronaut_radio/down/0,1">
+					<div id="intro3" class="container-fill" data-character-modify="Fade/astronaut_drift/up/0,0.5 Fade/astronaut_radio/down/0,0.5">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -364,7 +364,7 @@
 					</div>
 					<!-- /intro4 -->
 					
-					<div id="intro5" class="container-fill"data-character-modify="Grow/character_robot_open/up/0,0 Grow/character_robot/down/0,0">
+					<div id="intro5" class="container-fill" data-character-modify="Fade/robot_open/up/0,0.5 Fade/robot/down/0,0.5">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -415,10 +415,10 @@
 					
 					<div class="orbit orbit-top container-fill">
 						
-						<img src="img/sun.svg" class="planetoid" data-stellar-ratio="1.2">
+						<img src="img/space_sun.svg" class="planetoid" data-stellar-ratio="1.2">
 						
 						<div class="logo container-center hidden" data-stellar-offset-parent="true" data-stellar-offset-vertical="0" data-stellar-offset-horizontal="0" data-stellar-ratio="1.4">
-							<img src="img/logo_mark_color_light.svg" class="prospect">
+							<img src="img/logo_prospect_color_light.svg" class="prospect">
 							<div class="prospect-name">
 								<div class="letter-1">
 									<h2>Mercury</h2>
@@ -454,9 +454,9 @@
 								</div>
 							</div>
 							<div class="sponsors">
-								<img src="img/logo_sponsors_nasa_color_light.svg" class="iconk-fillHeight">
-								<img src="img/logo_sponsors_dlr_color_light.svg" class="iconk-fillHeight">
-								<img src="img/logo_sponsors_usra_color_light.svg" class="iconk-fillHeight">
+								<img src="img/logo_nasa_color_light.svg" class="iconk-fillHeight">
+								<img src="img/logo_dlr_color_light.svg" class="iconk-fillHeight">
+								<img src="img/logo_usra_color_light.svg" class="iconk-fillHeight">
 							</div>
 						</div>
 						
@@ -489,7 +489,7 @@
 						
 						<div class="middleground">
 							
-							<img src="img/mercury.svg" class="planetoid">
+							<img src="img/planet_mercury.svg" class="planetoid">
 							
 						</div>
 						
@@ -505,7 +505,7 @@
 						
 						<div class="middleground">
 							
-							<img src="img/venus.svg" class="planetoid">
+							<img src="img/planet_venus.svg" class="planetoid">
 							
 						</div>
 						
@@ -521,13 +521,13 @@
 						
 						<div class="middleground">
 							
-							<img src="img/earth.svg" class="planetoid">
+							<img src="img/planet_earth.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="foreground">
 							
-							<img src="img/earth_fg.svg" class="planetoid">
+							<img src="img/planet_earth_foreground.svg" class="planetoid">
 							
 						</div>
 						
@@ -565,19 +565,19 @@
 						
 						<div class="background">
 							
-							<img src="img/mars_bg.svg" class="planetoid">
+							<img src="img/planet_mars_background.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="middleground">
 							
-							<img src="img/mars.svg" class="planetoid">
+							<img src="img/planet_mars.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="foreground">
 							
-							<img src="img/mars_fg.svg" class="planetoid">
+							<img src="img/planet_mars_foreground.svg" class="planetoid">
 							
 						</div>
 					
@@ -593,40 +593,40 @@
 						
 						<div class="background">
 							
-							<img src="img/asteroid_003.svg" class="parallaxable" style="height:8%; top:0%; right: 35%;">
-							<img src="img/asteroid_001.svg" class="parallaxable" style="height:7%; top:3%; right: 11%;">
-							<img src="img/asteroid_002.svg" class="parallaxable" style="height:5%; top:10%; left: 5%;">
-							<img src="img/asteroid_002.svg" class="parallaxable" style="height:6%; top:20%; left: -1%;">
-							<img src="img/asteroid_003.svg" class="parallaxable" style="height:7%; top:32%; left: 12%;">
-							<img src="img/asteroid_003.svg" class="parallaxable" style="height:8%; top:40%; right: 16%;">
-							<img src="img/asteroid_001.svg" class="parallaxable" style="height:8%; top:15%; left: 28%;">
-							<img src="img/asteroid_002.svg" class="parallaxable" style="height:9%; bottom:3%; left: 10%;">
-							<img src="img/asteroid_003.svg" class="parallaxable" style="height:5%; bottom:8%; left: 32%;">
-							<img src="img/asteroid_002.svg" class="parallaxable" style="height:7%; bottom:14%; right: 4%;">
-							<img src="img/asteroid_003.svg" class="parallaxable" style="height:6%; bottom:22%; right: 40%;">
-							<img src="img/asteroid_001.svg" class="parallaxable" style="height:8%; bottom:31%; right: -1%;">
-							<img src="img/asteroid_001.svg" class="parallaxable" style="height:7%; bottom:34%; left: 20%;">
-							<img src="img/asteroid_002.svg" class="parallaxable" style="height:7%; bottom:42%; right: 34%;">
+							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:8%; top:0%; right: 35%;">
+							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:7%; top:3%; right: 11%;">
+							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:5%; top:10%; left: 5%;">
+							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:6%; top:20%; left: -1%;">
+							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:7%; top:32%; left: 12%;">
+							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:8%; top:40%; right: 16%;">
+							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:8%; top:15%; left: 28%;">
+							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:9%; bottom:3%; left: 10%;">
+							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:5%; bottom:8%; left: 32%;">
+							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:7%; bottom:14%; right: 4%;">
+							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:6%; bottom:22%; right: 40%;">
+							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:8%; bottom:31%; right: -1%;">
+							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:7%; bottom:34%; left: 20%;">
+							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:7%; bottom:42%; right: 34%;">
 							
 						</div>
 						
 						<div class="middleground">
 							
-							<img src="img/asteroid_001.svg" class="parallaxable" style="height:10%; top:30%; left: 10%;">
-							<img src="img/asteroid_003.svg" class="parallaxable" style="height:12%; top:40%; left: 40%;">
-							<img src="img/asteroid_001.svg" class="parallaxable" style="height:22%; top:30%; right: 27%;">
-							<img src="img/asteroid_002.svg" class="parallaxable" style="height:13%; top:20%; right: 8%;">
-							<img src="img/asteroid_003.svg" class="parallaxable" style="height:17%; bottom:20%; left: 15%;">
-							<img src="img/asteroid_002.svg" class="parallaxable" style="height:19%; bottom:10%; left: -1%;">
-							<img src="img/asteroid_002.svg" class="parallaxable" style="height:20%; bottom:0%; right: 23%;">
+							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:10%; top:30%; left: 10%;">
+							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:12%; top:40%; left: 40%;">
+							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:22%; top:30%; right: 27%;">
+							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:13%; top:20%; right: 8%;">
+							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:17%; bottom:20%; left: 15%;">
+							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:19%; bottom:10%; left: -1%;">
+							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:20%; bottom:0%; right: 23%;">
 							
 						</div>
 						
 						<div class="foreground">
 							
-							<img src="img/asteroid_002.svg" class="parallaxable" style="height:30%; top:16%; left: 20%;">
-							<img src="img/asteroid_001.svg" class="parallaxable" style="height:25%; bottom:-2%; left: 35%;">
-							<img src="img/asteroid_003.svg" class="parallaxable" style="height:35%; bottom:26%; right: 9%;">
+							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:30%; top:16%; left: 20%;">
+							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:25%; bottom:-2%; left: 35%;">
+							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:35%; bottom:26%; right: 9%;">
 							
 						</div>
 						
@@ -642,19 +642,19 @@
 						
 						<div class="background">
 							
-							<img src="img/jupiter_bg.svg" class="planetoid">
+							<img src="img/planet_jupiter_background.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="middleground">
 							
-							<img src="img/jupiter.svg" class="planetoid">
+							<img src="img/planet_jupiter.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="foreground">
 							
-							<img src="img/jupiter_fg.svg" class="planetoid">
+							<img src="img/planet_jupiter_foreground.svg" class="planetoid">
 							
 						</div>
 						
@@ -670,19 +670,19 @@
 						
 						<div class="background">
 							
-							<img src="img/saturn_bg.svg" class="planetoid">
+							<img src="img/planet_saturn_background.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="middleground">
 							
-							<img src="img/saturn.svg" class="planetoid">
+							<img src="img/planet_saturn.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="foreground">
 							
-							<img src="img/saturn_fg.svg" class="planetoid">
+							<img src="img/planet_saturn_foreground.svg" class="planetoid">
 							
 						</div>
 						
@@ -698,19 +698,19 @@
 						
 						<div class="background">
 							
-							<img src="img/uranus_bg.svg" class="planetoid">
+							<img src="img/planet_uranus_background.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="middleground">
 							
-							<img src="img/uranus.svg" class="planetoid">
+							<img src="img/planet_uranus.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="foreground">
 							
-							<img src="img/uranus_fg.svg" class="planetoid">
+							<img src="img/planet_uranus_foreground.svg" class="planetoid">
 							
 						</div>
 						
@@ -726,19 +726,19 @@
 						
 						<div class="background">
 							
-							<img src="img/neptune_bg.svg" class="planetoid">
+							<img src="img/planet_neptune_background.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="middleground">
 							
-							<img src="img/neptune.svg" class="planetoid">
+							<img src="img/planet_neptune.svg" class="planetoid">
 							
 						</div>
 						
 						<div class="foreground">
 							
-							<img src="img/neptune_fg.svg" class="planetoid">
+							<img src="img/planet_neptune_foreground.svg" class="planetoid">
 							
 						</div>
 						

@@ -45,17 +45,22 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 				.data( 'options', {
 					base: {
 						widthCSS: $element.prop("style")[ 'width' ],
-						heightCSS: $element.prop("style")[ 'height' ]
+						heightCSS: $element.prop("style")[ 'height' ],
+						opacityCSS: $element.prop("style")[ 'opacity' ]
 					},
 					adjust: {}
 				} );
 			
 			var options = $element.data( 'options' );
-			options.base.width = options.width = parseFloat( options.base.widthCSS );
-			options.base.height = options.height = parseFloat( options.base.heightCSS );
+			var width = parseFloat( options.base.widthCSS );
+			var height = parseFloat( options.base.heightCSS );
+			var opacity = parseFloat( options.base.opacityCSS );
 			
-			if ( _utils.IsNumber( options.base.width ) ) {
+			// width
+			
+			if ( _utils.IsNumber( width ) ) {
 				
+				options.base.width = options.width = width;
 				options.adjust.width = true;
 				
 				options.base.leftCSS = $element.prop("style")[ 'left' ];
@@ -76,8 +81,17 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 				}
 				
 			}
-			if ( _utils.IsNumber( options.base.height  ) ) {
+			else {
 				
+				options.base.width = options.width = 100;
+				
+			}
+			
+			// height
+			
+			if ( _utils.IsNumber( height ) ) {
+				
+				options.base.height = options.height = height;
 				options.adjust.height = true;
 				
 				options.base.topCSS = $element.prop("style")[ 'top' ];
@@ -98,6 +112,25 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 				}
 				
 			}
+			else {
+				
+				options.base.height = options.height = 100;
+				
+			}
+			
+			// opacity
+			
+			if ( _utils.IsNumber( opacity ) ) {
+				
+				options.base.opacity = options.opacity = opacity;
+				
+			}
+			else {
+				
+				options.base.opacity = options.opacity = 1;
+				
+			}
+			
 			
 			// store
 			
@@ -107,8 +140,8 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			
 			if ( hide === true ) {
 				
-				Grow( id, { width: 0, height: 0 } );
-				
+				//Grow( id, { width: 0, height: 0 } );
+				Fade( id, { opacity: 0 } );
 			}
 			
 		}
@@ -135,13 +168,13 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	function SetActiveSection ( section ) {
 		
 		if ( _sectionActive !== section ) {
-			if ( _sectionActive ) console.log( 'REMOVING TRIGGERS FROM', _sectionActive.id, ' user triggers ', _sectionTriggers.length, ' navi triggers', _navi.GetTriggers().length, ' + sorted ', _navi.GetTriggersSorted().top.length, _navi.GetTriggersSorted().bottom.length );
+			
 			_sectionActive = section;
 			
 			// reset section data
 			
 			_navi.RemoveTriggers( _sectionTriggers );
-			console.log( ' > after remove, navi triggers', _navi.GetTriggers().length, ' + sorted ', _navi.GetTriggersSorted().top.length, _navi.GetTriggersSorted().bottom.length );
+			
 			_sectionTriggers = [];
 			_sectionOptions = _sectionOptionsById[ _sectionActive.id ] = _sectionOptionsById[ _sectionActive.id ] || {};
 			
@@ -297,7 +330,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			
 			if ( pctTotal <= 0 ) {
 				
-				if ( scrollPositionCenterY < bottom ) {
+				if ( scrollPositionCenterY > bottom ) {
 					
 					pct = 0;
 					
@@ -351,81 +384,59 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	/*===================================================
 	
-	resize
+	fade
 	
 	=====================================================*/
 	
-	function Grow ( id, parameters ) {
-		//console.log( 'Grow', id );
-		parameters = parameters || {};
-		var $element = $( parameters.element );
-		
-		// based on scroll
-		
-		if ( $element.length > 0 ) {
-			
-			parameters.pct = GetModifierPct( $element, parameters );
-			
-			ResizeCharacter( id, parameters );
-			
-		}
-		// for tween
-		else {
-			
-			var $character = _charactersById[ id ];
-			
-			if ( $character instanceof $ ) {
-				
-				var options = $character.data( 'options' );
-				
-				if ( _utils.IsNumber( parameters.width ) !== true ) parameters.width = options.base.width;
-				if ( _utils.IsNumber( parameters.height ) !== true ) parameters.height = options.base.height;
-				
-				ResizeCharacter( id, parameters );
-				
-			}
-			
-		}
-		
-	}
-	
-	function ResizeCharacter ( id, parameters ) {
-		//console.log( ' > ResizeCharacter', id );
+	function Fade ( id, parameters ) {
+		console.log( 'Fade', id );
 		var $character = _charactersById[ id ];
 		
 		if ( $character instanceof $ ) {
 			
 			var options = $character.data( 'options' );
+			if ( options.tweening === true ) {
+				
+				options.tweening = false;
+				TweenMax.killTweensOf( options );
+				
+			}
+			
+			// reset size
+			
+			if ( options.height !== options.base.height || options.width !== options.base.width ) {
+				console.log( ' > resetting grow ', options.height !== options.base.height, options.width !== options.base.width );
+				Grow( id );
+				
+			}
 			
 			parameters = parameters || {};
-			var pct = parameters.pct;
+			var $element = $( parameters.element );
 			
-			TweenMax.killTweensOf( options );
+			// based on scroll
 			
-			// resize based on pct
+			if ( $element.length > 0 ) {
+				
+				var pct = GetModifierPct( $element, parameters );
+				
+				options.opacity = pct;
+				
+				UpdateCharacterOpacity( $character );
 			
-			if ( _utils.IsNumber( pct ) ) {
-				
-				if ( options.adjust.width === true ) options.width = options.base.width * pct;
-				if ( options.adjust.height === true ) options.height = options.base.height * pct;
-				
-				UpdateResizeCharacter( $character );
-				
 			}
 			// tween to
 			else {
 				
-				if ( options.adjust.width !== true ) delete parameters.width;
-				if ( options.adjust.height !== true ) delete parameters.height;
-				
 				var duration = _utils.IsNumber( parameters.duration ) ? parameters.duration : 0;
+				if ( _utils.IsNumber( parameters.opacity ) !== true ) parameters.opacity = options.base.opacity;
 				parameters.easing = parameters.easing || Strong.easeIn;
 				parameters.onUpdate = function () {
 					
-					UpdateResizeCharacter( $character );
+					UpdateCharacterOpacity( $character );
 					
 				};
 				
+				options.tweening = true;
 				TweenMax.to( options, duration, parameters );
 				
 			}
@@ -434,7 +445,90 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		
 	}
 	
-	function UpdateResizeCharacter ( $character ) {
+	function UpdateCharacterOpacity ( $character ) {
+		
+		var options = $character.data( 'options' );
+		
+		if ( options.opacityLast !== options.opacity ) {
+			
+			options.opacityLast = options.opacity;
+			console.log( 'update opacity', options.opacity, $character.css( 'opacity' ) );
+			$character.css( 'opacity', options.opacity );
+			
+		}
+		
+	}
+	
+	/*===================================================
+	
+	resize
+	
+	=====================================================*/
+	
+	function Grow ( id, parameters ) {
+		console.log( 'Grow', id );
+		var $character = _charactersById[ id ];
+		
+		if ( $character instanceof $ ) {
+			
+			var options = $character.data( 'options' );
+			if ( options.tweening === true ) {
+				
+				options.tweening = false;
+				TweenMax.killTweensOf( options );
+				
+			}
+			
+			// reset fading
+			
+			if ( options.opacity !== options.base.opacity ) {
+				console.log( ' > resetting Fade ' );
+				Fade( id );
+				
+			}
+			
+			parameters = parameters || {};
+			var $element = $( parameters.element );
+			
+			// based on scroll
+			
+			if ( $element.length > 0 ) {
+				
+				var pct = GetModifierPct( $element, parameters );
+				
+				if ( options.adjust.width === true ) options.width = options.base.width * pct;
+				if ( options.adjust.height === true ) options.height = options.base.height * pct;
+				
+				UpdateCharacterSize( $character );
+				
+			}
+			// for tween
+			else {
+				
+				if ( options.adjust.width !== true ) delete parameters.width;
+				else if ( _utils.IsNumber( parameters.width ) !== true ) parameters.width = options.base.width;
+				
+				if ( options.adjust.height !== true ) delete parameters.height;
+				else if ( _utils.IsNumber( parameters.height ) !== true ) parameters.height = options.base.height;
+				
+				var duration = _utils.IsNumber( parameters.duration ) ? parameters.duration : 0;
+				parameters.easing = parameters.easing || Strong.easeIn;
+				parameters.onUpdate = function () {
+					
+					UpdateCharacterSize( $character );
+					
+				};
+				
+				options.tweening = true;
+				TweenMax.to( options, duration, parameters );
+				
+			}
+			
+		}
+		
+	}
+	
+	function UpdateCharacterSize ( $character ) {
 		
 		var options = $character.data( 'options' );
 		
@@ -463,6 +557,8 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			options.heightLast = options.height;
 			
 			$character.css( 'height', options.height + '%' );
+			
+			// TODO: adjust top/bottom based on base top/bottom and base height
 			
 			if ( options.adjust.top === true ) {
 				
@@ -507,6 +603,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	=====================================================*/
 	
 	_user.Grow = Grow;
+	_user.Fade = Fade;
 	
 	return _user;
 	
