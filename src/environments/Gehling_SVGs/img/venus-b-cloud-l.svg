@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 15.0.2, SVG Export Plug-In  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+	<!ENTITY ns_flows "http://ns.adobe.com/Flows/1.0/">
+]>
+<svg version="1.1"
+	 xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:a="http://ns.adobe.com/AdobeSVGViewerExtensions/3.0/"
+	 x="0px" y="0px" width="946px" height="457px" viewBox="0 0 946 457" overflow="visible" enable-background="new 0 0 946 457"
+	 xml:space="preserve">
+<defs>
+</defs>
+<polygon fill="#C39F4E" points="916.056,151.445 915.415,151.379 915.992,151.275 840.519,61.924 734.323,80.465 664.914,25.816 
+	471.623,41.154 455.737,0 450.04,0.824 275.883,28.895 178.68,96.861 1.562,116.237 1.5,116.197 0,116.408 0,275.295 0,456.596 
+	218.686,316.484 511.403,307.479 665.86,316.484 946.079,229.035 "/>
+<polygon fill="#DCBF69" points="665.86,316.484 511.403,307.479 946.079,229.035 "/>
+<polygon fill="#CEAD5B" points="450.04,0.824 186.965,235.85 275.883,28.895 "/>
+<polygon fill="#C7A450" points="218.686,316.484 186.965,235.85 450.04,0.824 455.737,0 "/>
+<polygon fill="#CEAD5B" points="186.965,235.85 0,116.408 178.68,96.861 "/>
+<polygon fill="#DCDBDD" points="186.965,235.85 0,456.596 0,116.408 "/>
+<polygon fill="#BD9A47" points="946.079,229.035 511.403,307.479 568.038,173.408 664.914,25.816 734.323,80.465 840.519,61.924 
+	915.145,151.352 916.056,151.445 "/>
+<polygon fill="#C39F4E" points="664.914,25.816 568.659,174.104 471.623,41.154 "/>
+<polygon fill="#C39F4E" points="568.659,174.104 840.519,61.924 734.323,80.465 "/>
+<polygon fill="#C7A451" points="915.992,151.275 795.777,172.898 840.519,61.924 "/>
+<polygon fill="#C39F4E" points="568.659,174.104 795.777,172.898 946.079,229.035 "/>
+<polygon fill="#CEAD5B" points="946.079,229.035 511.403,307.479 568.659,174.104 "/>
+<polygon fill="#DBC065" points="511.403,307.479 218.686,316.484 568.659,174.104 "/>
+<polygon fill="#CEAD5B" points="568.659,174.104 218.686,316.484 455.737,0 471.623,41.154 "/>
+<polygon fill="#BD9A47" points="186.965,235.85 178.68,96.861 275.883,28.895 "/>
+<polygon fill="#DBC065" points="186.965,235.85 0,456.596 0,116.408 1.5,116.197 "/>
+<polygon fill="#C39F4E" points="218.686,316.484 0,456.596 186.965,235.85 "/>
+</svg>
