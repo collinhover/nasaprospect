@@ -28,6 +28,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	var _$characters = _$charactersContainer.find( '.character' );
 	var _charactersById = {};
+	var _charactersActive = [];
 	
 	_$characters.each( function () {
 		
@@ -253,18 +254,66 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		var direction = modParts[ 2 ];
 		var propertiesString = modParts[ 3 ];
 		var properties = propertiesString ? propertiesString.split( ',' ) : [];
+		var solo;
+		
+		if ( properties[ 0 ] === 'solo' ) {
+			
+			solo = true;
+			properties.splice( 0, 1 );
+			
+		}
 		
 		if ( typeof _user[ type ] === 'function' && ids.length > 0 ) {
 			
 			var modTrigger = {
 				callbackCenterContinuous: function ( trigger ) {
 					
+					var scrollDirection = _navi.GetScrollDirection().y;
+					var scrolling, antiscrolling;
+					
+					if ( scrollDirection < 0 ) {
+						
+						scrolling = 'up';
+						antiscrolling = 'down';
+						
+					}
+					else {
+						
+						scrolling = 'down';
+						antiscrolling = 'up';
+						
+					}
+					
+					var directional = direction === 'concat';
+					
+					// check solo
+					
+					if ( solo === true ) {
+						
+						for ( var id in _charactersById ) {
+							
+							var $character = _charactersById[ id ];
+							
+							if ( $character.data( 'options' ).opacity !== 0 && _utils.IndexOfValue( ids, id ) === -1 ) {
+								
+								Fade( id, { opacity: 0, duration: 0.5 } );
+								
+							}
+							
+						}
+						
+					}
+					
 					for ( var i = 0, il = ids.length; i < il; i++ ) {
 						
-						_user[ type ]( ids[ i ], { 
+						_user[ type ]( ids[ i ], {
 							element: $element,
 							bounds: trigger.bounds,
-							direction: direction,
+							direction: directional ? scrolling : direction,
+							scrollDirection: scrollDirection,
+							scrolling: scrolling,
+							antiscrolling: antiscrolling,
+							directional: directional,
 							properties: properties
 						} );
 						
@@ -286,16 +335,21 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	function GetModifierPct ( $element, parameters ) {
 		
+		var direction = parameters.direction;
 		var properties = parameters.properties;
 		var scrollPositionCenterY = _navi.GetScrollCenterPosition().y;
 		var bounds = parameters.bounds || _utils.DOMBounds( $element );
 		var top = bounds.top;
 		var bottom = bounds.bottom;
-		var boundsDistanceV = bottom - top;
-		var pctEnd, pctStart, pctTotal;
-		var pct;
+		var topToBottom = bottom - top;
+		var boundsDistanceV;
+		var pct, pctEnd, pctStart, pctTotal;
+		var toggle, pctEndToggle, pctStartToggle;
+		var topToggle, bottomToggle;
 		
 		if ( properties.length > 0 ) {
+			
+			// ranges
 			
 			pctStart = parseFloat( properties[ 0 ] );
 			pctEnd = parseFloat( properties[ 1 ] );
@@ -308,13 +362,34 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			
 			pctTotal = pctEnd - pctStart;
 			
-			top += boundsDistanceV *  pctStart;
-			boundsDistanceV *= pctTotal;
+			toggle = properties[ 2 ];
+			
+			if ( toggle === 'in' ) {
+				
+				pctStartToggle = parseFloat( properties[ 3 ] );
+				pctEndToggle = parseFloat( properties[ 4 ] );
+				
+				if ( isNaN( pctStartToggle ) ) pctStartToggle = pctStart;
+				else pctStartToggle = _utils.Clamp( pctStartToggle, pctStart, pctEnd );
+				
+				if ( isNaN( pctEndToggle ) ) pctEndToggle = pctEnd;
+				else pctEndToggle = _utils.Clamp( pctEndToggle, pctStartToggle, pctEnd );
+				
+				// bounds
+				
+				topToggle = top + topToBottom *  pctStartToggle;
+				bottomToggle = bottom - ( topToBottom - topToBottom * pctEndToggle );
+				
+			}
+			
+			top += topToBottom *  pctStart;
+			boundsDistanceV = topToBottom * pctTotal;
 			bottom = top + boundsDistanceV;
 			
 		}
 		else {
 			
+			boundsDistanceV = topToBottom;
 			pctEnd = 1;
 			pctStart = 0;
 			
@@ -322,13 +397,11 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		
 		var distanceV = scrollPositionCenterY - top;
 		
-		// get pct by direction
+		// total pct of 0
 		
-		if ( parameters.direction === 'up' ) {
+		if ( pctTotal <= 0 ) {
 			
-			// special case for total pct of 0
-			
-			if ( pctTotal <= 0 ) {
+			if ( direction === 'up' ) {
 				
 				if ( scrollPositionCenterY > bottom ) {
 					
@@ -342,20 +415,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 				}
 				
 			}
-			// default pct
 			else {
-				
-				pct = _utils.Clamp( 1 - distanceV / boundsDistanceV, 0, 1 );
-				
-			}
-			
-		}
-		// default to down
-		else {
-			
-			// special case for total pct of 0
-			
-			if ( pctTotal <= 0 ) {
 				
 				if ( scrollPositionCenterY < top ) {
 					
@@ -369,7 +429,37 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 				}
 				
 			}
-			// default pct
+			
+		}
+		// toggle
+		else if ( toggle === 'in' ) {
+			
+			if ( scrollPositionCenterY <= topToggle ) {
+				
+				pct = _utils.Clamp( distanceV / ( topToggle - top ), 0, 1 );
+				
+			}
+			else if ( scrollPositionCenterY >= bottomToggle ) {
+				
+				pct = _utils.Clamp( 1 - ( scrollPositionCenterY - bottomToggle ) / ( bottom - bottomToggle ), 0, 1 );
+				
+			}
+			else {
+				
+				pct = 1;
+				
+			}
+			
+		}
+		// pct by direction
+		else {
+			
+			if ( direction === 'up' ) {
+				
+				pct = _utils.Clamp( 1 - distanceV / boundsDistanceV, 0, 1 );
+				
+			}
+			// default to down
 			else {
 				
 				pct = _utils.Clamp( distanceV / boundsDistanceV, 0, 1 );
@@ -377,7 +467,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			}
 			
 		}
-		console.log( 'pct ', pct, ' pctEnd', pctEnd, 'pctStart', pctStart, 'top', top, bounds.top, 'bottom', bottom, bounds.bottom, 'scrollPositionCenterY', scrollPositionCenterY, ' distanceV', distanceV );
+		console.log( 'pct ', pct, ' pctEnd', pctEnd, 'pctStart', pctStart, 'toggle', toggle, 'top', top, bounds.top, 'bottom', bottom, bounds.bottom, 'scrollPositionCenterY', scrollPositionCenterY, ' distanceV', distanceV );
 		return pct;
 		
 	}
@@ -389,6 +479,20 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	=====================================================*/
 	
 	function Fade ( id, parameters ) {
+		
+		parameters = parameters || {};
+		
+		// handle directional
+		
+		if ( parameters.directional === true ) {
+			
+			// hide opposite
+			
+			Fade( id + parameters.antiscrolling, { opacity: 0 } );
+			
+			id += parameters.scrolling;
+			
+		}
 		console.log( 'Fade', id );
 		var $character = _charactersById[ id ];
 		
@@ -405,12 +509,11 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			// reset size
 			
 			if ( options.height !== options.base.height || options.width !== options.base.width ) {
-				console.log( ' > resetting grow ', options.height !== options.base.height, options.width !== options.base.width );
+				
 				Grow( id );
 				
 			}
 			
-			parameters = parameters || {};
 			var $element = $( parameters.element );
 			
 			// based on scroll
@@ -452,7 +555,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		if ( options.opacityLast !== options.opacity ) {
 			
 			options.opacityLast = options.opacity;
-			console.log( 'update opacity', options.opacity, $character.css( 'opacity' ) );
+			
 			$character.css( 'opacity', options.opacity );
 			
 		}
@@ -466,6 +569,20 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	=====================================================*/
 	
 	function Grow ( id, parameters ) {
+		
+		parameters = parameters || {};
+		
+		// handle directional
+		
+		if ( parameters.directional === true ) {
+			
+			// hide opposite
+			
+			Grow( id + parameters.antiscrolling, { width: 0, height: 0 } );
+			
+			id += parameters.scrolling;
+			
+		}
 		console.log( 'Grow', id );
 		var $character = _charactersById[ id ];
 		
@@ -482,7 +599,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			// reset fading
 			
 			if ( options.opacity !== options.base.opacity ) {
-				console.log( ' > resetting Fade ' );
+				
 				Fade( id );
 				
 			}

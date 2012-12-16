@@ -13,6 +13,8 @@
         <meta name="description" content="NASA: Prospect">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 		
+		<link rel="shortcut icon" href="favicon.ico">
+		
         <!-- JS setup -->
         
         <script src="js/lib/modernizr-2.6.2.min.js"></script>
@@ -67,14 +69,16 @@
 				
 				<div id="userCharacters">
 					
-					<img src="img/character_robot.svg" id="robot" class="character characterbackground hidden" style="height:40%; top: 30%; left: 30%;">
-					<img src="img/character_robot_open.svg" id="robot_open" class="character characterbackground hidden" style="height:40%; top: 30%; left: 30%;">
-					<img src="img/character_astronaut.svg" id="astronaut" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
-					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
-					<img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
-					<img src="img/character_astronaut_land.svg" id="astronaut_land" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
-					<img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
-					<img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character characterforeground hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_robot.svg" id="robot" class="character hidden" style="height:40%; top: 30%; left: 30%;">
+					<!--<img src="img/character_robot_open.svg" id="robot_open" class="character hidden" style="height:40%; top: 30%; left: 30%;">-->
+					<img src="img/character_astronaut.svg" id="astronaut" class="character hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_land.svg" id="astronaut_land" class="character hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_fly_up.svg" id="fly_up" class="character center-horizontal hidden" style="height:80%; top: 10%;">
+					<img src="img/character_fly_down.svg" id="fly_down" class="character center-horizontal hidden" style="height:80%; top: 10%;">
 					
 				</div>
 				<!-- /characters -->
@@ -236,7 +240,7 @@
 				
 				<section id="intro" class="system-section no-crop">
 					
-					<div id="intro1" class="container-fill" data-character-modify="Grow/astronaut_drift/down/0,0.5">
+					<div id="intro1" class="container-fill" data-character-modify="Fade/fly_/concat/solo,0,1,in,0.25,0.75">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -469,8 +473,9 @@
 				</section>
 				<!-- /sun -->
 				
-				<section class="interplanet">
-					<div class="stars">
+				<section id="sunToMercury" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,0.5,solo,1,in">
 						
 						<div class="container-fill">
 							
@@ -481,6 +486,7 @@
 						</div>
 						
 					</div>
+					
 				</section>
 				
 				<section id="mercury" class="system-section">
@@ -753,6 +759,16 @@
 		
 		</div>
 		<!-- /main -->
+		
+		<footer class="visuallyhidden">
+			
+			<p>Welcome to NASA Prospect!</p>
+			<p>Prospect is the interactive story of the planet prospectors, left behind by NASA to recover the golden objects of humankind scattered across the solar-system by a global disaster.</p>
+			<p>This episode follows Nicolas and Pyxis, on a mission to find remnants of human music contained in the golden records. Travel with them as they explore new planets, overcome great odds, and make unexpected friends. Space isn't so lonely when you've got friends with you!</p>
+			<p>NASA Prospect was created by a group of designers and developers who each contributed to all aspects of the project. This project was authored by and is copyright to Collin Hover, Amanda Connelly, Amy Gehling, Calvin LaBrie, Ashley Palmer, and Keaton Solomon, 2012.</p>
+			<p>This project and all of its source files may be found at <a href="http://github.com/collinhover/nasaprospect">http://github.com/collinhover/nasaprospect</a>. We've released the source files under the MIT License in the hopes that they will help others produce something even better!</p>
+			
+		</footer>
         
         <!-- javascript -->
         
