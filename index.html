@@ -70,13 +70,14 @@
 				<div id="userCharacters">
 					
 					<img src="img/character_robot.svg" id="robot" class="character hidden" style="height:40%; top: 30%; left: 30%;">
-					<!--<img src="img/character_robot_open.svg" id="robot_open" class="character hidden" style="height:40%; top: 30%; left: 30%;">-->
+					<img src="img/character_robot_excited.svg" id="robot_excited" class="character hidden" style="height:40%; top: 30%; left: 30%;">
 					<img src="img/character_astronaut.svg" id="astronaut" class="character hidden" style="height:40%; top: 30%; right: 30%;">
 					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character hidden" style="height:40%; top: 30%; right: 30%;">
 					<img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character hidden" style="height:40%; top: 30%; right: 30%;">
 					<img src="img/character_astronaut_land.svg" id="astronaut_land" class="character hidden" style="height:40%; top: 30%; right: 30%;">
 					<img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character hidden" style="height:40%; top: 30%; right: 30%;">
 					<img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_rescue.svg" id="rescue" class="character center-horizontal hidden" style="height:80%; top: 10%;">
 					<img src="img/character_fly_up.svg" id="fly_up" class="character center-horizontal hidden" style="height:80%; top: 10%;">
 					<img src="img/character_fly_down.svg" id="fly_down" class="character center-horizontal hidden" style="height:80%; top: 10%;">
 					
@@ -240,7 +241,7 @@
 				
 				<section id="intro" class="system-section no-crop">
 					
-					<div id="intro1" class="container-fill" data-character-modify="Fade/fly_/concat/0,1,in,0.25,0.75 Fade/astronaut_drift/down/0.75,1">
+					<div id="intro1" class="container-fill" data-character-modify="Grow/astronaut_drift/down/0,0.5">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -250,10 +251,10 @@
 										<div class="offset9 span3">
 											
 											<div class="dialogue">
-												<p>Every kid wants to be an astronaut. Spaceships, planets, stars, black holes; more than you could ever fit in before dinner, and definitely more than you could be curious about in a life time. But become a Planet-Walker like me? Huh, most people don't even know I exist.</p>
+												<p>Every kid wants to be an astronaut. Spaceships, aliens, planets, stars, black holes... way more than you could explore in a lifetime. But no kid spends their summer days pretending to be a Prospector. Huh, when was the last time you heard about what we do for humankind?</p>
 												<div class="separator"></div>
-												<h3 class="sidekick-type dim">the first thing I remember was space and garbled noise</h3>
-												<h1 class="logo-type">...Ro...b...gfzb</h1>
+												<h3 class="sidekick-type dim">I remember the noise that woke me:</h3>
+												<h1 class="logo-type">...Ni..zko..bsz!</h1>
 											</div>
 											
 										</div>
@@ -276,20 +277,9 @@
 										<div class="span3">
 											
 											<div class="dialogue dialogue-left">
-												<img src="img/character_robot_icon_white.svg" class="origin iconk-medium dim">
-												<h1 class="robot logo-type">Yo-</h1>
+												<h3 class="sidekick-type dim">Oxygen in the suit felt thin. I must have been drifting for days.</h3>
 												<div class="separator"></div>
-												<p>Everyone likes to say there isn't any sound in space, so no one expected what we're hearing right now. Tweak some systems, turn up the volume and space is suddenly one beast of an electromagnetic beat...</p>
-											</div>
-											
-										</div>
-										<div class="offset6 span3">
-											
-											<div class="dialogue">
-												<p>At first, we didn't think much of the strange music. But when we couldn't trace the source back to Earth, people started to get curious. All that curiousity ended in NASA shooting me n' Prospect out here to find it.</p>
-												<div class="separator"></div>
-												<h1 class="robot logo-type">-Robb!</h1>
-												<h3 class="sidekick-type dim">Prospect's greeting came through clearly this time</h3>
+												<p>But I didn't need to ask where I was, the crushing heat of the sun told me well enough. As for who I was, I didn't remember. And at that moment I didn't care, because there is nothing as terrifying as free floating in space.</p>
 											</div>
 											
 										</div>
@@ -309,25 +299,16 @@
 								<div class="ui-pane-section-quarter-top-middle expandable">
 									
 									<div class="row-fluid">
-										<div class="span3">
+										<div class="offset9 span3">
 											
-											<div class="dialogue dialogue-left">
+											<div class="dialogue">
+												<p>It felt like my entire body was straining to hear that garbled noise again. As if I could be swept away to safety by a sound.</p>
+												<div class="separator"></div>
 												<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-												<h1 class="astronaut logo-type important-type">Where are we?</h1>
-												<h3 class="sidekick-type dim">I radioed to Prospect</h3>
+												<h1 class="astronaut logo-type important-type">Hello?</h1>
+												<h3 class="sidekick-type dim">I managed.</h3>
 												<div class="separator"></div>
-												<p>Oxygen in the suit feels thin... I must have been drifting for hours. Surrounded by all this space and sound, its easy to see why some people swear by meditation.</p>
-											</div>
-											
-										</div>
-										<div class="offset6 span3">
-											
-											<div class="dialogue dialogue-secondary">
-												<img src="img/character_robot_icon_white.svg" class="origin iconk-medium dim">
-												<h1 class="robot logo-type">Wrong side of the sun</h1>
-												<h3 class="sidekick-type dim">she replied patiently</h3>
-												<div class="separator"></div>
-												<p>Sometimes Prospect'd say something that seemed sarcastic, or even mean, but she always sounded cheerful and it made for some bizarre conversations. Sure, I was talking to a spaceship, but I never could get used to it.</p>
+												<p>My voice sounded electronic, but not the unpleasant or grating sort. I was expecting a heavier sound, you know, like physical vibrations. This was faster and lighter.</p>
 											</div>
 											
 										</div>
@@ -340,22 +321,21 @@
 					</div>
 					<!-- /intro3 -->
 					
-					<div id="intro4" class="container-fill" data-character-modify="Grow/astronaut_radio/up Grow/robot_open/down">
+					<div id="intro4" class="container-fill">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
 								<div class="ui-pane-section-quarter-top-middle expandable">
 									
 									<div class="row-fluid">
-										<div class="offset9 span3">
+										<div class="span3">
 											
-											<div class="dialogue">
-												<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-												<h1 class="astronaut logo-type">You alright?</h1>
-												<h3 class="sidekick-type dim">I asked her, concerned</h3>
+											<div class="dialogue dialogue-left">
+												<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
+												<h1 class="robot logo-type">Hi Nicolas!</h1>
+												<h3 class="sidekick-type dim">someone replied cheerily.</h3>
 												<div class="separator"></div>
-												<p>Unconsciously, I tried to check on Prospect while I waited for the all clear in the airlock, but my internal interface was down. Better reboot.</p>
-												<p class="note">Internal Interface ready!<br>Welcome Planet-Walker (PW) Robb<br>Please say a command: _<br><br>--- STATUS CHECK ---<br>[ PW ] Robb<br>Oxygen: 37 %<br>Pressure: Safe<br>Injuries Detected!<br>...</p>
+												<p>Again I heard an electronic voice, but they sounded much too happy to be floating helplessly towards the sun alongside me.</p>
 											</div>
 											
 										</div>
@@ -367,40 +347,6 @@
 										
 					</div>
 					<!-- /intro4 -->
-					
-					<div id="intro5" class="container-fill" data-character-modify="Fade/robot_open/up/0,0.5 Fade/robot/down/0,0.5">
-						
-						<div class="ui-pane-column-middle">
-							<div class="ui-pane-section-body">
-								<div class="ui-pane-section-quarter-top-middle expandable">
-									
-									<div class="row-fluid">
-										<div class="span3">
-											
-											<div class="dialogue dialogue-left">
-												<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-												<h1 class="robot logo-type">I...</h1>
-												<h3 class="sidekick-type dim">her reply was careful</h3>
-												<h1 class="robot logo-type important-type">think so!</h1>
-												<h3 class="sidekick-type dim"> but cheery all the same</h3>
-											</div>
-											
-										</div>
-										<div class="offset6 span3">
-											
-											<div class="dialogue">
-												<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-												<p class="note">[PW LOG] Robb<br>[2042 / March / 01 09:18:51]<br><br>Head is sore but otherwise I feel normal, and Prospect says she's okay. Last log is dated just a few hours ago from Earth's orbit, and since then we've just traveled about 92 million miles... we're at the bloody sun.</p>
-											</div>
-										</div>
-									</div>
-									
-								</div>
-							</div>
-						</div>
-										
-					</div>
-					<!-- /intro5 -->
 					
 				</section>
 				<!-- /intro -->
@@ -466,23 +412,98 @@
 						
 					</div>
 					
-					<div id="rescue" class="container-fill">
+					<div id="rescue" class="container-fill" data-character-modify="Fade/astronaut_radio/up/0,0.3 Fade/rescue/down/0,0.3">
 						
+						<div class="ui-pane-column-middle">
+							<div class="ui-pane-section-body">
+								<div class="ui-pane-section-quarter-top-middle expandable">
+									
+									<div class="row-fluid">
+										<div class="span3">
+											
+											<div class="dialogue dialogue-left">
+												<p>Suddenly she was there, a robot like I'd never seen before, extending me what was probably her impression of a helping hand.</p>
+												<div class="separator"></div>
+												<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
+												<h1 class="robot logo-type important-type">Come on!</h1>
+												<h3 class="sidekick-type dim">she said lightly.</h3>
+											</div>
+											
+										</div>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+										
 					</div>
+					<!-- /rescue -->
 					
 				</section>
 				<!-- /sun -->
 				
 				<section id="sunToMercury" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,0.5,solo,1,in">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/rescue/up/0,0.2 Fade/robot/down/0.8,1 Fade/astronaut/down/0.8,1">
 						
-						<div class="container-fill">
-							
+						<div id="status1" class="container-fill">
+							<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+											<div class="span3">
+												
+												<div class="dialogue dialogue-left">
+													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
+													<h1 class="robot logo-type">Are you okay Prospector?</h1>
+													<h3 class="sidekick-type dim">she asked, accelerating quickly.</h3>
+												</div>
+												
+											</div>
+											<div class="offset6 span3">
+												
+												<div class="dialogue">
+													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
+													<h1 class="astronaut logo-type">I..."</h1>
+													<div class="separator"></div>
+													<p>Before I had a chance to respond, my visor lit up with an array of buttons, panels, and readouts.</p>
+													<p class="note">
+														nicolas&gt; End Hibernation...<br>
+														nicolas&gt; Internal Interface ready!<br>
+														nicolas&gt; Status Check...<br>
+														----------<br>
+														Oxygen: 37 %<br>
+														Pressure: Safe</p>
+													<h1 class="astronaut logo-type">think so!"</h1>
+												</div>
+											</div>
+										</div>
+										
+									</div>
+								</div>
+							</div>
 						</div>
 						
-						<div class="container-fill">
-							
+						<div id="status2" class="container-fill">
+							<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+											<div class="span3">
+												
+												<div class="dialogue dialogue-left">
+													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
+													<h1 class="robot logo-type">Okay! Here we go!</h1>
+													<h3 class="sidekick-type dim">And with that, we fell, unceremoniously, into Mercury's atmosphere.</h3>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 						
 					</div>
@@ -490,7 +511,9 @@
 				</section>
 				
 				<section id="mercury" class="system-section">
-					
+					<!--
+					<p class="note">[PW LOG] Robb<br>[2042 / March / 01 09:18:51]<br><br>Head is sore but otherwise I feel normal, and Prospect says she's okay. Last log is dated just a few hours ago from Earth's orbit, and since then we've just traveled about 92 million miles... we're at the bloody sun.</p>
+					-->
 					<div class="orbit orbit-top container-fill">
 						
 						<div class="middleground">

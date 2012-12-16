@@ -251,11 +251,41 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		var type = modParts[ 0 ];
 		var idsString = modParts[ 1 ];
 		var ids = idsString ? idsString.split( ',' ) : [];
-		var direction = modParts[ 2 ];
-		var propertiesString = modParts[ 3 ];
-		var properties = propertiesString ? propertiesString.split( ',' ) : [];
 		
 		if ( typeof _user[ type ] === 'function' && ids.length > 0 ) {
+			
+			var direction = modParts[ 2 ];
+			var propertiesString = modParts[ 3 ];
+			var propertiesList = propertiesString ? propertiesString.split( ',' ) : [];
+			var properties = {};
+			
+			// parse properties
+			
+			properties.pctStart = parseFloat( propertiesList[ 0 ] );
+			properties.pctEnd = parseFloat( propertiesList[ 1 ] );
+			
+			if ( isNaN( properties.pctStart ) ) properties.pctStart = 0;
+			else properties.pctStart = _utils.Clamp( properties.pctStart, 0, 1 );
+			
+			if ( isNaN( properties.pctEnd ) ) properties.pctEnd = 1;
+			else properties.pctEnd = _utils.Clamp( properties.pctEnd, properties.pctStart, 1 );
+			
+			properties.toggle = propertiesList[ 2 ];
+			
+			if ( properties.toggle === 'in' ) {
+				
+				properties.pctStartToggle = parseFloat( propertiesList[ 3 ] );
+				properties.pctEndToggle = parseFloat( propertiesList[ 4 ] );
+				
+				if ( isNaN( properties.pctStartToggle ) ) properties.pctStartToggle = properties.pctStart;
+				else properties.pctStartToggle = _utils.Clamp( properties.pctStartToggle, properties.pctStart, properties.pctEnd );
+				
+				if ( isNaN( properties.pctEndToggle ) ) properties.pctEndToggle = properties.pctEnd;
+				else properties.pctEndToggle = _utils.Clamp( properties.pctEndToggle, properties.pctStartToggle, properties.pctEnd );
+				
+			}
+			
+			// build trigger
 			
 			var modTrigger = {
 				callbackCenterContinuous: function ( trigger ) {
@@ -317,63 +347,27 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		var bottom = bounds.bottom;
 		var topToBottom = bottom - top;
 		var boundsDistanceV;
-		var pct, pctEnd, pctStart, pctTotal;
-		var toggle, pctEndToggle, pctStartToggle;
+		var pct;
+		var pctRange = properties.pctEnd - properties.pctStart;
+		var toggle = properties.toggle;
 		var topToggle, bottomToggle;
 		
-		if ( properties.length > 0 ) {
+		if ( toggle === 'in' ) {
 			
-			// ranges
-			
-			pctStart = parseFloat( properties[ 0 ] );
-			pctEnd = parseFloat( properties[ 1 ] );
-			
-			if ( isNaN( pctStart ) ) pctStart = 0;
-			else pctStart = _utils.Clamp( pctStart, 0, 1 );
-			
-			if ( isNaN( pctEnd ) ) pctEnd = 1;
-			else pctEnd = _utils.Clamp( pctEnd, pctStart, 1 );
-			
-			pctTotal = pctEnd - pctStart;
-			
-			toggle = properties[ 2 ];
-			
-			if ( toggle === 'in' ) {
-				
-				pctStartToggle = parseFloat( properties[ 3 ] );
-				pctEndToggle = parseFloat( properties[ 4 ] );
-				
-				if ( isNaN( pctStartToggle ) ) pctStartToggle = pctStart;
-				else pctStartToggle = _utils.Clamp( pctStartToggle, pctStart, pctEnd );
-				
-				if ( isNaN( pctEndToggle ) ) pctEndToggle = pctEnd;
-				else pctEndToggle = _utils.Clamp( pctEndToggle, pctStartToggle, pctEnd );
-				
-				// bounds
-				
-				topToggle = top + topToBottom *  pctStartToggle;
-				bottomToggle = bottom - ( topToBottom - topToBottom * pctEndToggle );
-				
-			}
-			
-			top += topToBottom *  pctStart;
-			boundsDistanceV = topToBottom * pctTotal;
-			bottom = top + boundsDistanceV;
+			topToggle = top + topToBottom *  properties.pctStartToggle;
+			bottomToggle = bottom - ( topToBottom - topToBottom * properties.pctEndToggle );
 			
 		}
-		else {
-			
-			boundsDistanceV = topToBottom;
-			pctEnd = 1;
-			pctStart = 0;
-			
-		}
+		
+		top += topToBottom * properties.pctStart;
+		boundsDistanceV = topToBottom * pctRange;
+		bottom = top + boundsDistanceV;
 		
 		var distanceV = scrollPositionCenterY - top;
 		
 		// total pct of 0
 		
-		if ( pctTotal <= 0 ) {
+		if ( pctRange <= 0 ) {
 			
 			if ( direction === 'up' ) {
 				
@@ -441,7 +435,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			}
 			
 		}
-		console.log( 'pct ', pct, ' pctEnd', pctEnd, 'pctStart', pctStart, 'toggle', toggle, 'top', top, bounds.top, 'bottom', bottom, bounds.bottom, 'scrollPositionCenterY', scrollPositionCenterY, ' distanceV', distanceV );
+		console.log( 'pct ', pct, 'toggle', toggle, 'top', top, bounds.top, 'bottom', bottom, bounds.bottom, 'scrollPositionCenterY', scrollPositionCenterY, ' distanceV', distanceV );
 		return pct;
 		
 	}
