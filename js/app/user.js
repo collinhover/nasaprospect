@@ -254,14 +254,6 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		var direction = modParts[ 2 ];
 		var propertiesString = modParts[ 3 ];
 		var properties = propertiesString ? propertiesString.split( ',' ) : [];
-		var solo;
-		
-		if ( properties[ 0 ] === 'solo' ) {
-			
-			solo = true;
-			properties.splice( 0, 1 );
-			
-		}
 		
 		if ( typeof _user[ type ] === 'function' && ids.length > 0 ) {
 			
@@ -285,24 +277,6 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 					}
 					
 					var directional = direction === 'concat';
-					
-					// check solo
-					
-					if ( solo === true ) {
-						
-						for ( var id in _charactersById ) {
-							
-							var $character = _charactersById[ id ];
-							
-							if ( $character.data( 'options' ).opacity !== 0 && _utils.IndexOfValue( ids, id ) === -1 ) {
-								
-								Fade( id, { opacity: 0, duration: 0.5 } );
-								
-							}
-							
-						}
-						
-					}
 					
 					for ( var i = 0, il = ids.length; i < il; i++ ) {
 						
