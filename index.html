@@ -72,14 +72,14 @@
 					<img src="img/character_robot.svg" id="robot" class="character hidden" style="height:40%; top: 30%; left: 30%;">
 					<img src="img/character_robot_excited.svg" id="robot_excited" class="character hidden" style="height:40%; top: 30%; left: 30%;">
 					<img src="img/character_astronaut.svg" id="astronaut" class="character hidden" style="height:40%; top: 30%; right: 30%;">
-					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character hidden" style="height:40%; top: 30%; right: 30%;">
+					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character hidden" style="height:70%; top: 15%;">
 					<img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character hidden" style="height:40%; top: 30%; right: 30%;">
 					<img src="img/character_astronaut_land.svg" id="astronaut_land" class="character hidden" style="height:40%; top: 30%; right: 30%;">
 					<img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character hidden" style="height:40%; top: 30%; right: 30%;">
 					<img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character hidden" style="height:40%; top: 30%; right: 30%;">
-					<img src="img/character_rescue.svg" id="rescue" class="character center-horizontal hidden" style="height:80%; top: 10%;">
-					<img src="img/character_fly_up.svg" id="fly_up" class="character center-horizontal hidden" style="height:80%; top: 10%;">
-					<img src="img/character_fly_down.svg" id="fly_down" class="character center-horizontal hidden" style="height:80%; top: 10%;">
+					<img src="img/character_rescue.svg" id="rescue" class="character center-horizontal hidden" style="height:70%; top: 15%;">
+					<img src="img/character_fly_up.svg" id="fly_up" class="character center-horizontal hidden" style="height:90%; top: 5%;">
+					<img src="img/character_fly_down.svg" id="fly_down" class="character center-horizontal hidden" style="height:90%; top: 5%;">
 					
 				</div>
 				<!-- /characters -->
@@ -241,7 +241,7 @@
 				
 				<section id="intro" class="system-section no-crop">
 					
-					<div id="intro1" class="container-fill" data-character-modify="Grow/astronaut_drift/down/0,0.5">
+					<div id="intro1" class="container-fill" data-character-modify="Grow/astronaut_drift/down/0,0.3/1/left">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -292,7 +292,7 @@
 					</div>
 					<!-- /intro2 -->
 					
-					<div id="intro3" class="container-fill" data-character-modify="Fade/astronaut_drift/up/0,0.5 Fade/astronaut_radio/down/0,0.5">
+					<div id="intro3" class="container-fill" data-character-modify="Fade/astronaut_drift/up/0,0.25 Fade/astronaut_radio/down/0,0.25">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -412,7 +412,7 @@
 						
 					</div>
 					
-					<div id="rescue" class="container-fill" data-character-modify="Fade/astronaut_radio/up/0,0.3 Fade/rescue/down/0,0.3">
+					<div id="rescue" class="container-fill" data-character-modify="Fade/astronaut_radio/up/0,0.25 Fade/rescue/down/0,0.25">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -495,7 +495,7 @@
 												
 												<div class="dialogue dialogue-left">
 													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="robot logo-type">Okay! Here we go!</h1>
+													<h1 class="robot logo-type">Okay! Here we go...</h1>
 													<h3 class="sidekick-type dim">And with that, we fell, unceremoniously, into Mercury's atmosphere.</h3>
 												</div>
 												
@@ -528,6 +528,18 @@
 				</section>
 				<!-- /mercury -->
 				
+				<section id="mercuryToVenus" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8 Fade/astronaut/all/0,1,out,0.2,0.8">
+						
+						<div class="container-fill"></div>
+						<div class="container-fill"></div>
+						
+					</div>
+					
+				</section>
+				<!-- mercuryToVenus -->
+				
 				<section id="venus" class="system-section">
 					
 					<div class="orbit orbit-top container-fill">
@@ -543,6 +555,18 @@
 					
 				</section>
 				<!-- /venus -->
+				
+				<section id="venusToEarth" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2 Fade/astronaut/up/0,0.2 Fade/robot/down/0.8,1 Fade/astronaut/down/0.8,1">
+						
+						<div class="container-fill"></div>
+						<div class="container-fill"></div>
+						
+					</div>
+					
+				</section>
+				<!-- venusToEarth -->
 				
 				<section id="earth" class="system-section">
 					
@@ -588,6 +612,18 @@
 				</section>
 				<!-- /earth -->
 				
+				<section id="earthToMars" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2 Fade/astronaut/up/0,0.2 Fade/robot/down/0.8,1 Fade/astronaut/down/0.8,1">
+						
+						<div class="container-fill"></div>
+						<div class="container-fill"></div>
+						
+					</div>
+					
+				</section>
+				<!-- earthToMars -->
+				
 				<section id="mars" class="system-section">
 				
 					<div class="orbit orbit-top container-fill">
@@ -615,6 +651,17 @@
 					
 				</section>
 				<!-- /mars -->
+				
+				<section id="marsToAsteroidBelt" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2 Fade/astronaut/up/0,0.2 Fade/robot/down/0.8,1 Fade/astronaut/down/0.8,1">
+						
+						<div class="container-fill"></div>
+						
+					</div>
+					
+				</section>
+				<!-- marsToAsteroidBelt -->
 				
 				<section id="asteroidBelt" class="system-section">
 					
@@ -665,6 +712,17 @@
 				</section>
 				<!-- /asteroidBelt -->
 				
+				<section id="asteroidBeltToJupiter" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2 Fade/astronaut/up/0,0.2 Fade/robot/down/0.8,1 Fade/astronaut/down/0.8,1">
+						
+						<div class="container-fill"></div>
+						
+					</div>
+					
+				</section>
+				<!-- asteroidBeltToJupiter -->
+				
 				<section id="jupiter" class="system-section">
 					
 					<div class="orbit orbit-top container-fill">
@@ -692,6 +750,18 @@
 					
 				</section>
 				<!-- /jupiter -->
+				
+				<section id="jupiterToSaturn" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2 Fade/astronaut/up/0,0.2 Fade/robot/down/0.8,1 Fade/astronaut/down/0.8,1">
+						
+						<div class="container-fill"></div>
+						<div class="container-fill"></div>
+						
+					</div>
+					
+				</section>
+				<!-- jupiterToSaturn -->
 				
 				<section id="saturn" class="system-section">
 					
@@ -721,6 +791,18 @@
 				</section>
 				<!-- /saturn -->
 				
+				<section id="saturnToUranus" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2 Fade/astronaut/up/0,0.2 Fade/robot/down/0.8,1 Fade/astronaut/down/0.8,1">
+						
+						<div class="container-fill"></div>
+						<div class="container-fill"></div>
+						
+					</div>
+					
+				</section>
+				<!-- saturnToUranus -->
+				
 				<section id="uranus" class="system-section">
 					
 					<div class="orbit orbit-top container-fill">
@@ -749,6 +831,18 @@
 				</section>
 				<!-- /uranus -->
 				
+				<section id="uranusToNeptune" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2 Fade/astronaut/up/0,0.2 Fade/robot/down/0.8,1 Fade/astronaut/down/0.8,1">
+						
+						<div class="container-fill"></div>
+						<div class="container-fill"></div>
+						
+					</div>
+					
+				</section>
+				<!-- uranusToNeptune -->
+				
 				<section id="neptune" class="system-section">
 					
 					<div class="orbit orbit-top container-fill">
@@ -776,6 +870,18 @@
 					
 				</section>
 				<!-- /neptune -->
+				
+				<section id="neptuneToEnd" class="system-section interplanet">
+					
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0.8,1 Fade/astronaut/up/0.8,1">
+						
+						<div class="container-fill"></div>
+						<div class="container-fill"></div>
+						
+					</div>
+					
+				</section>
+				<!-- neptuneToEnd -->
 				
 			</div>
 			<!-- /system -->

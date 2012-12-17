@@ -32,27 +32,29 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	_$characters.each( function () {
 		
-		var $element = $( this );
-		var id = $element.attr( 'id' );
+		var $character = $( this );
+		var id = $character.attr( 'id' );
 		
 		if ( typeof id === 'string' ) {
 		
 			// record original inline styles and init options
 			
-			var hide = $element.hasClass( 'hidden' );
+			var hide = $character.hasClass( 'hidden' );
 			
-			$element
+			$character
 				.removeClass( 'hidden' )
 				.data( 'options', {
 					base: {
-						widthCSS: $element.prop("style")[ 'width' ],
-						heightCSS: $element.prop("style")[ 'height' ],
-						opacityCSS: $element.prop("style")[ 'opacity' ]
+						widthCSS: $character.prop("style")[ 'width' ],
+						heightCSS: $character.prop("style")[ 'height' ],
+						opacityCSS: $character.prop("style")[ 'opacity' ],
+						size: 1,
+						placement: 'center'
 					},
 					adjust: {}
 				} );
 			
-			var options = $element.data( 'options' );
+			var options = $character.data( 'options' );
 			var width = parseFloat( options.base.widthCSS );
 			var height = parseFloat( options.base.heightCSS );
 			var opacity = parseFloat( options.base.opacityCSS );
@@ -63,23 +65,6 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 				
 				options.base.width = options.width = width;
 				options.adjust.width = true;
-				
-				options.base.leftCSS = $element.prop("style")[ 'left' ];
-				options.base.rightCSS = $element.prop("style")[ 'right' ];
-				options.base.left = options.left = parseFloat( options.base.leftCSS );
-				options.base.right = options.right = parseFloat( options.base.rightCSS );
-				
-				if ( _utils.IsNumber( options.base.left  ) ) {
-					
-					options.adjust.left = true;
-					
-				}
-				
-				if ( _utils.IsNumber( options.base.right  ) ) {
-					
-					options.adjust.right = true;
-					
-				}
 				
 			}
 			else {
@@ -95,29 +80,52 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 				options.base.height = options.height = height;
 				options.adjust.height = true;
 				
-				options.base.topCSS = $element.prop("style")[ 'top' ];
-				options.base.bottomCSS = $element.prop("style")[ 'bottom' ];
-				options.base.top = options.top = parseFloat( options.base.topCSS );
-				options.base.bottom = options.bottom = parseFloat( options.base.bottomCSS );
-				
-				if ( _utils.IsNumber( options.base.top  ) ) {
-					
-					options.adjust.top = true;
-					
-				}
-				
-				if ( _utils.IsNumber( options.base.bottom  ) ) {
-					
-					options.adjust.bottom = true;
-					
-				}
-				
 			}
 			else {
 				
 				options.base.height = options.height = 100;
 				
 			}
+			
+			// position
+			
+			options.base.leftCSS = $character.prop("style")[ 'left' ];
+			options.base.rightCSS = $character.prop("style")[ 'right' ];
+			options.base.left = options.left = parseFloat( options.base.leftCSS );
+			options.base.right = options.right = parseFloat( options.base.rightCSS );
+			
+			if ( _utils.IsNumber( options.base.left  ) ) {
+				
+				options.adjust.left = true;
+				
+			}
+			
+			if ( _utils.IsNumber( options.base.right  ) ) {
+				
+				options.adjust.right = true;
+				
+			}
+			
+			
+			options.base.topCSS = $character.prop("style")[ 'top' ];
+			options.base.bottomCSS = $character.prop("style")[ 'bottom' ];
+			options.base.top = options.top = parseFloat( options.base.topCSS );
+			options.base.bottom = options.bottom = parseFloat( options.base.bottomCSS );
+			
+			if ( _utils.IsNumber( options.base.top  ) ) {
+				
+				options.adjust.top = true;
+				
+			}
+			
+			if ( _utils.IsNumber( options.base.bottom  ) ) {
+				
+				options.adjust.bottom = true;
+				
+			}
+			
+			options.adjust.horizontal = options.adjust.left || options.adjust.right;
+			options.adjust.vertical = options.adjust.top || options.adjust.bottom;
 			
 			// opacity
 			
@@ -135,14 +143,18 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			
 			// store
 			
-			_charactersById[ id ] = $element;
+			_charactersById[ id ] = $character;
+			
+			// update once
+			
+			UpdateCharacter( $character );
 			
 			// hide after init complete
 			
 			if ( hide === true ) {
 				
-				//Grow( id, { width: 0, height: 0 } );
-				Fade( id, { opacity: 0 } );
+				Fade( $character, { opacity: 0 } );
+				
 			}
 			
 		}
@@ -255,31 +267,33 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		if ( typeof _user[ type ] === 'function' && ids.length > 0 ) {
 			
 			var direction = modParts[ 2 ];
-			var propertiesString = modParts[ 3 ];
-			var propertiesList = propertiesString ? propertiesString.split( ',' ) : [];
+			var pctRangesString = modParts[ 3 ];
+			var pctRangesOptions = pctRangesString ? pctRangesString.split( ',' ) : [];
+			var size = parseFloat( modParts[ 4 ] );
+			var placement = modParts[ 5 ];
 			var properties = {};
 			
 			// parse properties
 			
-			properties.pctStart = parseFloat( propertiesList[ 0 ] );
-			properties.pctEnd = parseFloat( propertiesList[ 1 ] );
+			// pct ranges
 			
+			properties.pctStart = parseFloat( pctRangesOptions[ 0 ] );
 			if ( isNaN( properties.pctStart ) ) properties.pctStart = 0;
 			else properties.pctStart = _utils.Clamp( properties.pctStart, 0, 1 );
 			
+			properties.pctEnd = parseFloat( pctRangesOptions[ 1 ] );
 			if ( isNaN( properties.pctEnd ) ) properties.pctEnd = 1;
 			else properties.pctEnd = _utils.Clamp( properties.pctEnd, properties.pctStart, 1 );
 			
-			properties.toggle = propertiesList[ 2 ];
+			properties.toggle = pctRangesOptions[ 2 ];
 			
-			if ( properties.toggle === 'in' ) {
+			if ( properties.toggle ) {
 				
-				properties.pctStartToggle = parseFloat( propertiesList[ 3 ] );
-				properties.pctEndToggle = parseFloat( propertiesList[ 4 ] );
-				
+				properties.pctStartToggle = parseFloat( pctRangesOptions[ 3 ] );
 				if ( isNaN( properties.pctStartToggle ) ) properties.pctStartToggle = properties.pctStart;
 				else properties.pctStartToggle = _utils.Clamp( properties.pctStartToggle, properties.pctStart, properties.pctEnd );
 				
+				properties.pctEndToggle = parseFloat( pctRangesOptions[ 4 ] );
 				if ( isNaN( properties.pctEndToggle ) ) properties.pctEndToggle = properties.pctEnd;
 				else properties.pctEndToggle = _utils.Clamp( properties.pctEndToggle, properties.pctStartToggle, properties.pctEnd );
 				
@@ -307,19 +321,55 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 					}
 					
 					var directional = direction === 'concat';
+					var directionMatchesScroll = directional || direction === 'all';
 					
 					for ( var i = 0, il = ids.length; i < il; i++ ) {
 						
-						_user[ type ]( ids[ i ], {
-							element: $element,
-							bounds: trigger.bounds,
-							direction: directional ? scrolling : direction,
-							scrollDirection: scrollDirection,
-							scrolling: scrolling,
-							antiscrolling: antiscrolling,
-							directional: directional,
-							properties: properties
-						} );
+						var id = ids[ i ];
+						
+						// hide opposite if directional
+						
+						if ( directional === true ) {
+							
+							Fade( _charactersById[ id + antiscrolling ], { opacity: 0 } );
+							id += scrolling;
+							
+						}
+						
+						var $character = _charactersById[ id ];
+						
+						if ( $character instanceof $ ) {
+							
+							var options = $character.data( 'options' );
+							
+							// update options
+							
+							options.size = size;
+							options.placement = placement;
+							
+							// reset opposite modifier
+							
+							if ( type === 'Grow' && options.opacity !== options.base.opacity ) {
+								
+								Fade( $character );
+								
+							}
+							else if ( type === 'Fade' && ( options.height !== options.base.height || options.width !== options.base.width ) ) {
+								
+								Grow( $character );
+								
+							}
+							
+							// modify
+							
+							_user[ type ]( $character, {
+								element: $element,
+								bounds: trigger.bounds,
+								direction: directionMatchesScroll ? scrolling : direction,
+								properties: properties
+							} );
+							
+						}
 						
 					}
 					
@@ -352,7 +402,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		var toggle = properties.toggle;
 		var topToggle, bottomToggle;
 		
-		if ( toggle === 'in' ) {
+		if ( toggle ) {
 			
 			topToggle = top + topToBottom *  properties.pctStartToggle;
 			bottomToggle = bottom - ( topToBottom - topToBottom * properties.pctEndToggle );
@@ -419,6 +469,25 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			}
 			
 		}
+		else if ( toggle === 'out' ) {
+			
+			if ( scrollPositionCenterY <= topToggle ) {
+				
+				pct = _utils.Clamp( 1 - distanceV / ( topToggle - top ), 0, 1 );
+				
+			}
+			else if ( scrollPositionCenterY >= bottomToggle ) {
+				
+				pct = _utils.Clamp( ( scrollPositionCenterY - bottomToggle ) / ( bottom - bottomToggle ), 0, 1 );
+				
+			}
+			else {
+				
+				pct = 0;
+				
+			}
+			
+		}
 		// pct by direction
 		else {
 			
@@ -446,85 +515,55 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	=====================================================*/
 	
-	function Fade ( id, parameters ) {
-		
+	function Fade ( $character, parameters ) {
+		console.log( 'Fade', $character.attr( 'id' ) );
 		parameters = parameters || {};
 		
-		// handle directional
+		var options = $character.data( 'options' );
+		var duration = _utils.IsNumber( parameters.duration ) ? parameters.duration : 0;
 		
-		if ( parameters.directional === true ) {
+		// tween to
+		if ( duration > 0 ) {
 			
-			// hide opposite
+			if( _utils.IsNumber( parameters.opacity ) !== true ) parameters.opacity = options.base.opacity;
+			parameters.easing = parameters.easing || Strong.easeIn;
+			parameters.onUpdate = function () {
+				
+				UpdateCharacter( $character );
+				
+			};
 			
-			Fade( id + parameters.antiscrolling, { opacity: 0 } );
-			
-			id += parameters.scrolling;
+			options.tweening = true;
+			TweenMax.to( options, duration, parameters );
 			
 		}
-		console.log( 'Fade', id );
-		var $character = _charactersById[ id ];
-		
-		if ( $character instanceof $ ) {
-			
-			var options = $character.data( 'options' );
-			if ( options.tweening === true ) {
-				
-				options.tweening = false;
-				TweenMax.killTweensOf( options );
-				
-			}
-			
-			// reset size
-			
-			if ( options.height !== options.base.height || options.width !== options.base.width ) {
-				
-				Grow( id );
-				
-			}
+		else {
 			
 			var $element = $( parameters.element );
 			
 			// based on scroll
-			
 			if ( $element.length > 0 ) {
+				
+				if ( options.tweening === true ) {
+					
+					options.tweening = false;
+					TweenMax.killTweensOf( options );
+					
+				}
 				
 				var pct = GetModifierPct( $element, parameters );
 				
 				options.opacity = pct;
-				
-				UpdateCharacterOpacity( $character );
 			
 			}
-			// tween to
+			// direct
 			else {
 				
-				var duration = _utils.IsNumber( parameters.duration ) ? parameters.duration : 0;
-				if ( _utils.IsNumber( parameters.opacity ) !== true ) parameters.opacity = options.base.opacity;
-				parameters.easing = parameters.easing || Strong.easeIn;
-				parameters.onUpdate = function () {
-					
-					UpdateCharacterOpacity( $character );
-					
-				};
-				
-				options.tweening = true;
-				TweenMax.to( options, duration, parameters );
+				options.opacity = _utils.IsNumber( parameters.opacity ) ? parameters.opacity : options.base.opacity;
 				
 			}
 			
-		}
-		
-	}
-	
-	function UpdateCharacterOpacity ( $character ) {
-		
-		var options = $character.data( 'options' );
-		
-		if ( options.opacityLast !== options.opacity ) {
-			
-			options.opacityLast = options.opacity;
-			
-			$character.css( 'opacity', options.opacity );
+			UpdateCharacter( $character );
 			
 		}
 		
@@ -536,126 +575,62 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	=====================================================*/
 	
-	function Grow ( id, parameters ) {
-		
+	function Grow ( $character, parameters ) {
+		console.log( 'Grow', $character.attr( 'id' ) );
 		parameters = parameters || {};
 		
-		// handle directional
+		var options = $character.data( 'options' );
+		var duration = _utils.IsNumber( parameters.duration ) ? parameters.duration : 0;
 		
-		if ( parameters.directional === true ) {
+		// tween to
+		if ( duration > 0 ) {
+		
+			if ( options.adjust.width !== true ) delete parameters.width;
+			else if ( _utils.IsNumber( parameters.width ) !== true ) parameters.width = options.base.width;
 			
-			// hide opposite
+			if ( options.adjust.height !== true ) delete parameters.height;
+			else if ( _utils.IsNumber( parameters.height ) !== true ) parameters.height = options.base.height;
 			
-			Grow( id + parameters.antiscrolling, { width: 0, height: 0 } );
+			parameters.easing = parameters.easing || Strong.easeIn;
+			parameters.onUpdate = function () {
+				
+				UpdateCharacter( $character );
+				
+			};
 			
-			id += parameters.scrolling;
+			options.tweening = true;
+			TweenMax.to( options, duration, parameters );
 			
 		}
-		console.log( 'Grow', id );
-		var $character = _charactersById[ id ];
-		
-		if ( $character instanceof $ ) {
+		else {
 			
-			var options = $character.data( 'options' );
-			if ( options.tweening === true ) {
-				
-				options.tweening = false;
-				TweenMax.killTweensOf( options );
-				
-			}
-			
-			// reset fading
-			
-			if ( options.opacity !== options.base.opacity ) {
-				
-				Fade( id );
-				
-			}
-			
-			parameters = parameters || {};
 			var $element = $( parameters.element );
 			
 			// based on scroll
-			
 			if ( $element.length > 0 ) {
+				
+				if ( options.tweening === true ) {
+					
+					options.tweening = false;
+					TweenMax.killTweensOf( options );
+					
+				}
 				
 				var pct = GetModifierPct( $element, parameters );
 				
 				if ( options.adjust.width === true ) options.width = options.base.width * pct;
 				if ( options.adjust.height === true ) options.height = options.base.height * pct;
-				
-				UpdateCharacterSize( $character );
-				
+			
 			}
-			// for tween
+			// direct
 			else {
 				
-				if ( options.adjust.width !== true ) delete parameters.width;
-				else if ( _utils.IsNumber( parameters.width ) !== true ) parameters.width = options.base.width;
-				
-				if ( options.adjust.height !== true ) delete parameters.height;
-				else if ( _utils.IsNumber( parameters.height ) !== true ) parameters.height = options.base.height;
-				
-				var duration = _utils.IsNumber( parameters.duration ) ? parameters.duration : 0;
-				parameters.easing = parameters.easing || Strong.easeIn;
-				parameters.onUpdate = function () {
-					
-					UpdateCharacterSize( $character );
-					
-				};
-				
-				options.tweening = true;
-				TweenMax.to( options, duration, parameters );
+				if ( options.adjust.width === true ) options.width = _utils.IsNumber( parameters.width ) ? parameters.width : options.base.width;
+				if ( options.adjust.height === true ) options.height = _utils.IsNumber( parameters.height ) ? parameters.height : options.base.height;
 				
 			}
 			
-		}
-		
-	}
-	
-	function UpdateCharacterSize ( $character ) {
-		
-		var options = $character.data( 'options' );
-		
-		if ( options.adjust.width === true && options.widthLast !== options.width ) {
-			
-			options.widthLast = options.width;
-			
-			$character.css( 'width', options.width + '%' );
-			
-			if ( options.adjust.left === true ) {
-				
-				$character.css( 'left', ( 100 - options.width ) * 0.5 + '%' );
-				
-			}
-			
-			if ( options.adjust.right === true ) {
-				
-				$character.css( 'right', ( 100 - options.width ) * 0.5 + '%' );
-				
-			}
-			
-		}
-		
-		if ( options.adjust.height === true && options.heightLast !== options.height ) {
-			
-			options.heightLast = options.height;
-			
-			$character.css( 'height', options.height + '%' );
-			
-			// TODO: adjust top/bottom based on base top/bottom and base height
-			
-			if ( options.adjust.top === true ) {
-				
-				$character.css( 'top', ( 100 - options.height ) * 0.5 + '%' );
-				
-			}
-			
-			if ( options.adjust.bottom === true ) {
-				
-				$character.css( 'bottom', ( 100 - options.height ) * 0.5 + '%' );
-				
-			}
+			UpdateCharacter( $character );
 			
 		}
 		
@@ -666,6 +641,88 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	update
 	
 	=====================================================*/
+	
+	function UpdateCharacter ( $character ) {
+		
+		var options = $character.data( 'options' );
+		var size = ( options.size || options.base.size );
+		var width = options.width * size;
+		var height = options.height * size;
+		var dimensionsChanged;
+		
+		if ( options.opacityLast !== options.opacity ) {
+			
+			options.opacityLast = options.opacity;
+			
+			$character.css( 'opacity', options.opacity );
+			
+		}
+		
+		if ( options.adjust.width === true && options.widthLast !== width ) {
+			
+			dimensionsChanged = true;
+			options.widthLast = width;
+			
+			$character.css( 'width', width + '%' );
+			
+		}
+		
+		if ( options.adjust.height === true && options.heightLast !== height ) {
+			
+			dimensionsChanged = true;
+			options.heightLast = height;
+			
+			$character.css( 'height', height + '%' );
+			
+		}
+		
+		if ( dimensionsChanged === true ) {
+			
+			if ( options.adjust.horizontal === true ) {
+				
+				if ( options.adjust.left === true ) {
+					
+					$character.css( 'left', ( 100 - width ) * 0.5 + '%' );
+					
+				}
+				
+				if ( options.adjust.right === true ) {
+					
+					$character.css( 'right', ( 100 - width ) * 0.5 + '%' );
+					
+				}
+				
+			}
+			else {
+				// TODO: only positions at center now, account for a range from 0 to 1?
+				$character.css( 'left', ( 100 - ( _s.h * ( height / 100 ) / _s.w ) * 100 ) * 0.5 + '%' );
+				
+			}
+			
+			if ( options.adjust.vertical === true ) {
+				
+				if ( options.adjust.top === true ) {
+					console.log( height, ( 100 - height ) * 0.5 );
+					$character.css( 'top', ( 100 - height ) * 0.5 + '%' );
+					
+				}
+				
+				if ( options.adjust.bottom === true ) {
+					
+					$character.css( 'bottom', ( 100 - height ) * 0.5 + '%' );
+					
+				}
+				
+			}
+			else {
+				
+				$character.css( 'top', ( 100 - ( _s.w * ( width / 100 ) / _s.h ) * 100 ) * 0.5 + '%' );
+				
+			}
+			
+		}
+		
+	}
 	
 	function Update () {
 		
