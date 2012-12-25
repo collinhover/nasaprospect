@@ -46,24 +46,34 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 		// clone orbit and land top to create bottom versions
 		
 		this.$landTop = this.$element.find( ".land-top" );
-		
-		this.$landBottom = this.$landTop
-			.clone()
-			.removeClass( "land-top" )
-			.addClass( "land-bottom" )
-			.insertAfter( this.$explore );
-		
-		_de.$containerFill = _de.$containerFill.add( this.$landBottom );
+		this.$landBottom = this.$element.find( ".land-bottom" );
+		console.log( this.$landTop.length > 0, this.$landTop.hasClass( 'clone' ) );
+		if ( this.$landTop.length > 0 && this.$landTop.hasClass( 'clone' ) ) {
+			
+			this.$landBottom = this.$landTop
+				.clone()
+				.removeClass( "land-top" )
+				.addClass( "land-bottom mirror-vertical" )
+				.insertAfter( this.$explore );
+			
+			_de.$containerFill = _de.$containerFill.add( this.$landBottom );
+			
+		}
 		
 		this.$orbitTop = this.$element.find( ".orbit-top" );
+		this.$orbitBottom = this.$element.find( ".orbit-bottom" );
 		
-		this.$orbitBottom = this.$orbitTop
-			.clone()
-			.removeClass( "orbit-top" )
-			.addClass( "orbit-bottom" )
-			.insertAfter( this.$landBottom );
-		
-		_de.$containerFill = _de.$containerFill.add( this.$orbitBottom );
+		if ( this.$orbitTop.length > 0 && this.$orbitTop.hasClass( 'clone' ) ) {
+			
+			this.$orbitBottom = this.$orbitTop
+				.clone()
+				.removeClass( "orbit-top" )
+				.addClass( "orbit-bottom mirror-vertical" )
+				.insertAfter( this.$landBottom.length > 0 ? this.$landBottom : this.explore );
+			
+			_de.$containerFill = _de.$containerFill.add( this.$orbitBottom );
+			
+		}
 		
 		this.$orbit = this.$element.find( ".orbit" );
 		this.$land = this.$element.find( ".land" );
@@ -293,6 +303,8 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 	
 	function StartLanding () {
 		
+		var me = this;
+		
 		if ( this.landing !== true ) {
 			console.log( this.$element.attr( 'id' ), 'start landing!' );
 			this.landing = true;
@@ -348,6 +360,8 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 	=====================================================*/
 	
 	function StartExploring () {
+		
+		var me = this;
 		
 		if ( this.exploring !== true ) {
 			console.log( this.$element.attr( 'id' ), 'start exploring!' );

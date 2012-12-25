@@ -10,13 +10,7 @@
 
 .interplanet {
 	background: @logoDark;
-	background: -moz-linear-gradient(top, fade( @logoDark, 0% ) 0%, @logoDark 15%, @logoDark 85%, fade( @logoDark, 0% ) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,fade( @logoDark, 0% )), color-stop(15%,@logoDark), color-stop(85%,@logoDark), color-stop(100%,fade( @logoDark, 0% ))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, fade( @logoDark, 0% ) 0%,@logoDark 15%,@logoDark 85%,fade( @logoDark, 0% ) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, fade( @logoDark, 0% ) 0%,@logoDark 15%,@logoDark 85%,fade( @logoDark, 0% ) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, fade( @logoDark, 0% ) 0%,@logoDark 15%,@logoDark 85%,fade( @logoDark, 0% ) 100%); /* IE10+ */
-	background: linear-gradient(to bottom, fade( @logoDark, 0% ) 0%,@logoDark 15%,@logoDark 85%,fade( @logoDark, 0% ) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00061b2b', endColorstr='#00061b2b',GradientType=0 ); /* IE6-9 */
+	#gradient > .vertical-four-colors( fade( @logoDark, 0% ), 0%, @logoDark, 15%, @logoDark, 85%, fade( @logoDark, 0% ) 100% );
 	
 	.stars {
 		background-image: url( "../img/space_stars_moving.png" );
@@ -86,25 +80,11 @@
     
 }
 
-.orbit-bottom {
-	.maxground, .foreground, .middleground, .background {
-		.transform( rotate( 180deg ) );
-	}
-}
-
 /* land
 -------------------------------------------------------------------------------*/
 
 .land {
 	#gradient-transparent > .vertical-three-colors( rgba( 51, 51, 51, 0 ), rgba( 51, 51, 51, 1 ), 50%, rgba( 51, 51, 51, 1 ) );
-}
-
-.land-bottom {
-	#gradient-transparent > .vertical-three-colors( rgba( 51, 51, 51, 1 ), rgba( 51, 51, 51, 1 ), 50%, rgba( 51, 51, 51, 0 ) );
-	
-	.maxground, .foreground, .middleground, .background {
-		.transform( rotate( 180deg ) );
-	}
 }
 
 /* explore

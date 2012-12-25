@@ -78,8 +78,8 @@ function ( $, Signal ) {
 	
 	_s.wMin = 950;
 	_s.hMin = 550;
-	_s.wBase = 1600;
-	_s.hBase = 800;
+	_s.wBase = 1200;
+	_s.hBase = _s.hMin;
 	_s.fontSizeMin = 0.8;
 	_s.fontSizeMax = 1;
 	

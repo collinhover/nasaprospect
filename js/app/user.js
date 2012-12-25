@@ -49,7 +49,8 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 						heightCSS: $character.prop("style")[ 'height' ],
 						opacityCSS: $character.prop("style")[ 'opacity' ],
 						size: 1,
-						placement: 'center'
+						offsetH: 0.5,
+						offsetV: 0.5
 					},
 					adjust: {}
 				} );
@@ -69,7 +70,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			}
 			else {
 				
-				options.base.width = options.width = 100;
+				options.base.width = options.width = $character.width();
 				
 			}
 			
@@ -83,49 +84,75 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			}
 			else {
 				
-				options.base.height = options.height = 100;
+				options.base.height = options.height = $character.height();
 				
 			}
 			
 			// position
+			
+			// horizontal
 			
 			options.base.leftCSS = $character.prop("style")[ 'left' ];
 			options.base.rightCSS = $character.prop("style")[ 'right' ];
 			options.base.left = options.left = parseFloat( options.base.leftCSS );
 			options.base.right = options.right = parseFloat( options.base.rightCSS );
 			
+			if ( _utils.IsNumber( options.base.right  ) ) {
+				
+				options.adjust.right = true;
+				options.base.offsetH = options.base.right / ( 100 - ( options.adjust.width === true ? options.base.width : 0 ) );
+				if ( _utils.IsNumber( options.base.offsetH ) !== true ) options.base.offsetH = 0;
+				
+			}
+			
 			if ( _utils.IsNumber( options.base.left  ) ) {
 				
+				options.adjust.left = true;
+				options.base.offsetH = options.base.left / ( 100 - ( options.adjust.width === true ? options.base.width : 0 ) );
+				if ( _utils.IsNumber( options.base.offsetH ) !== true ) options.base.offsetH = 0;
+				
+			}
+			
+			// fallback to adjusting left
+			
+			if ( options.adjust.left !== true && options.adjust.right !== true ) {
+				
+				options.base.left = options.left = options.right = options.base.right = 50;
 				options.adjust.left = true;
 				
 			}
 			
-			if ( _utils.IsNumber( options.base.right  ) ) {
-				
-				options.adjust.right = true;
-				
-			}
-			
+			// vertical
 			
 			options.base.topCSS = $character.prop("style")[ 'top' ];
 			options.base.bottomCSS = $character.prop("style")[ 'bottom' ];
 			options.base.top = options.top = parseFloat( options.base.topCSS );
 			options.base.bottom = options.bottom = parseFloat( options.base.bottomCSS );
 			
-			if ( _utils.IsNumber( options.base.top  ) ) {
-				
-				options.adjust.top = true;
-				
-			}
-			
 			if ( _utils.IsNumber( options.base.bottom  ) ) {
 				
 				options.adjust.bottom = true;
+				options.base.offsetV = options.base.bottom / ( 100 - ( options.adjust.height === true ? options.base.height : 0 ) );
+				if ( _utils.IsNumber( options.base.offsetV ) !== true ) options.base.offsetV = 0;
 				
 			}
 			
-			options.adjust.horizontal = options.adjust.left || options.adjust.right;
-			options.adjust.vertical = options.adjust.top || options.adjust.bottom;
+			if ( _utils.IsNumber( options.base.top  ) ) {
+				
+				options.adjust.top = true;
+				options.base.offsetV = options.base.top / ( 100 - ( options.adjust.height === true ? options.base.height : 0 ) );
+				if ( _utils.IsNumber( options.base.offsetV ) !== true ) options.base.offsetV = 0;
+				
+			}
+			
+			// fallback to adjusting top
+			
+			if ( options.adjust.top !== true && options.adjust.bottom !== true ) {
+				
+				options.base.top = options.top = options.bottom = options.base.bottom = 50;
+				options.adjust.top = true;
+				
+			}
 			
 			// opacity
 			
@@ -270,7 +297,8 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			var pctRangesString = modParts[ 3 ];
 			var pctRangesOptions = pctRangesString ? pctRangesString.split( ',' ) : [];
 			var size = parseFloat( modParts[ 4 ] );
-			var placement = modParts[ 5 ];
+			var offsetH = modParts[ 5 ];
+			var offsetV = modParts[ 6 ];
 			var properties = {};
 			
 			// parse properties
@@ -285,17 +313,68 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			if ( isNaN( properties.pctEnd ) ) properties.pctEnd = 1;
 			else properties.pctEnd = _utils.Clamp( properties.pctEnd, properties.pctStart, 1 );
 			
+			// pct toggle
+			
 			properties.toggle = pctRangesOptions[ 2 ];
 			
 			if ( properties.toggle ) {
 				
-				properties.pctStartToggle = parseFloat( pctRangesOptions[ 3 ] );
-				if ( isNaN( properties.pctStartToggle ) ) properties.pctStartToggle = properties.pctStart;
-				else properties.pctStartToggle = _utils.Clamp( properties.pctStartToggle, properties.pctStart, properties.pctEnd );
+				var toggleOptionA = parseFloat( pctRangesOptions[ 3 ] );
+				var toggleOptionB = parseFloat( pctRangesOptions[ 4 ] );
 				
-				properties.pctEndToggle = parseFloat( pctRangesOptions[ 4 ] );
-				if ( isNaN( properties.pctEndToggle ) ) properties.pctEndToggle = properties.pctEnd;
-				else properties.pctEndToggle = _utils.Clamp( properties.pctEndToggle, properties.pctStartToggle, properties.pctEnd );
+				// generate num splits
+				
+				if ( _utils.IsNumber( toggleOptionA ) && toggleOptionA >= 1 && ( _utils.IsNumber( toggleOptionB ) !== true || toggleOptionB >= 1 ) ) {
+					
+					properties.toggleRanges = [];
+					
+					var numSplits = toggleOptionA;
+					var offsetSplit = _utils.IsNumber( toggleOptionB ) ? toggleOptionB : 0;
+					var pctPerSplit = 1 / numSplits;
+					var pctPerSplitSection = pctPerSplit / 3;
+					var pctOffset = pctPerSplitSection * offsetSplit;
+					var pctCurrent = properties.pctStart + pctOffset;
+					
+					for ( var i = 0; i < numSplits; i++ ) {
+						
+						properties.toggleRanges.push( {
+							pctStart: _utils.Clamp( pctCurrent, 0, 1 ),
+							pctEnd: _utils.Clamp( pctCurrent + pctPerSplit, 0, 1 ),
+							pctStartToggle: _utils.Clamp( pctCurrent + pctPerSplitSection, 0, 1 ),
+							pctEndToggle: _utils.Clamp( pctCurrent + pctPerSplitSection * 2, 0, 1 )
+						} );
+						
+						pctCurrent += pctPerSplit;
+						
+					}
+					
+				}
+				// two pcts follow toggle, split at
+				else if ( _utils.IsNumber( toggleOptionA ) && _utils.IsNumber( toggleOptionB ) ) {
+					
+					var toggleRange = {};
+					
+					toggleRange.pctStart = properties.pctStart;
+					toggleRange.pctEnd = properties.pctEnd;
+					
+					toggleRange.pctStartToggle = toggleOptionA;
+					if ( isNaN( toggleRange.pctStartToggle ) ) toggleRange.pctStartToggle = toggleRange.pctStart;
+					else toggleRange.pctStartToggle = _utils.Clamp( toggleRange.pctStartToggle, toggleRange.pctStart, toggleRange.pctEnd );
+					
+					toggleRange.pctEndToggle = toggleOptionB;
+					if ( isNaN( toggleRange.pctEndToggle ) ) toggleRange.pctEndToggle = toggleRange.pctEnd;
+					else toggleRange.pctEndToggle = _utils.Clamp( toggleRange.pctEndToggle, toggleRange.pctStart, toggleRange.pctEnd );
+					
+					properties.toggleRanges = [ toggleRange ];
+					
+				}
+				// unusable input, clear toggle
+				else {
+					
+					delete properties.toggle;
+					
+				}
+				console.log( 'properties.toggleRanges', properties.toggleRanges );
 				
 			}
 			
@@ -345,7 +424,8 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 							// update options
 							
 							options.size = size;
-							options.placement = placement;
+							options.offsetH = offsetH;
+							options.offsetV = offsetV;
 							
 							// reset opposite modifier
 							
@@ -396,24 +476,8 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		var top = bounds.top;
 		var bottom = bounds.bottom;
 		var topToBottom = bottom - top;
-		var boundsDistanceV;
 		var pct;
 		var pctRange = properties.pctEnd - properties.pctStart;
-		var toggle = properties.toggle;
-		var topToggle, bottomToggle;
-		
-		if ( toggle ) {
-			
-			topToggle = top + topToBottom *  properties.pctStartToggle;
-			bottomToggle = bottom - ( topToBottom - topToBottom * properties.pctEndToggle );
-			
-		}
-		
-		top += topToBottom * properties.pctStart;
-		boundsDistanceV = topToBottom * pctRange;
-		bottom = top + boundsDistanceV;
-		
-		var distanceV = scrollPositionCenterY - top;
 		
 		// total pct of 0
 		
@@ -449,57 +513,92 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			}
 			
 		}
-		// toggle
-		else if ( toggle === 'in' ) {
-			
-			if ( scrollPositionCenterY <= topToggle ) {
-				
-				pct = _utils.Clamp( distanceV / ( topToggle - top ), 0, 1 );
-				
-			}
-			else if ( scrollPositionCenterY >= bottomToggle ) {
-				
-				pct = _utils.Clamp( 1 - ( scrollPositionCenterY - bottomToggle ) / ( bottom - bottomToggle ), 0, 1 );
-				
-			}
-			else {
-				
-				pct = 1;
-				
-			}
-			
-		}
-		else if ( toggle === 'out' ) {
-			
-			if ( scrollPositionCenterY <= topToggle ) {
-				
-				pct = _utils.Clamp( 1 - distanceV / ( topToggle - top ), 0, 1 );
-				
-			}
-			else if ( scrollPositionCenterY >= bottomToggle ) {
-				
-				pct = _utils.Clamp( ( scrollPositionCenterY - bottomToggle ) / ( bottom - bottomToggle ), 0, 1 );
-				
-			}
-			else {
-				
-				pct = 0;
-				
-			}
-			
-		}
-		// pct by direction
 		else {
 			
-			if ( direction === 'up' ) {
+			var boundsDistanceV = topToBottom * pctRange;
+			
+			top += topToBottom * properties.pctStart;
+			bottom = top + boundsDistanceV;
+			
+			var distanceV = scrollPositionCenterY - top;
+			var pctFromTop = distanceV / boundsDistanceV;
+			var toggle = properties.toggle;
+			
+			if ( toggle ) {
 				
-				pct = _utils.Clamp( 1 - distanceV / boundsDistanceV, 0, 1 );
+				var toggleRanges = properties.toggleRanges;
+				var toggleRange;
+				
+				// find toggle range
+				
+				for ( var i = 0, il = toggleRanges.length; i < il; i++ ) {
+					
+					toggleRange = toggleRanges[ i ];
+					
+					if ( pctFromTop >= toggleRange.pctStart && pctFromTop < toggleRange.pctEnd ) break;
+					
+				}
+				
+				var startToggle = top + boundsDistanceV * toggleRange.pctStart;
+				var endToggle = top + boundsDistanceV * toggleRange.pctEnd;
+				var topToggle = top + boundsDistanceV * toggleRange.pctStartToggle;
+				var bottomToggle = top + boundsDistanceV * toggleRange.pctEndToggle;
+				
+				// toggle outside
+				if ( toggle === 'out' ) {
+					if ( scrollPositionCenterY <= topToggle ) {
+						
+						pct = _utils.Clamp( 1 - ( scrollPositionCenterY - startToggle ) / ( topToggle - startToggle ), 0, 1 );
+						
+					}
+					else if ( scrollPositionCenterY >= bottomToggle ) {
+						
+						pct = _utils.Clamp( ( scrollPositionCenterY - bottomToggle ) / ( endToggle - bottomToggle ), 0, 1 );
+						
+					}
+					else {
+						
+						pct = 0;
+						
+					}
+					
+				}
+				// default to inside
+				else {
+					
+					if ( scrollPositionCenterY <= topToggle ) {
+						
+						pct = _utils.Clamp( ( scrollPositionCenterY - startToggle ) / ( topToggle - startToggle ), 0, 1 );
+						
+					}
+					else if ( scrollPositionCenterY >= bottomToggle ) {
+						
+						pct = _utils.Clamp( 1 - ( scrollPositionCenterY - bottomToggle ) / ( endToggle - bottomToggle ), 0, 1 );
+						
+					}
+					else {
+						
+						pct = 1;
+						
+					}
+					
+				}
 				
 			}
-			// default to down
+			// pct by direction
 			else {
 				
-				pct = _utils.Clamp( distanceV / boundsDistanceV, 0, 1 );
+				if ( direction === 'up' ) {
+					
+					pct = _utils.Clamp( 1 - pctFromTop, 0, 1 );
+					
+				}
+				// default to down
+				else {
+					
+					pct = _utils.Clamp( pctFromTop, 0, 1 );
+					
+				}
 				
 			}
 			
@@ -646,8 +745,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		
 		var options = $character.data( 'options' );
 		var size = ( options.size || options.base.size );
-		var width = options.width * size;
-		var height = options.height * size;
+		var width, height;
 		var dimensionsChanged;
 		
 		if ( options.opacityLast !== options.opacity ) {
@@ -658,65 +756,80 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			
 		}
 		
-		if ( options.adjust.width === true && options.widthLast !== width ) {
+		if ( options.adjust.width === true ) {
 			
-			dimensionsChanged = true;
-			options.widthLast = width;
+			width = options.width * size;
 			
-			$character.css( 'width', width + '%' );
+			if ( options.widthLast !== width ) {
+				
+				dimensionsChanged = true;
+				options.widthLast = width;
+				
+				$character.css( 'width', width + '%' );
+				
+			}
+			
+		}
+		else {
+			
+			width = ( options.width / _s.w ) * 100 * ( options.height / options.base.height ) * size;	
 			
 		}
 		
-		if ( options.adjust.height === true && options.heightLast !== height ) {
+		if ( options.adjust.height === true ) {
 			
-			dimensionsChanged = true;
-			options.heightLast = height;
+			height = options.height * size;
 			
-			$character.css( 'height', height + '%' );
+			if ( options.heightLast !== height ) {
+				
+				dimensionsChanged = true;
+				options.heightLast = height;
+				
+				$character.css( 'height', height + '%' );
+				
+			}
+			
+		}
+		else {
+			
+			height = ( options.height / _s.h ) * 100 * ( options.width / options.base.width ) * size;	
 			
 		}
 		
 		if ( dimensionsChanged === true ) {
 			
-			if ( options.adjust.horizontal === true ) {
+			var offsetH = ( options.offsetH || options.base.offsetH );
+			var offsetV = ( options.offsetV || options.base.offsetV );
+			var pctH = ( 100 * offsetH ) - ( width * 0.5 );
+			var pctV = ( 100 * offsetV ) - ( height * 0.5 );
+			
+			if ( pctH < 0 ) pctH = 0;
+			else if ( pctH + width > 100 ) pctH = 100 - width;
+			
+			if ( pctV < 0 ) pctV = 0;
+			else if ( pctV + height > 100 ) pctV = 100 - height;
+			console.log( $character.attr('id'), 'pctH', pctH, 'pctV', pctV, 'offsetH', offsetH, 'offsetV', offsetV, 'width', width, 'height', height );
+			if ( options.adjust.left === true ) {
 				
-				if ( options.adjust.left === true ) {
-					
-					$character.css( 'left', ( 100 - width ) * 0.5 + '%' );
-					
-				}
-				
-				if ( options.adjust.right === true ) {
-					
-					$character.css( 'right', ( 100 - width ) * 0.5 + '%' );
-					
-				}
-				
-			}
-			else {
-				// TODO: only positions at center now, account for a range from 0 to 1?
-				$character.css( 'left', ( 100 - ( _s.h * ( height / 100 ) / _s.w ) * 100 ) * 0.5 + '%' );
+				$character.css( 'left', pctH + '%' );
 				
 			}
 			
-			if ( options.adjust.vertical === true ) {
+			if ( options.adjust.right === true ) {
 				
-				if ( options.adjust.top === true ) {
-					console.log( height, ( 100 - height ) * 0.5 );
-					$character.css( 'top', ( 100 - height ) * 0.5 + '%' );
-					
-				}
-				
-				if ( options.adjust.bottom === true ) {
-					
-					$character.css( 'bottom', ( 100 - height ) * 0.5 + '%' );
-					
-				}
+				$character.css( 'right', pctH + '%' );
 				
 			}
-			else {
+			
+			if ( options.adjust.top === true ) {
 				
-				$character.css( 'top', ( 100 - ( _s.w * ( width / 100 ) / _s.h ) * 100 ) * 0.5 + '%' );
+				$character.css( 'top', pctV + '%' );
+				
+			}
+			
+			if ( options.adjust.bottom === true ) {
+				
+				$character.css( 'bottom', pctV + '%' );
 				
 			}
 			

@@ -61,7 +61,7 @@ function ( $, _s, _utils, _navi ) {
     function OnWindowResized () {
        
 		_s.w = _de.$window.width();
-        _s.h = _de.$window.height();
+		_s.h = _de.$window.height();
 		
 		// fill container elements to match screen height
 		
