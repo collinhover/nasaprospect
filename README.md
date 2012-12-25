@@ -14,7 +14,7 @@ The core goal of this project is to increase interest in space exploration.
 
 ####Design and Development
 
-[Collin Hover](http://collinhover.com "Collin Hover")
+[Collin Hover](http://collinhover.com "Collin Hover")  
 Amanda Connelly  
 Amy Gehling  
 Calvin LaBrie  
@@ -23,26 +23,25 @@ Keaton Solomon
 
 ####Music
   
-(TBA)  
+Misc Artists from [Jamendo](http://jamendo.com/)
   
 ##Technology
   
 HTML5  
 CSS3  
 Javascript  
-WebGL  
 
 ####Libraries
  
 Modernizr  
 LESS  
 Bootstrap  
-RequireJS
+Require  
 jQuery  
-SignalsJS  
-StellarJS  
+Signals  
+Stellar  
 SoundManager2  
-Greensock Tweens  
+Greensock Tweening Engine  
 
 ---
   
