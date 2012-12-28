@@ -5,12 +5,14 @@ define( [
 	"app/navigator",
 	"app/solarSystem",
 	"app/section",
+	"app/sound",
 	"TweenMax"
 ],
-function ( $, _s, _utils, _navi, _ss, _section ) {
+function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 	
 	var _de = _s.domElements;
 	var _user = {};
+	var _findables = {};
 	var _sectionActive;
 	var _sectionTriggers = [];
 	var _sectionOptions;
@@ -24,8 +26,10 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	var _$element = _de.$user;
 	var _$ui = _$element.find( '#userUI' );
-	var _$charactersContainer = _$element.find( '#userCharacters' );
 	
+	// init characters
+	
+	var _$charactersContainer = _$element.find( '#userCharacters' );
 	var _$characters = _$charactersContainer.find( '.character' );
 	var _charactersById = {};
 	var _charactersActive = [];
@@ -199,6 +203,103 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	_ss.onSectionActivated.add( SetActiveSection );
 	
+	// init find
+	
+	_de.$findable.each( function () {
+		
+		var $element = $( this );
+		var parts = _utils.ParseDataString( $element, 'data-findable' );
+		
+		for ( var i = 0, il = parts.length; i < il; i++ ) {
+			
+			var part = parts[ i ];
+			var type = part[ 0 ];
+			var optionsString = part[ 1 ];
+			var options = typeof optionsString === 'string' ? $.trim( optionsString.toLowerCase() ).split( ',' ) : [];
+			var groupId = _utils.FindDataOptionValue( options, 'group' );
+			var groupData;
+			
+			// handle defaults
+			
+			if ( typeof type !== 'string' || type.length === 0 ) type = 'finding';
+			if ( typeof groupId !== 'string'|| groupId.length === 0 ) groupId = 'all';
+			
+			// init and find group data
+			
+			if ( typeof _findables[ groupId ] === 'undefined' ) {
+				
+				_findables[ groupId ] = {
+					id: groupId,
+					found: false,
+					$trigger: $(),
+					$found: $(),
+					$finding: $(),
+					soundIds: []
+				};
+				
+			}
+			
+			groupData = _findables[ groupId ];
+			
+			// check sounds
+			
+			var soundsString = _utils.FindDataOptionValue( options, 'sounds' );
+			
+			if ( typeof soundsString === 'string' ) {
+				
+				var soundIds = soundsString.split( ',' );
+				groupData.soundIds = groupData.soundIds.concat( soundIds );
+				
+				_snd.DisableSounds( { ids: soundIds } );
+				
+			}
+			
+			// store and init by type
+			
+			groupData[ '$' + type ] = groupData[ '$' + type ] instanceof $ ? groupData[ '$' + type ].add( $element ) : $element;
+			
+			if ( type === 'trigger' ) {
+				
+				$element.one( 'tap.findable', function () {
+					
+					Find( groupData );
+					
+				} );
+				
+			}
+			
+		}
+		
+	} );
+	
+	/*===================================================
+	
+	findables
+	
+	=====================================================*/
+	
+	function Find ( groupData ) {
+		
+		if ( groupData.found !== true ) {
+			
+			groupData.found = true;
+			
+			_utils.FadeDOM( {
+				element: $().add( groupData.$found ).add( groupData.$trigger ),
+				duration: 0
+			} );
+			
+			_utils.FadeDOM( {
+				element: groupData.$finding,
+				opacity: 1
+			} );
+			
+			_snd.EnableSounds( { ids: groupData.soundIds } );
+			
+		}
+		
+	}
+	
 	/*===================================================
 	
 	section
@@ -251,14 +352,12 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			
 			if ( _utils.IsArray( modTriggers ) !== true ) {
 				
-				var modsString = $.trim( $element.attr( 'data-character-modify' ) );
-				var modsStrings = modsString.split( /[ \t\r]+/g );
-				
 				modTriggers = [];
+				var parts = _utils.ParseDataString( $element, 'data-character-modify' );
 				
-				for ( i = 0, il = modsStrings.length; i < il; i++ ) {
+				for ( i = 0, il = parts.length; i < il; i++ ) {
 					
-					var modTrigger = GenerateModifierTrigger( $element, modsStrings[ i ] );
+					var modTrigger = GenerateModifierTrigger( $element, parts[ i ] );
 					
 					if ( typeof modTrigger !== 'undefined' ) {
 						
@@ -286,21 +385,20 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	
 	=====================================================*/
 	
-	function GenerateModifierTrigger ( $element, modString ) {
+	function GenerateModifierTrigger ( $element, modOptions ) {
 		
-		var modParts = $.trim( modString ).split( /\/|\\/ );
-		var type = modParts[ 0 ];
-		var idsString = modParts[ 1 ];
+		var type = modOptions[ 0 ];
+		var idsString = modOptions[ 1 ];
 		var ids = idsString ? idsString.split( ',' ) : [];
 		
 		if ( typeof _user[ type ] === 'function' && ids.length > 0 ) {
 			
-			var direction = modParts[ 2 ];
-			var pctRangesString = modParts[ 3 ];
+			var direction = modOptions[ 2 ];
+			var pctRangesString = modOptions[ 3 ];
 			var pctRangesOptions = pctRangesString ? pctRangesString.split( ',' ) : [];
-			var size = parseFloat( modParts[ 4 ] );
-			var offsetH = modParts[ 5 ];
-			var offsetV = modParts[ 6 ];
+			var size = parseFloat( modOptions[ 4 ] );
+			var offsetH = modOptions[ 5 ];
+			var offsetV = modOptions[ 6 ];
 			var properties = {};
 			
 			// parse properties

@@ -198,6 +198,22 @@ function ( $, _s ) {
 		
 	}
 	
+	function IndexOfString( array, string ) {
+		
+		for ( var i = 0, l = array.length; i < l; i++ ) {
+			
+			if ( typeof array[ i ] === 'string' && array[ i ].indexOf( string ) !== -1 ) {
+				
+				return i;
+				
+			}
+			
+		}
+		
+		return -1;
+		
+	}
+	
 	function IndexOfProperty( array, property, value ) {
 		
 		for ( var i = 0, l = array.length; i < l; i++ ) {
@@ -322,6 +338,47 @@ function ( $, _s ) {
 		if ( aMaxY < bMinY ) return false;
 		
 		return true;
+		
+	}
+	
+	/*===================================================
+    
+    strings
+    
+    =====================================================*/
+	
+	function ParseDataString ( $element, dataName ) {
+		
+		var string = $element.attr( dataName );
+		var strings = $.trim( string ).split( /[ \t\r]+/g );
+		var parts = [];
+		
+		for ( var i = 0, il = strings.length; i < il; i++ ) {
+			
+			parts.push( $.trim( strings[ i ] ).split( /\/|\\/ ) );
+			
+		}
+		
+		return parts;
+		
+	}
+	
+	function FindDataOptionValue ( options, option ) {
+		
+		var index = _utils.IndexOfString( options, option );
+		var value;
+		
+		if ( index !== -1 ) {
+			
+			value = options[ index ];
+			index = value.indexOf( ':' );
+			
+			if ( index !== -1 ) value = value.slice( index + 1 );
+			else value = true;
+			
+		}
+		
+		return value;
 		
 	}
 	
@@ -680,6 +737,7 @@ function ( $, _s ) {
 	_utils.LastIndexOfValue = LastIndexOfValue;
 	_utils.IndicesOfValue = IndicesOfValue;
 	_utils.IndexOfValues = IndexOfValues;
+	_utils.IndexOfString = IndexOfString;
 	_utils.IndexOfProperty = IndexOfProperty;
 	_utils.IndexOfPropertyjQuery = IndexOfPropertyjQuery;
 	_utils.ValuesWithPropertyjQuery = ValuesWithPropertyjQuery;
@@ -688,6 +746,9 @@ function ( $, _s ) {
 	
 	_utils.Clamp = Clamp;
 	_utils.AABBIntersectsAABB = AABBIntersectsAABB;
+	
+	_utils.ParseDataString = ParseDataString;
+	_utils.FindDataOptionValue = FindDataOptionValue;
 	
 	_utils.DOMBounds = DOMBounds;
 	_utils.IgnorePointerDOM = IgnorePointerDOM;

@@ -47,6 +47,7 @@ function ( $, Signal ) {
 	_de.$scrollable = $( ".scrollable" );
 	_de.$stickable = $( ".stickyme, .is-sticky" );
 	_de.$toggleSound = $( ".toggle-sound" );
+	_de.$findable = $( "[data-findable]" );
 	
 	_de.$containerFill = $( ".container-fill" );
 	

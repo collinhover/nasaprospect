@@ -212,6 +212,7 @@ function ( $, _s, _utils ) {
 		if ( $element.length > 0 ) {
 			
 			var index = _utils.IndexOfPropertyjQuery( _triggers, '$element', $element );
+			
 			var trigger;
 			var triggerEmpty = true;
 			

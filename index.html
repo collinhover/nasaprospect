@@ -194,7 +194,7 @@
 			</section>
 			<!-- /user -->
 			
-			<div id="solar-system" class="unselectable" data-sound="twilight_by_stellardrone" data-sound-loops="true" data-sound-fade="true">
+			<div id="solar-system" class="unselectable" data-sounds="twilight_by_stellardrone/loops,fade,volume:20">
 				
 				<section id="setup" class="system-section">
 				
@@ -355,7 +355,7 @@
 				</section>
 				<!-- /intro -->
 				
-				<section id="sun" class="system-section no-crop" data-sound="the_illness_by_dub_terminator" data-sound-loops="true" data-sound-fade="true">
+				<section id="sun" class="system-section no-crop" data-sounds="the_illness_by_dub_terminator/loops,fade">
 					
 					<div class="container-fill">
 							
@@ -516,9 +516,6 @@
 				<!-- /sunToMercury -->
 				
 				<section id="mercury" class="system-section">
-				
-						<div class="container-fill" data-sound="wind" data-sound-loops="true" data-sound-fade="true">
-						</div>
 						
 					<div class="orbit orbit-top container-fill">
 						
@@ -565,27 +562,27 @@
 					</div>
 					<!-- /land -->
 					
-					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+					<div class="explore container-fill" data-sounds="wind/loops,disabled" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
 						
 						<div class="middleground">
-								<img src="img/space_golden_record.svg" class="parallaxable clickable" style="height:10%; top:40%; left: 20%;" data-find="trigger" data-find-group="A">
+								<img src="img/space_golden_record.svg" class="parallaxable clickable" style="height:10%; top:40%; left: 20%;" data-findable="trigger/group:mercury,sounds:wind">
 						</div>
 						
 						<div class="ui-pane-column-middle">
 								<div class="ui-pane-section-body">
 									<div class="ui-pane-section-quarter-top-middle expandable">
 										
-										<div class="row-fluid" data-find="found">
+										<div class="row-fluid" data-findable="found/group:mercury">
 											<div class="offset9 span3">
 												
 												<div class="dialogue">
 													<p>Suddenly I felt something. Something familiar and new at the same time, and it was urging me to find it.</p>
-													<h3 class="sidekick-type dim">Could it be the shining object?</h3>
+													<h3 class="sidekick-type dim">Could it be the golden object?</h3>
 												</div>
 												
 											</div>
 										</div>
-										<div class="row-fluid hidden" data-find="finding" data-find-group="A">
+										<div class="row-fluid hidden" data-findable="finding/group:mercury">
 											<div class="span3">
 												
 												<div class="dialogue dialogue-left">
@@ -622,7 +619,7 @@
 								<div class="ui-pane-section-body">
 									<div class="ui-pane-section-quarter-top-middle expandable">
 										
-										<div class="row-fluid unfound">
+										<div class="row-fluid" data-findable="found/group:mercury">
 											<div class="span3">
 												
 												<div class="dialogue dialogue-left">

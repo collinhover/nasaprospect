@@ -91,9 +91,10 @@ function ( $, _s, _utils ) {
 		this.fade = ParseAttribute( parameters.fade, _durationFade, false );
 		this.loops = ParseAttribute( parameters.loops, _infinite, 1 );
 		this.loopCount = 0;
-		this.volumeBase = parameters.volume || 100;
+		this.volumeBase = parseInt( parameters.volume ) || 100;
 		this.volume = this.volumeBase;
 		this.volumeLast = this.volume === 0 ? 100 : 0;
+		this.enabled = ParseAttribute( parameters.disabled, false, true );
 		
 		this.trigger = GenerateScrollTrigger( this );
 		
@@ -113,7 +114,7 @@ function ( $, _s, _utils ) {
 		
 		if ( this.options.descendents === true ) {
 			
-			$elements = this.$element = $elements.find( "[data-sound]" ).andSelf();
+			$elements = this.$element = $elements.find( "[data-sounds]" ).andSelf();
 			
 		}
 		
@@ -132,16 +133,32 @@ function ( $, _s, _utils ) {
 		$elements.each( function () {
 			
 			var $element = $( this );
+			var parts = _utils.ParseDataString( $element, 'data-sounds' );
 			
-			me.Add( {
-				$element: $element,
-				file: $element.attr( "data-sound" ),
-				id: $element.attr( "data-sound-id" ),
-				fade: $element.attr( "data-sound-fade" ),
-				loops: $element.attr( "data-sound-loops" ),
-				volume: $element.attr( "data-sound-volume" )
-			} );
+			for ( var i = 0, il = parts.length; i < il; i++ ) {
 				
+				var part = parts[ i ];
+				var file = part[ 0 ];
+				
+				if ( typeof file === 'string' && file.length > 0 ) {
+					
+					var optionsString = part[ 1 ];
+					var options = typeof optionsString === 'string' ? $.trim( optionsString.toLowerCase() ).split( ',' ) : [];
+					
+					me.Add( {
+						$element: $element,
+						file: file,
+						id: file,
+						fade: _utils.FindDataOptionValue( options, 'fade' ),
+						loops: _utils.FindDataOptionValue( options, 'loops' ),
+						volume: _utils.FindDataOptionValue( options, 'volume' ),
+						disabled: _utils.FindDataOptionValue( options, 'disabled' )
+					} );
+					
+				}
+				
+			}
+			
 		} );
 		
 		return this;
@@ -160,19 +177,11 @@ function ( $, _s, _utils ) {
 		
 		if ( typeof lookingFor === 'undefined' ) {
 			
-			lookingFor = [ 'true', 'yes' ];
+			lookingFor = [ true, 'true', 'yes' ];
 			
 		}
 		
-		for ( i = 0, il = lookingFor.length; i < il; i++ ) {
-			
-			if ( attribute === lookingFor[ i ] ) {
-				
-				return whenFound;
-				
-			}
-			
-		}
+		if ( _utils.IndexOfValue( lookingFor, attribute ) !== -1 ) return whenFound;
 		
 		attribute = parseInt( attribute );
 		
@@ -324,6 +333,61 @@ function ( $, _s, _utils ) {
 	
 	/*===================================================
 	
+	enable
+	
+	=====================================================*/
+	
+	function Enable ( parameters ) {
+		
+		if ( this.data.length > 0 ) {
+			
+			this.ForData( parameters, EnableSound );
+			
+		}
+		
+	}
+	
+	function EnableSound () {
+		
+		this.enabled = true;
+		
+		if ( this.playOnEnable === true ) {
+			
+			PlaySound.call( this );
+			
+		}
+		
+	}
+	
+	function Disable ( parameters ) {
+		
+		if ( this.data.length > 0 ) {
+			
+			this.ForData( parameters, DisableSound );
+			
+		}
+		
+	}
+	
+	function DisableSound () {
+		
+		this.enabled = false;
+		
+		var playOnEnable = false;
+		
+		if ( this.sound && this.sound.playState === 1 ) {
+			
+			playOnEnable = true;
+			PauseSound.call( this );
+			
+		}
+		
+		this.playOnEnable = playOnEnable;
+		
+	}
+	
+	/*===================================================
+	
 	play
 	
 	=====================================================*/
@@ -342,26 +406,37 @@ function ( $, _s, _utils ) {
 	
 	function PlaySound () {
 		
-		var sound = SoundCheck( this );
-		
-		if ( sound ) {
+		if ( this.enabled === true ) {
 			
-			if ( sound.playState !== 1 ) {
+			this.playOnEnable = false;
+			
+			var sound = SoundCheck( this );
+			
+			if ( sound ) {
 				
-				sound.play( {
-					onplay: $.proxy( OnPlaySound, this ),
-					onfinish: $.proxy( OnFinishSound, this ),
-					onstop: $.proxy( OnStopSound, this )
-				} );
+				if ( sound.playState !== 1 ) {
+					
+					sound.play( {
+						onplay: $.proxy( OnPlaySound, this ),
+						onfinish: $.proxy( OnFinishSound, this ),
+						onstop: $.proxy( OnStopSound, this )
+					} );
+					
+				}
+				else if ( sound.paused ) {
+					
+					OnPlaySound.call( this );
+					
+					sound.resume();
+					
+				}
 				
 			}
-			else if ( sound.paused ) {
-				
-				OnPlaySound.call( this );
-				
-				sound.resume();
-				
-			}
+			
+		}
+		else {
+			
+			this.playOnEnable = true;
 			
 		}
 		
@@ -386,6 +461,8 @@ function ( $, _s, _utils ) {
 	}
 	
 	function PauseSound () {
+		
+		this.playOnEnable = false;
 		
 		var sound = this.sound;
 		
@@ -429,6 +506,8 @@ function ( $, _s, _utils ) {
 	}
 	
 	function StopSound () {
+		
+		this.playOnEnable = false;
 		
 		var sound = this.sound;
 		
@@ -839,6 +918,18 @@ function ( $, _s, _utils ) {
 		
 	}
 	
+	function EnableSounds ( parameters ) {
+		
+		ForAll( parameters, Enable );
+		
+	}
+	
+	function DisableSounds ( parameters ) {
+		
+		ForAll( parameters, Disable );
+		
+	}
+	
 	function ForAll ( parameters, callback ) {
 		
 		var i, il, handler;
@@ -948,6 +1039,9 @@ function ( $, _s, _utils ) {
 	_snd.SoundHandler.prototype.Add = Add;
 	_snd.SoundHandler.prototype.Remove = Remove;
 	
+	_snd.SoundHandler.prototype.Enable = Enable;
+	_snd.SoundHandler.prototype.Disable = Disable;
+	
 	_snd.SoundHandler.prototype.Play = Play;
 	_snd.SoundHandler.prototype.Pause = Pause;
 	_snd.SoundHandler.prototype.Stop = Stop;
@@ -965,6 +1059,8 @@ function ( $, _s, _utils ) {
 	_snd.RemoveFiller = RemoveFiller;
 	_snd.MuteAll = MuteAll;
 	_snd.UnmuteAll = UnmuteAll;
+	_snd.EnableSounds = EnableSounds;
+	_snd.DisableSounds = DisableSounds;
 	
 	return _snd;
 	
