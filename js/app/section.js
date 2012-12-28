@@ -47,7 +47,7 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 		
 		this.$landTop = this.$element.find( ".land-top" );
 		this.$landBottom = this.$element.find( ".land-bottom" );
-		console.log( this.$landTop.length > 0, this.$landTop.hasClass( 'clone' ) );
+		
 		if ( this.$landTop.length > 0 && this.$landTop.hasClass( 'clone' ) ) {
 			
 			this.$landBottom = this.$landTop
@@ -86,10 +86,11 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 			element: new _snd.SoundHandler( { element: this.$element } ),
 			orbit: new _snd.SoundHandler( { element: this.$orbit, options: { descendents: true } } ),
 			land: new _snd.SoundHandler( { element: this.$land, options: { descendents: true } } ),
-			explore: new _snd.SoundHandler( { element: this.$explore, options: { descendents: true } } )
+			explore: new _snd.SoundHandler( { element: this.$explore, options: { descendents: true } } ),
+			other: new _snd.SoundHandler( { element: this.$element.children(), options: { descendents: true, $exclude: $().add( this.$orbit ).add( this.$land ).add( this.$explore ) } } )
 		}
 		
-		// persistent triggers
+		// triggers
 		
 		this.triggersPersistent = [
 			{
@@ -100,6 +101,10 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 				callbackCenterOutside: { callback: this.Deactivate, context: this }
 			}
 		];
+		this.triggersActive = [];
+		
+		// init persistent triggers
+		
 		_navi.AddTriggers( this.triggersPersistent );
 		
 		// signals
@@ -114,8 +119,6 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 		this.onLandingStopped = new Signal();
 		this.onExploringStarted = new Signal();
 		this.onExploringStopped = new Signal();
-		
-		this.$planet.on( 'tap', $.proxy( this.ToOrbit, this ) );
 		
 		this.Deactivate();
 		this.Exit();
@@ -190,9 +193,12 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 			this.onActivated.dispatch( this );
 			console.log( this.id, ' activate' );
 			this.soundHandlers.element.Play();
+			this.triggersActive = _navi.AddTriggers( this.soundHandlers.other.triggers );
 			
 			_navi.RemoveTriggers( this.triggers );
 			this.triggers = [];
+			
+			// add new triggers
 			
 			this.$orbit.each( function () {
 				
@@ -218,6 +224,7 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 			this.StopAll();
 			
 			this.soundHandlers.element.Pause();
+			_navi.RemoveTriggers( this.triggersActive );
 			
 			_navi.RemoveTriggers( this.triggers );
 			this.triggers = [];
@@ -235,17 +242,6 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 	orbiting
 	
 	=====================================================*/
-	
-	function ToOrbit () {
-		
-		_navi.scrollToElement( this.$orbit, true, 1, {
-			ease: Cubic.easeOut,
-			onComplete: $.proxy( this.StartOrbiting, this )
-		} );
-		
-		return this;
-		
-	}
 	
 	function StartOrbiting () {
 		
@@ -450,7 +446,6 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 	_section.Instance.prototype.Activate = Activate;
 	_section.Instance.prototype.Deactivate = Deactivate;
 	
-	_section.Instance.prototype.ToOrbit = ToOrbit;
 	_section.Instance.prototype.StartOrbiting = StartOrbiting;
 	_section.Instance.prototype.StopOrbiting = StopOrbiting;
 	_section.Instance.prototype.StartLanding = StartLanding;

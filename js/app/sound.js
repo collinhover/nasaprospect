@@ -108,14 +108,24 @@ function ( $, _s, _utils ) {
 	function Find ( parameters ) {
 		
 		var me = this;
-		
-		this.options = $.extend( true, {}, _snd.options, parameters.options );
-		
 		var $elements = this.$element = $( parameters.element || parameters.$element );
+		this.options = $.extend( {}, _snd.options, parameters.options );
 		
 		if ( this.options.descendents === true ) {
 			
-			$elements = $elements.find( "[data-sound]" ).andSelf();
+			$elements = this.$element = $elements.find( "[data-sound]" ).andSelf();
+			
+		}
+		
+		var $exclude = this.options.$exclude;
+		
+		if ( $exclude instanceof $ ) {
+			
+			$elements = this.$element = $elements.filter( function () {
+				
+				return !$exclude.is( this ) || !$exclude.has( this );
+				
+			} );
 			
 		}
 		
@@ -178,19 +188,22 @@ function ( $, _s, _utils ) {
 	
 	function GenerateScrollTrigger ( datum ) {
 		
-		return {
+		var trigger = {
 			element: datum.$element,
 			callback: function () {
 				
-				PlaySound( datum );
+				PlaySound.call( datum );
 				
 			},
 			callbackRemove: function () {
 				
-				PauseSound( datum );
+				PauseSound.call( datum );
 				
 			}
 		};
+		trigger.callbackOutside = trigger.callbackRemove;
+		
+		return trigger;
 		
 	}
 	

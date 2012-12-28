@@ -222,7 +222,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 				
 				// if will be resizing characters while in section
 				
-				InitSectionModifiers( _sectionActive );
+				InitSection( _sectionActive );
 				
 			}
 			
@@ -230,13 +230,9 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		
 	}
 	
-	/*===================================================
-	
-	modifiers
-	
-	=====================================================*/
-	
-	function InitSectionModifiers ( section ) {
+	function InitSection ( section ) {
+		
+		// modifiers
 		
 		if ( _sectionOptions.$modifiers instanceof $ !== true ) {
 			
@@ -283,6 +279,12 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 		} );
 		
 	}
+	
+	/*===================================================
+	
+	modifiers
+	
+	=====================================================*/
 	
 	function GenerateModifierTrigger ( $element, modString ) {
 		
@@ -374,7 +376,6 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 					delete properties.toggle;
 					
 				}
-				console.log( 'properties.toggleRanges', properties.toggleRanges );
 				
 			}
 			
@@ -603,7 +604,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			}
 			
 		}
-		console.log( 'pct ', pct, 'toggle', toggle, 'top', top, bounds.top, 'bottom', bottom, bounds.bottom, 'scrollPositionCenterY', scrollPositionCenterY, ' distanceV', distanceV );
+		//console.log( 'pct ', pct, 'toggle', toggle, 'top', top, bounds.top, 'bottom', bottom, bounds.bottom, 'scrollPositionCenterY', scrollPositionCenterY, ' distanceV', distanceV );
 		return pct;
 		
 	}
@@ -615,7 +616,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	=====================================================*/
 	
 	function Fade ( $character, parameters ) {
-		console.log( 'Fade', $character.attr( 'id' ) );
+		
 		parameters = parameters || {};
 		
 		var options = $character.data( 'options' );
@@ -675,7 +676,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 	=====================================================*/
 	
 	function Grow ( $character, parameters ) {
-		console.log( 'Grow', $character.attr( 'id' ) );
+		
 		parameters = parameters || {};
 		
 		var options = $character.data( 'options' );
@@ -808,7 +809,7 @@ function ( $, _s, _utils, _navi, _ss, _section ) {
 			
 			if ( pctV < 0 ) pctV = 0;
 			else if ( pctV + height > 100 ) pctV = 100 - height;
-			console.log( $character.attr('id'), 'pctH', pctH, 'pctV', pctV, 'offsetH', offsetH, 'offsetV', offsetV, 'width', width, 'height', height );
+			//console.log( $character.attr('id'), 'pctH', pctH, 'pctV', pctV, 'offsetH', offsetH, 'offsetV', offsetV, 'width', width, 'height', height );
 			if ( options.adjust.left === true ) {
 				
 				$character.css( 'left', pctH + '%' );

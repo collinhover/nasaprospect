@@ -74,12 +74,16 @@
 					<img src="img/character_astronaut.svg" id="astronaut" class="character hidden" style="height:70%">
 					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character hidden" style="height:70%;">
 					<img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character hidden" style="height:70%">
+					<img src="img/character_astronaut_excited.svg" id="astronaut_excited" class="character hidden" style="height:70%">
 					<img src="img/character_astronaut_land.svg" id="astronaut_land" class="character hidden" style="height:70%">
 					<img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character hidden" style="height:70%">
 					<img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character hidden" style="height:70%">
 					<img src="img/character_rescue.svg" id="rescue" class="character hidden" style="height:70%;">
 					<img src="img/character_fly_up.svg" id="fly_up" class="character hidden" style="height:90%;">
 					<img src="img/character_fly_down.svg" id="fly_down" class="character hidden" style="height:90%;">
+					<img src="img/character_fight_start.svg" id="fight_start" class="character hidden" style="height:90%;">
+					<img src="img/character_fight_uppercut.svg" id="fight_uppercut" class="character hidden" style="height:90%;">
+					<img src="img/character_fight_victory.svg" id="fight_victory" class="character hidden" style="height:90%;">
 					
 				</div>
 				<!-- /characters -->
@@ -412,7 +416,7 @@
 						
 					</div>
 					
-					<div id="rescue" class="container-fill" data-character-modify="Fade/astronaut_radio/up/0,0.25 Fade/rescue/down/0,0.25">
+					<div id="rescue" class="container-fill" data-character-modify="Fade/astronaut_radio/up/0,0.25 Fade/rescue/down/0,0.25/0.7">
 						
 						<div class="ui-pane-column-middle">
 							<div class="ui-pane-section-body">
@@ -444,7 +448,7 @@
 				
 				<section id="sunToMercury" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/rescue/up/0,0.2 Fade/robot/down/0.8,1/0.8/0.35 Fade/astronaut/down/0.8,1/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/rescue/up/0,0.2/0.7 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
 						
 						<div id="status1" class="container-fill">
 							<div class="ui-pane-column-middle">
@@ -465,7 +469,7 @@
 												
 												<div class="dialogue">
 													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="astronaut logo-type">I..."</h1>
+													<h1 class="astronaut logo-type">I...</h1>
 													<div class="separator"></div>
 													<p>Before I had a chance to respond, my visor lit up with an array of buttons, panels, and readouts.</p>
 													<p class="note">
@@ -475,7 +479,7 @@
 														----------<br>
 														Oxygen: 37 %<br>
 														Pressure: Safe</p>
-													<h1 class="astronaut logo-type">think so!"</h1>
+													<h1 class="astronaut logo-type">think so!</h1>
 												</div>
 											</div>
 										</div>
@@ -496,7 +500,7 @@
 												<div class="dialogue dialogue-left">
 													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
 													<h1 class="robot logo-type">Okay! Here we go...</h1>
-													<h3 class="sidekick-type dim">And with that, we fell, unceremoniously, into Mercury's atmosphere.</h3>
+													<h3 class="sidekick-type dim">And with that, we fell into Mercury's atmosphere.</h3>
 												</div>
 												
 											</div>
@@ -509,11 +513,13 @@
 					</div>
 					
 				</section>
+				<!-- /sunToMercury -->
 				
 				<section id="mercury" class="system-section">
-					<!--
-					<p class="note">[PW LOG] Robb<br>[2042 / March / 01 09:18:51]<br><br>Head is sore but otherwise I feel normal, and Prospect says she's okay. Last log is dated just a few hours ago from Earth's orbit, and since then we've just traveled about 92 million miles... we're at the bloody sun.</p>
-					-->
+				
+						<div class="container-fill" data-sound="wind" data-sound-loops="true" data-sound-fade="true">
+						</div>
+						
 					<div class="orbit orbit-top container-fill">
 						
 						<div class="middleground">
@@ -525,24 +531,131 @@
 					</div>
 					<!-- /orbit -->
 					
-					<div class="land land-top container-fill" data-character-modify="Fade/astronaut/up/0,0.25/0.8/0.65 Fade/astronaut_land/all/0,0.25/0.8/0.65">
+					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+											<div class="span3">
+												
+												<div class="dialogue dialogue-left">
+													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
+													<h1 class="astronaut logo-type">What are we doing here?</h1>
+													<div class="separator"></div>
+													<p>I had no idea how we survived so far, but I couldn't complain about that.</p>
+												</div>
+												
+											</div>
+											<div class="offset6 span3">
+												
+												<div class="dialogue">
+													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
+													<h1 class="robot logo-type">We're on an adventure!</h1>
+													<h3 class="sidekick-type dim">She told me her name was Ema, and that she was a Planet Jumper.</h3>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						
 					</div>
+					<!-- /land -->
 					
-					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.8/0.8/0.65 Fade/astronaut_walk_right/down/0,1,in,2/0.8/0.65 Fade/astronaut_walk_left/down/0,1,in,2,2/0.8/0.65">
+					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+						
+						<div class="middleground">
+								<img src="img/space_golden_record.svg" class="parallaxable clickable" style="height:10%; top:40%; left: 20%;" data-find="trigger" data-find-group="A">
+						</div>
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid" data-find="found">
+											<div class="offset9 span3">
+												
+												<div class="dialogue">
+													<p>Suddenly I felt something. Something familiar and new at the same time, and it was urging me to find it.</p>
+													<h3 class="sidekick-type dim">Could it be the shining object?</h3>
+												</div>
+												
+											</div>
+										</div>
+										<div class="row-fluid hidden" data-find="finding" data-find-group="A">
+											<div class="span3">
+												
+												<div class="dialogue dialogue-left">
+													<p>As I approached it, I started to hear something incredibly familiar. It felt like something from a past life.</p>
+													<div class="separator"></div>
+													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
+													<h1 class="astronaut logo-type">Are you hearing this?</h1>
+													<h3 class="sidekick-type dim">I said, handing it to Ema.</h3>
+												</div>
+												
+											</div>
+											<div class="offset6 span3">
+												
+												<div class="dialogue">
+													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
+													<h3 class="sidekick-type dim">She nodded, turning it.</h3>
+													<h1 class="robot logo-type">Wait, a message!</h1>
+													<div class="separator"></div>
+													<p class="note">TODO</p>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						
 					</div>
+					<!-- explore -->
 					
-					<div class="land land-bottom mirror-vertical container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.8/0.65 Fade/astronaut_land/up/0.75,1/0.8/0.65">
+					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid unfound">
+											<div class="span3">
+												
+												<div class="dialogue dialogue-left">
+													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
+													<h1 class="logo-type">Didn't see anything...</h1>
+													<h3 class="sidekick-type dim">we said to each other.</h3>
+													<div class="separator"></div>
+													<p>There didn't seem to be much here after all. Perhaps we would find what we were looking for somewhere else.</p>
+												</div>
+												
+											</div>
+										</div>
+										<div class="row-fluid found hidden">
+											<div class="offset9 span3">
+												
+												<div class="dialogue">
+													<p>We'd gotten our first golden object without much trouble, aside from the insane temperature fluctuations, and a strange note to boot. Better not push our luck here.</p>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						
 					</div>
-					
+					<!-- /land -->
 				</section>
 				<!-- /mercury -->
 				
 				<section id="mercuryToVenus" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.8/0.35 Fade/astronaut/all/0,1,out,0.2,0.8/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						<div class="container-fill"></div>
@@ -565,12 +678,62 @@
 					</div>
 					<!-- /orbit -->
 					
+					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+									</div>
+								</div>
+						</div>
+					
+					</div>
+					<!-- /land -->
+					
+					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					<!-- /explore -->
+					
+					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					<!-- /land -->
+					
 				</section>
 				<!-- /venus -->
 				
 				<section id="venusToEarth" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.8/0.35 Fade/astronaut/all/0,1,out,0.2,0.8/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						<div class="container-fill"></div>
@@ -599,34 +762,62 @@
 					</div>
 					<!-- /orbit -->
 					
-					<!--<div class="land land-top container-fill" data-sound="wind" data-sound-id="earth-land-wind" data-sound-loops="true" data-sound-fade="true">
+					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
 						
-						<div class="background">
-							
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+									</div>
+								</div>
 						</div>
-						
-						<div class="middleground">
-							
-						</div>
-						
-						<div class="foreground">
-							
-						</div>
-						
-					</div>-->
+					
+					</div>
 					<!-- /land -->
 					
-					<!--<div class="explore container-fill">
+					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
 						
-					</div>-->
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
 					<!-- /explore -->
+					
+					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					<!-- /land -->
 					
 				</section>
 				<!-- /earth -->
 				
 				<section id="earthToMars" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.8/0.35 Fade/astronaut/all/0,1,out,0.2,0.8/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						<div class="container-fill"></div>
@@ -661,12 +852,62 @@
 					</div>
 					<!-- /orbit -->
 					
+					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+									</div>
+								</div>
+						</div>
+					
+					</div>
+					<!-- /land -->
+					
+					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					<!-- /explore -->
+					
+					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					<!-- /land -->
+					
 				</section>
 				<!-- /mars -->
 				
 				<section id="marsToAsteroidBelt" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.8/0.35 Fade/astronaut/all/0,1,out,0.2,0.8/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						
@@ -726,7 +967,7 @@
 				
 				<section id="asteroidBeltToJupiter" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.8/0.35 Fade/astronaut/all/0,1,out,0.2,0.8/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						
@@ -765,7 +1006,7 @@
 				
 				<section id="jupiterToSaturn" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.8/0.35 Fade/astronaut/all/0,1,out,0.2,0.8/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						<div class="container-fill"></div>
@@ -800,12 +1041,43 @@
 					</div>
 					<!-- /orbit -->
 					
+					<div class="container-fill" data-character-modify="Fade/astronaut/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+									</div>
+								</div>
+						</div>
+					
+					</div>
+					
+					<div class="container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					
 				</section>
 				<!-- /saturn -->
 				
 				<section id="saturnToUranus" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.8/0.35 Fade/astronaut/all/0,1,out,0.2,0.8/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						<div class="container-fill"></div>
@@ -840,12 +1112,62 @@
 					</div>
 					<!-- /orbit -->
 					
+					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+									</div>
+								</div>
+						</div>
+					
+					</div>
+					<!-- /land -->
+					
+					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					<!-- /explore -->
+					
+					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					<!-- /land -->
+					
 				</section>
 				<!-- /uranus -->
 				
 				<section id="uranusToNeptune" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.8/0.35 Fade/astronaut/all/0,1,out,0.2,0.8/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						<div class="container-fill"></div>
@@ -880,12 +1202,62 @@
 					</div>
 					<!-- /orbit -->
 					
+					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+									</div>
+								</div>
+						</div>
+					
+					</div>
+					<!-- /land -->
+					
+					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					<!-- /explore -->
+					
+					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+						
+						<div class="ui-pane-column-middle">
+								<div class="ui-pane-section-body">
+									<div class="ui-pane-section-quarter-top-middle expandable">
+										
+										<div class="row-fluid">
+												
+										</div>
+										
+									</div>
+								</div>
+						</div>
+						
+					</div>
+					<!-- /land -->
+					
 				</section>
 				<!-- /neptune -->
 				
 				<section id="neptuneToMap" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.8/0.35 Fade/astronaut/all/0,1,out,0.2,0.8/0.8/0.65">
+					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						<div class="container-fill"></div>
@@ -906,7 +1278,7 @@
 				
 				<section id="mapToAbout" class="system-section interplanet">
 					
-					<div class="stars" data-character-modify="Grow/fly_/concat/0,0.75,in,0,0.25 Fade/robot/up/0,0/0.8/0.35 Fade/astronaut/up/0,0/0.8/0.65">
+					<div class="stars" data-character-modify="Grow/fly_/concat/0,0.75,in,0,0.25 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6">
 						
 						<div class="container-fill"></div>
 						
