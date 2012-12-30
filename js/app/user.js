@@ -259,6 +259,11 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 				_snd.DisableSounds( { $element: $element } );
 				
 			}
+			else if ( type === 'finding' ) {
+				
+				$element.addClass( 'hidden' );
+				
+			}
 			
 		}
 		
