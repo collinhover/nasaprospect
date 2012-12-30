@@ -234,25 +234,12 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 					$trigger: $(),
 					$found: $(),
 					$finding: $(),
-					soundIds: []
+					$sounds: $()
 				};
 				
 			}
 			
 			groupData = _findables[ groupId ];
-			
-			// check sounds
-			
-			var soundsString = _utils.FindDataOptionValue( options, 'sounds' );
-			
-			if ( typeof soundsString === 'string' ) {
-				
-				var soundIds = soundsString.split( ',' );
-				groupData.soundIds = groupData.soundIds.concat( soundIds );
-				
-				_snd.DisableSounds( { ids: soundIds } );
-				
-			}
 			
 			// store and init by type
 			
@@ -265,6 +252,11 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 					Find( groupData );
 					
 				} );
+				
+			}
+			else if ( type === 'sounds' ) {
+				
+				_snd.DisableSounds( { $element: $element } );
 				
 			}
 			
@@ -294,7 +286,11 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 				opacity: 1
 			} );
 			
-			_snd.EnableSounds( { ids: groupData.soundIds } );
+			if ( groupData.$sounds.length > 0 ) {
+				
+				_snd.EnableSounds( { $element: groupData.$sounds } );
+				
+			}
 			
 		}
 		

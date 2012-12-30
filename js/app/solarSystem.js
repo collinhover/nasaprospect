@@ -35,15 +35,11 @@ function ( $, _s, _snd, _section, Signal ) {
 		
 	} );
 	
-	// section specific methods
-	
-	// sun
-	
 	_sectionsById[ 'sun' ].$element.find( _de.$logo ).removeClass( 'hidden' );
 	
-	// add system sound as filler for when no other sounds are playing
+	// play system sound
 	
-	_snd.AddFiller( _sound );
+	_sound.Play();
 	
 	// state change signals
 	

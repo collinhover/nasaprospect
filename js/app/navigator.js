@@ -138,7 +138,7 @@ function ( $, _s, _utils ) {
 	function AddTrigger ( parameters ) {
 		
 		parameters = parameters || {};
-		var $element = parameters.$element = parameters.$element || $( parameters.element );
+		var $element = parameters.$element || $( parameters.element );
 		
 		if ( $element.length > 0 ) {
 			
@@ -177,7 +177,7 @@ function ( $, _s, _utils ) {
 					
 					if ( trigger[ callbackType ] ) {
 						
-						trigger[ callbackType ] = [].concat( trigger[ callbackType ], parameters[ callbackType ] );
+						trigger[ callbackType ] = _utils.ToArray( trigger[ callbackType ] ).concat( parameters[ callbackType ] );
 						
 					}
 					else {
@@ -476,7 +476,6 @@ function ( $, _s, _utils ) {
 					}
 					
 					trigger.inside = true;
-					trigger.outside = false;
 				
 				}
 				else {

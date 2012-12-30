@@ -15,9 +15,9 @@ function ( $, _s, _utils ) {
 		}
 	};
 	var _handlers = [];
-	var _playing = [];
-	var _fillers = [];
-	var _fillersActive = true;
+	var _sounds = [];
+	var _playing;
+	var _waiting = [];
 	var _infinite = true;
 	var _durationFade = 500;
 	var _durationFadeMax = 2500;
@@ -91,12 +91,18 @@ function ( $, _s, _utils ) {
 		this.fade = ParseAttribute( parameters.fade, _durationFade, false );
 		this.loops = ParseAttribute( parameters.loops, _infinite, 1 );
 		this.loopCount = 0;
-		this.volumeBase = parseInt( parameters.volume ) || 100;
+		this.volumeBase = parseInt( parameters.volume );
+		if ( _utils.IsNumber( this.volumeBase ) !== true || this.volumeBase < 0 ) this.volumeBase = 100;
 		this.volume = this.volumeBase;
 		this.volumeLast = this.volume === 0 ? 100 : 0;
 		this.enabled = ParseAttribute( parameters.disabled, false, true );
+		this.priority = parseInt( parameters.priority );
+		if ( _utils.IsNumber( this.priority ) !== true ) this.priority = 0;
+		this.timestamp = Date.now();
 		
 		this.trigger = GenerateScrollTrigger( this );
+		
+		_utils.ArrayCautiousAdd( _sounds, this );
 		
 	}
 	
@@ -148,11 +154,12 @@ function ( $, _s, _utils ) {
 					me.Add( {
 						$element: $element,
 						file: file,
-						id: file,
+						id: _utils.FindDataOptionValue( options, 'id' ) || file,
 						fade: _utils.FindDataOptionValue( options, 'fade' ),
 						loops: _utils.FindDataOptionValue( options, 'loops' ),
 						volume: _utils.FindDataOptionValue( options, 'volume' ),
-						disabled: _utils.FindDataOptionValue( options, 'disabled' )
+						disabled: _utils.FindDataOptionValue( options, 'disabled' ),
+						priority: _utils.FindDataOptionValue( options, 'priority' )
 					} );
 					
 				}
@@ -398,8 +405,6 @@ function ( $, _s, _utils ) {
 			
 			this.ForData( parameters, PlaySound );
 			
-			Playing.call( this );
-			
 		}
 		
 	}
@@ -414,16 +419,14 @@ function ( $, _s, _utils ) {
 			
 			if ( sound ) {
 				
-				if ( sound.playState !== 1 ) {
-					
-					sound.play( {
-						onplay: $.proxy( OnPlaySound, this ),
-						onfinish: $.proxy( OnFinishSound, this ),
-						onstop: $.proxy( OnStopSound, this )
-					} );
-					
-				}
-				else if ( sound.paused ) {
+				var paused = sound.paused;
+				
+				sound.play( {
+					onplay: $.proxy( OnPlaySound, this ),
+					onfinish: $.proxy( OnFinishSound, this )
+				} );
+				
+				if ( paused ) {
 					
 					OnPlaySound.call( this );
 					
@@ -452,8 +455,6 @@ function ( $, _s, _utils ) {
 		
 		if ( this.data.length > 0 ) {
 			
-			NotPlaying.call( this );
-			
 			this.ForData( parameters, PauseSound );
 			
 		}
@@ -466,9 +467,11 @@ function ( $, _s, _utils ) {
 		
 		var sound = this.sound;
 		
-		if ( sound && sound.playState === 1 ) {
+		if ( sound ) {
 			
-			if ( this.fade !== false ) {
+			OnPauseSound.call( this );
+			
+			if ( sound.playState === 1 && this.fade !== false ) {
 				
 				FadeSound.call( this, {
 					onComplete: function () {
@@ -489,6 +492,66 @@ function ( $, _s, _utils ) {
 	
 	/*===================================================
 	
+	wait
+	
+	=====================================================*/
+	
+	function WaitSound () {
+		
+		var sound = this.sound;
+		
+		if ( sound ) {
+			
+			if ( this.priority > -1 ) {
+				
+				_utils.ArrayCautiousAdd( _waiting, this );
+				
+				_waiting.sort( SoundPriorityCompare );
+				
+			}
+			
+			if ( sound.playState === 1 && this.fade !== false ) {
+				
+				FadeSound.call( this, {
+					onComplete: function () {
+						sound.pause();
+					}
+				} );
+				
+			}
+			else {
+				
+				sound.pause();
+				
+			}
+			
+		}
+		
+	}
+	
+	function WaitCycle () {
+		
+		if ( this === _playing ) {
+			
+			_playing = undefined;
+			
+			if ( _waiting.length > 0 ) {
+				
+				PlaySound.call( _waiting[ 0 ] );
+				
+			}
+			
+		}
+		else {
+			
+			_utils.ArrayCautiousRemove( _waiting, this );
+			
+		}
+		
+	}
+	
+	/*===================================================
+	
 	stop
 	
 	=====================================================*/
@@ -496,8 +559,6 @@ function ( $, _s, _utils ) {
 	function Stop ( parameters ) {
 		
 		if ( this.data.length > 0 ) {
-			
-			NotPlaying.call( this );
 			
 			this.ForData( parameters, StopSound );
 			
@@ -511,15 +572,15 @@ function ( $, _s, _utils ) {
 		
 		var sound = this.sound;
 		
-		if ( sound && sound.playState === 1 ) {
+		if ( sound ) {
 			
-			if ( this.fade !== false ) {
+			OnStopSound.call( this );
+			
+			if ( sound.playState === 1 && this.fade !== false ) {
 				
 				FadeSound.call( this, {
 					onComplete: function () {
-						
 						sound.stop();
-						
 					}
 				} );
 				
@@ -541,6 +602,38 @@ function ( $, _s, _utils ) {
 	=====================================================*/
 	
 	function OnPlaySound () {
+		
+		this.timestamp = Date.now();
+		
+		_utils.ArrayCautiousRemove( _waiting, this );
+		
+		// handle priority
+		
+		if ( this.priority > -1 && _playing !== this ) {
+			
+			// no prioritized playing
+			
+			if ( typeof _playing === 'undefined' ) {
+				
+				_playing = this;
+				
+			}
+			// this has higher priority than playing
+			else if ( SoundPriorityCompare( this, _playing ) < 0 ) {
+				WaitSound.call( _playing );
+				
+				_playing = this;
+				
+			}
+			// lower priority than playing, pause
+			else {
+				WaitSound.call( this );
+				
+				return;
+				
+			}
+			
+		}
 		
 		if ( this.loopCount === 0 ) {
 			
@@ -576,13 +669,14 @@ function ( $, _s, _utils ) {
 				PlaySound.call( this );
 				
 			}
-			else if ( _utils.IsNumber( this.loops ) ) {
+			else if ( _utils.IsNumber( this.loops ) && this.loopCount < this.loops ) {
 				
-				if ( this.loopCount < this.loops ) {
-					
-					PlaySound.call( this );
-					
-				}
+				PlaySound.call( this );
+				
+			}
+			else {
+				
+				StopSound.call( this );
 				
 			}
 			
@@ -590,9 +684,25 @@ function ( $, _s, _utils ) {
 	
 	}
 	
+	function OnPauseSound () {
+		
+		if ( this.priority > -1 ) {
+			
+			WaitCycle.call( this );
+			
+		}
+		
+	}
+	
 	function OnStopSound () {
 		
 		this.loopCount = 0;
+		
+		if ( this.priority > -1 ) {
+			
+			WaitCycle.call( this );
+			
+		}
 		
 	}
 	
@@ -751,14 +861,19 @@ function ( $, _s, _utils ) {
 		
 		if ( this.data.length > 0 ) {
 			
-			var i, il;
-			var data = this.GetData( parameters );
+			ForSounds( this.GetData( parameters ), parameters, callback )
 			
-			for ( i = 0, il = data.length; i < il; i++ ) {
-				
-				callback.call( data[ i ], parameters );
-				
-			}
+		}
+		
+	}
+	
+	function ForSounds ( data, parameters, callback ) {
+		
+		data = _utils.ToArray( data );
+		
+		for ( var i = 0, il = data.length; i < il; i++ ) {
+			
+			callback.call( data[ i ], parameters );
 			
 		}
 		
@@ -779,30 +894,24 @@ function ( $, _s, _utils ) {
 			
 		}
 		
-		if ( typeof data === 'undefined'  && typeof parameters !== 'undefined' ) {
+		if ( typeof data === 'undefined' && typeof parameters !== 'undefined' ) {
 			
-			data = parameters.data || parameters.datum;
+			var ids = parameters.id || parameters.ids;
 			
-			if ( typeof data === 'undefined' ) {
+			if ( typeof ids !== 'undefined' ) {
 				
-				var ids = parameters.id || parameters.ids;
+				var i, il, dataById;
 				
-				if ( typeof ids !== 'undefined' ) {
+				ids = _utils.ToArray( ids );
+				data = [];
+				
+				for ( i = 0, il = ids.length; i < il; i++ ) {
 					
-					var i, il, dataById;
+					dataById = this.dataById[ ids[ i ] ];
 					
-					ids = _utils.ToArray( ids );
-					data = [];
-					
-					for ( i = 0, il = ids.length; i < il; i++ ) {
+					if ( typeof dataById !== 'undefined' ) {
 						
-						dataById = this.dataById[ ids[ i ] ];
-						
-						if ( typeof dataById !== 'undefined' ) {
-							
-							data = data.concat( dataById );
-							
-						}
+						data = data.concat( dataById );
 						
 					}
 					
@@ -836,71 +945,17 @@ function ( $, _s, _utils ) {
 		
 	}
 	
+	function SoundPriorityCompare ( a, b ) {
+		
+		return a.priority === b.priority ? b.timestamp - a.timestamp : b.priority - a.priority;
+		
+	}
+	
 	/*===================================================
 	
 	global
 	
 	=====================================================*/
-	
-	function AddFiller ( handler ) {
-		
-		_utils.ArrayCautiousAdd( _fillers, handler );
-		
-		if ( _fillersActive === true ) {
-			
-			ActivateFillers();
-			
-		}
-		
-	}
-	
-	function RemoveFiller ( handler ) {
-		
-		handler.Stop();
-		
-		_utils.ArrayCautiousRemove( _fillers, handler );
-		
-	}
-	
-	function ActivateFillers () {
-		
-		_fillersActive = true;
-		
-		ForAll( { handlers: _fillers }, Play );
-		
-	}
-	
-	function DeactivateFillers () {
-		
-		_fillersActive = false;
-		
-		ForAll( { handlers: _fillers }, Pause );
-		
-	}
-	
-	function Playing () {
-		
-		if ( _fillersActive === true && _utils.IndexOfValue( _fillers, this ) === -1 ) {
-			
-			DeactivateFillers();
-			
-		}
-		
-		_utils.ArrayCautiousAdd( _playing, this );
-		
-	}
-	
-	function NotPlaying () {
-		
-		_utils.ArrayCautiousRemove( _playing, this );
-		
-		if ( _playing.length === 0 && _utils.IndexOfValue( _fillers, this ) === -1 ) {
-			
-			ActivateFillers();
-			
-		}
-		
-	}
 	
 	function MuteAll ( parameters ) {
 		
@@ -920,26 +975,95 @@ function ( $, _s, _utils ) {
 	
 	function EnableSounds ( parameters ) {
 		
-		ForAll( parameters, Enable );
+		ForHandlers( GetHandlers( parameters ), parameters, Enable );
 		
 	}
 	
 	function DisableSounds ( parameters ) {
 		
-		ForAll( parameters, Disable );
+		ForHandlers( GetHandlers( parameters ), parameters, Disable );
+		
+	}
+	
+	function GetSounds ( parameters ) {
+		
+		var sounds = [];
+		
+		ForHandlers( GetHandlers( parameters ), parameters, function () {
+			
+			var data = this.GetData( parameters );
+			
+			sounds = sounds.concat( data );
+			
+		} );
+		
+		return sounds;
+		
+	}
+	
+	function GetHandlers ( parameters ) {
+		
+		parameters = parameters || {};
+		
+		var handlers;
+		
+		if ( parameters.handlers ) {
+			
+			handlers = _utils.ToArray( parameters.handlers );
+			
+		}
+		else if ( parameters.$element instanceof $ ) {
+			
+			var indices = _utils.IndicesOfPropertyjQuery( _handlers, '$element', parameters.$element );
+			
+			if ( indices.length > 0 ) {
+				
+				handlers = [];
+				
+				for ( i = 0, il = indices.length; i < il; i++ ) {
+					
+					handlers.push( _handlers[ indices[ i ] ] );
+					
+				}
+				
+			}
+			
+		}
+		
+		return handlers;
 		
 	}
 	
 	function ForAll ( parameters, callback ) {
 		
-		var i, il, handler;
-		var handlers = parameters && parameters.handlers ? _utils.ToArray( parameters.handlers ) : _handlers;
+		ForHandlers( GetHandlers( parameters ) || _handlers, parameters, callback );
 		
-		for ( i = 0, il = handlers.length; i < il; i++ ) {
+	}
+	
+	function ForHandlers ( handlers, parameters, callback ) {
+		
+		parameters = parameters || {};
+		
+		var data = parameters.data || parameters.datum || parameters.sounds || parameters.sound;
+		
+		if ( data ) {
 			
-			handler = handlers[ i ];
+			ForSounds( data, parameters, callback );
 			
-			callback.call( handler, parameters );
+		}
+		else {
+			
+			handlers = _utils.ToArray( handlers );
+			
+			var i, il, handler;
+			
+			for ( i = 0, il = handlers.length; i < il; i++ ) {
+				
+				handler = handlers[ i ];
+				
+				callback.call( handler, parameters );
+				
+			}
 			
 		}
 		
@@ -1055,12 +1179,11 @@ function ( $, _s, _utils ) {
 	_snd.SoundHandler.prototype.FadeIn = FadeIn;
 	_snd.SoundHandler.prototype.FadeOut = FadeOut;
 	
-	_snd.AddFiller = AddFiller;
-	_snd.RemoveFiller = RemoveFiller;
 	_snd.MuteAll = MuteAll;
 	_snd.UnmuteAll = UnmuteAll;
 	_snd.EnableSounds = EnableSounds;
 	_snd.DisableSounds = DisableSounds;
+	_snd.GetSounds = GetSounds;
 	
 	return _snd;
 	
