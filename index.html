@@ -1,1488 +1,2157 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-    <head>
-        
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        
-        <title>NASA: Prospect</title>
-        
-        <meta name="description" content="NASA: Prospect">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		
-		<link rel="shortcut icon" href="favicon.ico">
-		
-        <!-- JS setup -->
-        
-        <script src="js/lib/modernizr-2.6.2.min.js"></script>
-		<!-- sound manager has a strange loading setup, so we need to do it first -->
-        <script src="js/lib/soundmanager2.js"></script>
-        <script>
-			soundManager.setup({
-				url: 'swf/',
-				flashVersion: 9,
-				useFlashBlock: true,
-				preferFlash: true,
-				useHighPerformance: true,
-				waitForWindowLoad: true
-			});
-		</script>
-        
-        <!-- LESS -->
-        
-        <link rel="stylesheet/less" type="text/css" href="less/main.less">
-        <script src="js/lib/less-1.3.1.min.js" type="text/javascript"></script>
-        
-        <!-- CSS -->
-        
-        <!--<link rel="stylesheet" type="text/css" href="css/main.css">-->
-        
-    </head>
+<!--[if lt IE 7]>
+
+<html class="no-js lt-ie9 lt-ie8 lt-ie7">
+
+<![endif]-->
+<!--[if IE 7]>
+
+<html class="no-js lt-ie9 lt-ie8">
+
+<![endif]-->
+<!--[if IE 8]>
+
+<html class="no-js lt-ie9">
+
+<![endif]-->
+<!--[if gt IE 8]>
+<!-->
+
+<html class="no-js">
+  
+  <!--
+<![endif]-->
+  <head>
     
-    <body>
-		
-		<div id="sm2-container"></div>
-		
-		<div id="preloader" class="container-center">
-			
-			<div class="ui-pane-column-middle">
-				<div class="ui-pane-section-body">
-					<div class="ui-pane-section-quarter-top-middle expandable">
-						
-						<h3 class="sidekick-type dim">Hold on, we're</h3>
-						<h1 class="logo-type-spaced">unpacking the solar-system</h1>
-						<p class="sidekick-type dim">( less than a parsec to go! )</p>
-					
-					</div>
-				</div>
-			</div>
-			
-		</div>
-		<!-- /preloader -->
-		
-		<div id="main" class="scrollable unscrollable">
-			
-			<section id="user" class="container-fill">
-				
-				<div id="userCharacters">
-					
-					<img src="img/character_robot.svg" id="robot" class="character hidden" style="height:70%">
-					<img src="img/character_robot_excited.svg" id="robot_excited" class="character hidden" style="height:70%">
-					<img src="img/character_astronaut.svg" id="astronaut" class="character hidden" style="height:70%">
-					<img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character hidden" style="height:70%;">
-					<img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character hidden" style="height:70%">
-					<img src="img/character_astronaut_excited.svg" id="astronaut_excited" class="character hidden" style="height:70%">
-					<img src="img/character_astronaut_land.svg" id="astronaut_land" class="character hidden" style="height:70%">
-					<img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character hidden" style="height:70%">
-					<img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character hidden" style="height:70%">
-					<img src="img/character_rescue.svg" id="rescue" class="character hidden" style="height:70%;">
-					<img src="img/character_fly_up.svg" id="fly_up" class="character hidden" style="height:90%;">
-					<img src="img/character_fly_down.svg" id="fly_down" class="character hidden" style="height:90%;">
-					<img src="img/character_fight_start.svg" id="fight_start" class="character hidden" style="height:90%;">
-					<img src="img/character_fight_uppercut.svg" id="fight_uppercut" class="character hidden" style="height:90%;">
-					<img src="img/character_fight_victory.svg" id="fight_victory" class="character hidden" style="height:90%;">
-					
-				</div>
-				<!-- /characters -->
-				
-				<div id="userUI">
-					
-					<div class="ui-pane-column-left">
-						
-						<div class="ui-pane-section-body">
-							
-							<div id="navbarPlanets" class="hidden">
-								<ul class="nav-planets">
-									<li> 
-										<a href="#sun" class="nav-planet-sun">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Sun</div>
-											<h2 class="logo-type">Sun</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#mercury" class="nav-planet-mercury">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Mercury</div>
-											<h2 class="logo-type">Mercury</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#venus" class="nav-planet-venus">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Venus</div>
-											<h2 class="logo-type">Venus</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#earth" class="nav-planet-earth">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Earth</div>
-											<h2 class="logo-type">Earth</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#mars" class="nav-planet-mars">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Mars</div>
-											<h2 class="logo-type">Mars</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#jupiter" class="nav-planet-jupiter">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Jupiter</div>
-											<h2 class="logo-type">Jupiter</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#saturn" class="nav-planet-saturn">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Saturn</div>
-											<h2 class="logo-type">Saturn</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#uranus" class="nav-planet-uranus">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Uranus</div>
-											<h2 class="logo-type">Uranus</h2>
-										</a>
-									</li>
-									<li>
-										<a href="#neptune" class="nav-planet-neptune">
-											<div class="aspect-enforcer"></div>
-											<div class="aspect-shape">Neptune</div>
-											<h2 class="logo-type">Neptune</h2>
-										</a>
-									</li>
-								</ul>
-							</div>
-							<!-- /navbarPlanets -->
-						
-						</div>
-						
-						<div class="ui-pane-section-footer">
-							
-							<div class="toggle toggle-sound">
-								
-								<div class="state-off">
-									<img src="img/sound_off_white.svg" class="iconk-large toggle-on">
-								</div>
-								
-								<div class="state-on">
-									<img src="img/sound_on_white.svg" class="iconk-large toggle-off">
-									
-									<div class="iconk-large slider slider-volume">
-										<div class="track"></div>
-										<div class="knob"></div>
-									</div>
-								</div>
-								
-							</div>
-							
-						</div>
-						
-					</div>
-						
-				</div>
-				<!-- /ui -->
-				
-			</section>
-			<!-- /user -->
-			
-			<div id="solar-system" class="unselectable" data-sounds="twilight_by_stellardrone/loops,fade,volume:20">
-				
-				<section id="setup" class="system-section">
-				
-					<div class="container-fill">
-						
-						<div class="ui-pane-column-middle">
-							<div class="ui-pane-section-body container-center">
-								<div class="ui-pane-section-quarter-top-middle expandable">
-									
-									<div class="row-fluid">
-										<div class="span2 offset5">
-											<div class="toggle toggle-sound">
-												
-												<div class="aspect-enforcer"></div>
-												<div class="aspect-shape">
-													
-													<div class="state-off">
-														<img src="img/sound_off_white.svg" class="iconk-fillMajority-heightFollow toggle-on">
-													</div>
-													
-													<div class="state-on">
-														<img src="img/sound_on_white.svg" class="iconk-fillMajority-heightFollow toggle-off">
-														
-														<div class="iconk-large-fillWidth slider slider-volume">
-															<div class="track"></div>
-															<div class="knob"></div>
-														</div>
-													</div>
-													
-												</div>
-												
-											</div>
-										</div>
-									</div>
-									<h1 class="logo-type-spaced">Pump up the volume!</h1>
-									<p class="dim hidden-desktop">mobile users: audio may be blocked to save your data</p>
-									<h3 class="sidekick-type dim">( and start scrolling down )</h3>
-									
-								</div>
-								
-							</div>
-						</div>
-						
-					</div>
-					
-				</section>
-				<!-- /setup -->
-				
-				<section id="intro" class="system-section no-crop">
-					
-					<div id="intro1" class="container-fill" data-character-modify="Grow/astronaut_drift/down/0,0.3">
-						
-						<div class="ui-pane-column-middle">
-							<div class="ui-pane-section-body">
-								<div class="ui-pane-section-quarter-top-middle expandable">
-									
-									<div class="row-fluid">
-										<div class="offset9 span3">
-											
-											<div class="dialogue">
-												<p>Every kid wants to be an astronaut. Spaceships, aliens, planets, stars, black holes... way more than you could explore in a lifetime. But no kid spends their summer days pretending to be a Prospector. Huh, when was the last time you heard about what we do for humankind?</p>
-												<div class="separator"></div>
-												<h3 class="sidekick-type dim">I remember the noise that woke me:</h3>
-												<h1 class="logo-type">...Ni..zko..bsz!</h1>
-											</div>
-											
-										</div>
-									</div>
-									
-								</div>
-							</div>
-						</div>
-										
-					</div>
-					<!-- /intro1 -->
-					
-					<div id="intro2" class="container-fill">
-						
-						<div class="ui-pane-column-middle">
-							<div class="ui-pane-section-body">
-								<div class="ui-pane-section-quarter-top-middle expandable">
-									
-									<div class="row-fluid">
-										<div class="span3">
-											
-											<div class="dialogue dialogue-left">
-												<h3 class="sidekick-type dim">Oxygen in the suit felt thin. I must have been drifting for days.</h3>
-												<div class="separator"></div>
-												<p>But I didn't need to ask where I was, the crushing heat of the sun told me well enough. As for who I was, I didn't remember. And at that moment I didn't care, because there is nothing as terrifying as free floating in space.</p>
-											</div>
-											
-										</div>
-									</div>
-									
-								</div>
-							</div>
-						</div>
-										
-					</div>
-					<!-- /intro2 -->
-					
-					<div id="intro3" class="container-fill" data-character-modify="Fade/astronaut_drift/up/0,0.25 Fade/astronaut_radio/down/0,0.25">
-						
-						<div class="ui-pane-column-middle">
-							<div class="ui-pane-section-body">
-								<div class="ui-pane-section-quarter-top-middle expandable">
-									
-									<div class="row-fluid">
-										<div class="offset9 span3">
-											
-											<div class="dialogue">
-												<p>It felt like my entire body was straining to hear that garbled noise again. As if I could be swept away to safety by a sound.</p>
-												<div class="separator"></div>
-												<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-												<h1 class="astronaut logo-type important-type">Hello?</h1>
-												<h3 class="sidekick-type dim">I managed.</h3>
-												<div class="separator"></div>
-												<p>My voice sounded electronic, but not the unpleasant or grating sort. I was expecting a heavier sound, you know, like physical vibrations. This was faster and lighter.</p>
-											</div>
-											
-										</div>
-									</div>
-									
-								</div>
-							</div>
-						</div>
-										
-					</div>
-					<!-- /intro3 -->
-					
-					<div id="intro4" class="container-fill">
-						
-						<div class="ui-pane-column-middle">
-							<div class="ui-pane-section-body">
-								<div class="ui-pane-section-quarter-top-middle expandable">
-									
-									<div class="row-fluid">
-										<div class="span3">
-											
-											<div class="dialogue dialogue-left">
-												<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-												<h1 class="robot logo-type">Hi Nicolas!</h1>
-												<h3 class="sidekick-type dim">someone replied cheerily.</h3>
-												<div class="separator"></div>
-												<p>Again I heard an electronic voice, but they sounded much too happy to be floating helplessly towards the sun alongside me.</p>
-											</div>
-											
-										</div>
-									</div>
-									
-								</div>
-							</div>
-						</div>
-										
-					</div>
-					<!-- /intro4 -->
-					
-				</section>
-				<!-- /intro -->
-				
-				<section id="sun" class="system-section no-crop" data-sounds="the_illness_by_dub_terminator/loops,fade,priority:1">
-					
-					<div class="container-fill">
-							
-							<div class="maxground container-center">
-								
-								<h2 class="robot-type warning-type">SOLAR RADIATION WARNING</h2>
-								
-							</div>
-							
-					</div>
-					
-					<div class="orbit orbit-top container-fill">
-						
-						<img src="img/space_sun.svg" class="planetoid" data-stellar-ratio="1.2">
-						
-						<div class="logo container-center hidden" data-stellar-offset-parent="true" data-stellar-offset-vertical="0" data-stellar-offset-horizontal="0" data-stellar-ratio="1.4">
-							<img src="img/logo_prospect_color_light.svg" class="prospect">
-							<div class="prospect-name">
-								<div class="letter-1">
-									<h2>Mercury</h2>
-									<h1 data-stellar-ratio="1.2">P</h1>
-								</div>
-								<div class="letter-2">
-									<h2>Venus</h2>
-									<h1 data-stellar-ratio="1.5">R</h1>
-								</div>
-								<div class="letter-3">
-									<h2>Earth</h2>
-									<h1 data-stellar-ratio="1.6">O</h1>
-								</div>
-								<div class="letter-4">
-									<h2>Mars</h2>
-									<h1 data-stellar-ratio="1.3">S</h1>
-								</div>
-								<div class="letter-5">
-									<h2>Jupiter</h2>
-									<h1 data-stellar-ratio="2">P</h1>
-								</div>
-								<div class="letter-6">
-									<h2>Saturn</h2>
-									<h1 data-stellar-ratio="1.9">E</h1>
-								</div>
-								<div class="letter-7">
-									<h2>Uranus</h2>
-									<h1 data-stellar-ratio="1.4">C</h1>
-								</div>
-								<div class="letter-8">
-									<h2>Neptune</h2>
-									<h1 data-stellar-ratio="1.1">T</h1>
-								</div>
-							</div>
-							<div class="sponsors">
-								<img src="img/logo_nasa_color_light.svg" class="iconk-fillHeight">
-								<img src="img/logo_dlr_color_light.svg" class="iconk-fillHeight">
-								<img src="img/logo_usra_color_light.svg" class="iconk-fillHeight">
-							</div>
-						</div>
-						
-					</div>
-					
-					<div id="rescue" class="container-fill" data-character-modify="Fade/astronaut_radio/up/0,0.25 Fade/rescue/down/0,0.25/0.7">
-						
-						<div class="ui-pane-column-middle">
-							<div class="ui-pane-section-body">
-								<div class="ui-pane-section-quarter-top-middle expandable">
-									
-									<div class="row-fluid">
-										<div class="span3">
-											
-											<div class="dialogue dialogue-left">
-												<p>Suddenly she was there, a robot like I'd never seen before, extending me what was probably her impression of a helping hand.</p>
-												<div class="separator"></div>
-												<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-												<h1 class="robot logo-type important-type">Come on!</h1>
-												<h3 class="sidekick-type dim">she said lightly.</h3>
-											</div>
-											
-										</div>
-									</div>
-									
-								</div>
-							</div>
-						</div>
-										
-					</div>
-					<!-- /rescue -->
-					
-				</section>
-				<!-- /sun -->
-				
-				<section id="sunToMercury" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/rescue/up/0,0.2/0.7 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
-						
-						<div id="status1" class="container-fill">
-							<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-											<div class="span3">
-												
-												<div class="dialogue dialogue-left">
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="robot logo-type">Are you okay Prospector?</h1>
-													<h3 class="sidekick-type dim">she asked, accelerating quickly.</h3>
-												</div>
-												
-											</div>
-											<div class="offset6 span3">
-												
-												<div class="dialogue">
-													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="astronaut logo-type">I...</h1>
-													<div class="separator"></div>
-													<p>Before I had a chance to respond, my visor lit up with an array of buttons, panels, and readouts.</p>
-													<p class="note">
-														nicolas&gt; End Hibernation...<br>
-														nicolas&gt; Internal Interface ready!<br>
-														nicolas&gt; Status Check...<br>
-														----------<br>
-														Oxygen: 37 %<br>
-														Pressure: Safe</p>
-													<h1 class="astronaut logo-type">think so!</h1>
-												</div>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-						</div>
-						
-						<div id="status2" class="container-fill">
-							<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-											<div class="span3">
-												
-												<div class="dialogue dialogue-left">
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="robot logo-type">Okay! Here we go...</h1>
-													<h3 class="sidekick-type dim">And with that, we fell into Mercury's atmosphere.</h3>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
-						
-					</div>
-					
-				</section>
-				<!-- /sunToMercury -->
-				
-				<section id="mercury" class="system-section">
-						
-					<div class="orbit orbit-top container-fill">
-						
-						<div class="middleground">
-							
-							<img src="img/planet_mercury.svg" class="planetoid">
-							
-						</div>
-						
-					</div>
-					<!-- /orbit -->
-					
-					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-											<div class="span3">
-												
-												<div class="dialogue dialogue-left">
-													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="astronaut logo-type">What are we doing here?</h1>
-													<div class="separator"></div>
-													<p>I had no idea how we survived so far, but I couldn't complain about that.</p>
-												</div>
-												
-											</div>
-											<div class="offset6 span3">
-												
-												<div class="dialogue">
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="robot logo-type">We're on an adventure!</h1>
-													<h3 class="sidekick-type dim">She told me her name was Ema, and that she was a Planet Jumper.</h3>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						
-					</div>
-					<!-- /land -->
-					
-					<div class="explore container-fill" data-findable="sounds/group:mercury" data-sounds="wind/loops,disabled,priority:2" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
-						
-						<div class="middleground">
-								<img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:10%; top:40%; left: 20%;" data-findable="trigger/group:mercury">
-						</div>
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid" data-findable="found/group:mercury">
-											<div class="offset9 span3">
-												
-												<div class="dialogue">
-													<p>Suddenly I felt something. Something familiar and new at the same time, and it was urging me to find it.</p>
-													<h3 class="sidekick-type dim">Could it be the golden object?</h3>
-												</div>
-												
-											</div>
-										</div>
-										<div class="row-fluid hidden" data-findable="finding/group:mercury">
-											<div class="span3">
-												
-												<div class="dialogue dialogue-left">
-													<p>As I approached it, I started to hear something incredibly familiar. It felt like something from a past life.</p>
-													<div class="separator"></div>
-													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="astronaut logo-type">Are you hearing this?</h1>
-													<h3 class="sidekick-type dim">I said, handing it to Ema.</h3>
-												</div>
-												
-											</div>
-											<div class="offset6 span3">
-												
-												<div class="dialogue">
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h3 class="sidekick-type dim">She nodded, turning it.</h3>
-													<h1 class="robot logo-type">Wait, a message!</h1>
-													<div class="separator"></div>
-													<p class="note">TODO</p>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						
-					</div>
-					<!-- explore -->
-					
-					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid" data-findable="found/group:mercury">
-											<div class="span3">
-												
-												<div class="dialogue dialogue-left">
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="logo-type">Didn't see anything...</h1>
-													<h3 class="sidekick-type dim">we said to each other.</h3>
-													<div class="separator"></div>
-													<p>There didn't seem to be much here after all. Perhaps we would find what we were looking for somewhere else.</p>
-												</div>
-												
-											</div>
-										</div>
-										<div class="row-fluid"  data-findable="finding/group:mercury">
-											<div class="offset9 span3">
-												
-												<div class="dialogue">
-													<p>We'd gotten our first golden object without much trouble, aside from the insane temperature fluctuations, and a strange note to boot. Better not push our luck here.</p>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						
-					</div>
-					<!-- /land -->
-				</section>
-				<!-- /mercury -->
-				
-				<section id="mercuryToVenus" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
-						
-						<div class="container-fill">
-								
-							<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-											<div class="span3">
-												
-												<div class="dialogue dialogue-left">
-													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="astronaut logo-type">So...</h1>
-													<h3 class="sidekick-type dim">Everyone knows sound can't travel through space!</h3>
-													<div class="separator"></div>
-													<h1 class="astronaut logo-type">why is there sound out here?</h1>
-												</div>
-												
-											</div>
-											<div class="offset6 span3">
-												
-												<div class="dialogue">
-													<p>Maybe I should have been more concerned with how I got out here, millions of miles away from home, but I couldn't stop thinking about the music.</p>
-													<div class="separator"></div>
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="robot logo-type">The electro-magnetic waves?</h1>
-													<h3 class="sidekick-type dim">Ema glanced at me, puzzled.</h3>
-												</div>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>	
-								
-						</div>
-						<div class="container-fill">
-								
-							<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-											<div class="span3">
-												
-												<div class="dialogue dialogue-left">
-													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="astronaut logo-type">But humans can't-</h1>
-													<h3 class="sidekick-type dim">I fell silent, thinking.</h3>
-												</div>
-												
-											</div>
-											<div class="offset6 span3">
-												
-												<div class="dialogue">
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="robot logo-type">Maybe we're not human!</h1>
-													<div class="separator"></div>
-													<p>Ema laughed, sarcasm in her voice. Maybe she hadn't looked in a mirror lately. Then again, neither had I.</p>
-												</div>
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>	
-								
-						</div>
-						
-					</div>
-					
-				</section>
-				<!-- mercuryToVenus -->
-				
-				<section id="venus" class="system-section">
-					
-					<div class="orbit orbit-top container-fill">
-						
-						<div class="middleground">
-							
-							<img src="img/planet_venus.svg" class="planetoid">
-							
-						</div>
-						
-					</div>
-					<!-- /orbit -->
-					
-					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-											<div class="span3">
-												
-												<div class="dialogue dialogue-left">
-													<p>We could see electricity arcing across the clouds, but that only made it more exciting. Every kick-ass adventure needs some thunder and lightning.</p>
-													<div class="separator"></div>
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h3 class="sidekick-type dim">Ema grinned.</h3>
-													<h1 class="robot logo-type">Let's find some treasure!</h1>
-												</div>
-												
-											</div>
-										</div>
-									</div>
-								</div>
-						</div>
-					
-					</div>
-					<!-- /land -->
-					
-					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-											
-											<div class="span3" data-findable="finding/group:venus1">
-												
-												<div class="dialogue dialogue-left">
-													<p>These records must have had thousands of grooves, each creating a perfect circle. Over those was a faint image of Earth, as if to say where the object came from.</p>
-													<p class="note">TODO</p>
-												</div>
-												
-											</div>
-											
-											<div class="offset6 span3" data-findable="finding/group:venus2">
-												
-												<div class="dialogue">
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="robot logo-type">That's it!</h1>
-													<h3 class="sidekick-type dim">Ema said as I dug out the second record.</h3>
-													<p class="note">TODO</p>
-												</div>
-												
-											</div>
-											
-											<div class="span3" data-findable="found/group:venus1">
-												
-												<div class="dialogue dialogue-left">
-													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="astronaut logo-type">Whoa, I'm picking up 2 anomalies!</h1>
-													<h3 class="sidekick-type dim">I said excitedly.</h3>
-												</div>
-											</div>
-											
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-						<div class="middleground">
-								<img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:10%; top:20%; left: 20%;" data-findable="trigger/group:venus1">
-								<img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:10%; top:40%; right: 20%;" data-findable="trigger/group:venus2">
-						</div>
-						
-					</div>
-					<!-- /explore -->
-					
-					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<!-- /land -->
-					
-				</section>
-				<!-- /venus -->
-				
-				<section id="venusToEarth" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
-						
-						<div class="container-fill">
-							<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-											<div class="span3">
-												
-												<div class="dialogue dialogue-left">
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="robot logo-type important-type">I feel like a human!</h1>
-												</div>
-												
-											</div>
-											<div class="offset6 span3">
-												
-												<div class="dialogue">
-													<div><img src="img/character_robot_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="robot logo-type">But look at me!</h1>
-													<div class="separator"></div>
-													<p>No matter what, Ema always sounded happy. It was strange enough talking to a robot, but one with a cheerful personality was just bizarre. Still, at that moment, she was... sad?</p>
-												</div>
-												
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>	
-						</div>
-						<div class="container-fill">
-							<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-											<div class="offset9 span3">
-												
-												<div class="dialogue">
-													<div><img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim"></div>
-													<h1 class="astronaut logo-type">Don't worry, someone on Earth will know.</h1>
-													<div class="separator"></div>
-													<p>I tried to comfort Ema, and although I don't think it helped much, she thanked me anyway.</p>
-												</div>
-												
-											</div>
-										</div>
-										
-									</div>
-								</div>
-							</div>
-						</div>
-						
-					</div>
-					
-				</section>
-				<!-- venusToEarth -->
-				
-				<section id="earth" class="system-section">
-					
-					<div class="orbit orbit-top container-fill">
-						
-						<div class="middleground">
-							
-							<img src="img/planet_earth.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="foreground">
-							
-							<img src="img/planet_earth_foreground.svg" class="planetoid">
-							
-						</div>
-						
-					</div>
-					<!-- /orbit -->
-					
-					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-									</div>
-								</div>
-						</div>
-					
-					</div>
-					<!-- /land -->
-					
-					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<!-- /explore -->
-					
-					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<!-- /land -->
-					
-				</section>
-				<!-- /earth -->
-				
-				<section id="earthToMars" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
-						
-						<div class="container-fill"></div>
-						<div class="container-fill"></div>
-						
-					</div>
-					
-				</section>
-				<!-- earthToMars -->
-				
-				<section id="mars" class="system-section">
-				
-					<div class="orbit orbit-top container-fill">
-						
-						<div class="background">
-							
-							<img src="img/planet_mars_background.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="middleground">
-							
-							<img src="img/planet_mars.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="foreground">
-							
-							<img src="img/planet_mars_foreground.svg" class="planetoid">
-							
-						</div>
-					
-					</div>
-					<!-- /orbit -->
-					
-					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-									</div>
-								</div>
-						</div>
-					
-					</div>
-					<!-- /land -->
-					
-					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<!-- /explore -->
-					
-					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<!-- /land -->
-					
-				</section>
-				<!-- /mars -->
-				
-				<section id="marsToAsteroidBelt" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
-						
-						<div class="container-fill"></div>
-						
-					</div>
-					
-				</section>
-				<!-- marsToAsteroidBelt -->
-				
-				<section id="asteroidBelt" class="system-section">
-					
-					<div class="orbit orbit-top container-fill">
-						
-						<div class="background">
-							
-							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:8%; top:0%; right: 35%;">
-							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:7%; top:3%; right: 11%;">
-							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:5%; top:10%; left: 5%;">
-							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:6%; top:20%; left: -1%;">
-							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:7%; top:32%; left: 12%;">
-							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:8%; top:40%; right: 16%;">
-							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:8%; top:15%; left: 28%;">
-							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:9%; bottom:3%; left: 10%;">
-							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:5%; bottom:8%; left: 32%;">
-							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:7%; bottom:14%; right: 4%;">
-							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:6%; bottom:22%; right: 40%;">
-							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:8%; bottom:31%; right: -1%;">
-							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:7%; bottom:34%; left: 20%;">
-							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:7%; bottom:42%; right: 34%;">
-							
-						</div>
-						
-						<div class="middleground">
-							
-							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:10%; top:30%; left: 10%;">
-							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:12%; top:40%; left: 40%;">
-							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:22%; top:30%; right: 27%;">
-							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:13%; top:20%; right: 8%;">
-							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:17%; bottom:20%; left: 15%;">
-							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:19%; bottom:10%; left: -1%;">
-							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:20%; bottom:0%; right: 23%;">
-							
-						</div>
-						
-						<div class="foreground">
-							
-							<img src="img/space_asteroid_002.svg" class="parallaxable" style="height:30%; top:16%; left: 20%;">
-							<img src="img/space_asteroid_001.svg" class="parallaxable" style="height:25%; bottom:-2%; left: 35%;">
-							<img src="img/space_asteroid_003.svg" class="parallaxable" style="height:35%; bottom:26%; right: 9%;">
-							
-						</div>
-						
-					</div>
-					<!-- /orbit -->
-					
-				</section>
-				<!-- /asteroidBelt -->
-				
-				<section id="asteroidBeltToJupiter" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
-						
-						<div class="container-fill"></div>
-						
-					</div>
-					
-				</section>
-				<!-- asteroidBeltToJupiter -->
-				
-				<section id="jupiter" class="system-section">
-					
-					<div class="orbit orbit-top container-fill">
-						
-						<div class="background">
-							
-							<img src="img/planet_jupiter_background.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="middleground">
-							
-							<img src="img/planet_jupiter.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="foreground">
-							
-							<img src="img/planet_jupiter_foreground.svg" class="planetoid">
-							
-						</div>
-						
-					</div>
-					<!-- /orbit -->
-					
-				</section>
-				<!-- /jupiter -->
-				
-				<section id="jupiterToSaturn" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
-						
-						<div class="container-fill"></div>
-						<div class="container-fill"></div>
-						
-					</div>
-					
-				</section>
-				<!-- jupiterToSaturn -->
-				
-				<section id="saturn" class="system-section">
-					
-					<div class="orbit orbit-top container-fill">
-						
-						<div class="background">
-							
-							<img src="img/planet_saturn_background.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="middleground">
-							
-							<img src="img/planet_saturn.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="foreground">
-							
-							<img src="img/planet_saturn_foreground.svg" class="planetoid">
-							
-						</div>
-						
-					</div>
-					<!-- /orbit -->
-					
-					<div class="container-fill" data-character-modify="Fade/astronaut/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-									</div>
-								</div>
-						</div>
-					
-					</div>
-					
-					<div class="container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					
-				</section>
-				<!-- /saturn -->
-				
-				<section id="saturnToUranus" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
-						
-						<div class="container-fill"></div>
-						<div class="container-fill"></div>
-						
-					</div>
-					
-				</section>
-				<!-- saturnToUranus -->
-				
-				<section id="uranus" class="system-section">
-					
-					<div class="orbit orbit-top container-fill">
-						
-						<div class="background">
-							
-							<img src="img/planet_uranus_background.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="middleground">
-							
-							<img src="img/planet_uranus.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="foreground">
-							
-							<img src="img/planet_uranus_foreground.svg" class="planetoid">
-							
-						</div>
-						
-					</div>
-					<!-- /orbit -->
-					
-					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-									</div>
-								</div>
-						</div>
-					
-					</div>
-					<!-- /land -->
-					
-					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<!-- /explore -->
-					
-					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<!-- /land -->
-					
-				</section>
-				<!-- /uranus -->
-				
-				<section id="uranusToNeptune" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
-						
-						<div class="container-fill"></div>
-						<div class="container-fill"></div>
-						
-					</div>
-					
-				</section>
-				<!-- uranusToNeptune -->
-				
-				<section id="neptune" class="system-section">
-					
-					<div class="orbit orbit-top container-fill">
-						
-						<div class="background">
-							
-							<img src="img/planet_neptune_background.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="middleground">
-							
-							<img src="img/planet_neptune.svg" class="planetoid">
-							
-						</div>
-						
-						<div class="foreground">
-							
-							<img src="img/planet_neptune_foreground.svg" class="planetoid">
-							
-						</div>
-						
-					</div>
-					<!-- /orbit -->
-					
-					<div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-									</div>
-								</div>
-						</div>
-					
-					</div>
-					<!-- /land -->
-					
-					<div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<!-- /explore -->
-					
-					<div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
-						
-						<div class="ui-pane-column-middle">
-								<div class="ui-pane-section-body">
-									<div class="ui-pane-section-quarter-top-middle expandable">
-										
-										<div class="row-fluid">
-												
-										</div>
-										
-									</div>
-								</div>
-						</div>
-						
-					</div>
-					<!-- /land -->
-					
-				</section>
-				<!-- /neptune -->
-				
-				<section id="neptuneToMap" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
-						
-						<div class="container-fill"></div>
-						<div class="container-fill"></div>
-						
-					</div>
-					
-				</section>
-				<!-- /neptuneToMap -->
-				
-				<section id="map" class="system-section">
-					
-					<div class="container-fill">
-						
-					</div>
-					
-				</section>
-				<!-- /map -->
-				
-				<section id="mapToAbout" class="system-section interplanet">
-					
-					<div class="stars" data-character-modify="Grow/fly_/concat/0,0.75,in,0,0.25 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6">
-						
-						<div class="container-fill"></div>
-						
-					</div>
-					
-				</section>
-				<!-- /mapToAbout -->
-				
-				
-				<section id="about" class="system-section">
-					
-					<div class="container-fill">
-						
-					</div>
-					
-				</section>
-				<!-- /about -->
-				
-			</div>
-			<!-- /system -->
-		
-		</div>
-		<!-- /main -->
-		
-		<footer class="visuallyhidden">
-			
-			<p>Welcome to NASA Prospect!</p>
-			<p>Prospect is the interactive story of the planet prospectors, left behind by NASA to recover the golden objects of humankind scattered across the solar-system by a global disaster.</p>
-			<p>This episode follows Nicolas and Pyxis, on a mission to find remnants of human music contained in the golden records. Travel with them as they explore new planets, overcome great odds, and make unexpected friends. Space isn't so lonely when you've got friends with you!</p>
-			<p>NASA Prospect was created by a group of designers and developers who each contributed to all aspects of the project. This project was authored by and is copyright to Collin Hover, Amanda Connelly, Amy Gehling, Calvin LaBrie, Ashley Palmer, and Keaton Solomon, 2012.</p>
-			<p>This project and all of its source files may be found at <a href="http://github.com/collinhover/nasaprospect">http://github.com/collinhover/nasaprospect</a>. We've released the source files under the MIT License in the hopes that they will help others produce something even better!</p>
-			
-		</footer>
-        
-        <!-- javascript -->
-        
-    	<script>
-    		// simple hook to remove noscript if javascript present
-    		( function () {
-    			var noscript = document.getElementById("noscript");
-    			if ( noscript ) {
-    				noscript.parentNode.removeChild( noscript );
-    			}
-    		} )();
-    	</script>
-        
-		<script data-main="js/main.js" src="js/lib/require-jquery.js"></script>
-        
-    </body>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     
+    <title>
+      NASA: Prospect
+    </title>
+    
+    <meta name="description" content="NASA: Prospect">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    
+    <!-- JS setup -->
+    
+    <script src="js/lib/modernizr-2.6.2.min.js">
+    </script>
+    <!-- sound manager has a strange loading setup, so we need to do it first -->
+    <script src="js/lib/soundmanager2.js">
+    </script>
+    <script>
+      soundManager.setup({
+        url: 'swf/',
+        flashVersion: 9,
+        useFlashBlock: true,
+        preferFlash: true,
+        useHighPerformance: true,
+        waitForWindowLoad: true
+      }
+                        );
+    </script>
+    
+    <!-- LESS -->
+    
+    <link rel="stylesheet/less" type="text/css" href="less/main.less">
+    <script src="js/lib/less-1.3.1.min.js" type="text/javascript">
+    </script>
+    
+    <!-- CSS -->
+    
+    <!--
+<link rel="stylesheet" type="text/css" href="css/main.css">
+-->
+      
+  </head>
+  
+  <body>
+    
+    <div id="sm2-container">
+    </div>
+    
+    <div id="preloader" class="container-center">
+      
+      <div class="ui-pane-column-middle">
+        <div class="ui-pane-section-body">
+          <div class="ui-pane-section-quarter-top-middle expandable">
+            
+            <h3 class="sidekick-type dim">
+              Hold on, we're
+            </h3>
+            <h1 class="logo-type-spaced">
+              unpacking the solar-system
+            </h1>
+            <p class="sidekick-type dim">
+              ( less than a parsec to go! )
+            </p>
+            
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <!-- /preloader -->
+    
+    <div id="main" class="scrollable unscrollable">
+      
+      <section id="user" class="container-fill">
+        
+        <div id="userCharacters">
+          
+          <img src="img/character_robot.svg" id="robot" class="character hidden" style="height:70%">
+          <img src="img/character_robot_excited.svg" id="robot_excited" class="character hidden" style="height:70%">
+          <img src="img/character_astronaut.svg" id="astronaut" class="character hidden" style="height:70%">
+          <img src="img/character_astronaut_drift.svg" id="astronaut_drift" class="character hidden" style="height:70%;">
+          <img src="img/character_astronaut_radio.svg" id="astronaut_radio" class="character hidden" style="height:70%">
+          <img src="img/character_astronaut_excited.svg" id="astronaut_excited" class="character hidden" style="height:70%">
+          <img src="img/character_astronaut_land.svg" id="astronaut_land" class="character hidden" style="height:70%">
+          <img src="img/character_astronaut_walk_left.svg" id="astronaut_walk_left" class="character hidden" style="height:70%">
+          <img src="img/character_astronaut_walk_right.svg" id="astronaut_walk_right" class="character hidden" style="height:70%">
+          <img src="img/character_rescue.svg" id="rescue" class="character hidden" style="height:70%;">
+          <img src="img/character_fly_up.svg" id="fly_up" class="character hidden" style="height:90%;">
+          <img src="img/character_fly_down.svg" id="fly_down" class="character hidden" style="height:90%;">
+          <img src="img/character_fight_start.svg" id="fight_start" class="character hidden" style="height:90%;">
+          <img src="img/character_fight_uppercut.svg" id="fight_uppercut" class="character hidden" style="height:90%;">
+          <img src="img/character_fight_victory.svg" id="fight_victory" class="character hidden" style="height:90%;">
+          
+        </div>
+        <!-- /characters -->
+        
+        <div id="userUI">
+          
+          <div class="ui-pane-column-left">
+            
+            <div class="ui-pane-section-body">
+              
+              <div id="navbarPlanets" class="hidden">
+                <ul class="nav-planets">
+                  <li>
+                    
+                    <a href="#sun" class="nav-planet-sun">
+                      <div class="aspect-enforcer">
+                      </div>
+                      <div class="aspect-shape">
+                        Sun
+                      </div>
+                      <h2 class="logo-type">
+                        Sun
+                      </h2>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#mercury" class="nav-planet-mercury">
+                      <div class="aspect-enforcer">
+                      </div>
+                      <div class="aspect-shape">
+                        Mercury
+                      </div>
+                      <h2 class="logo-type">
+                        Mercury
+                      </h2>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#venus" class="nav-planet-venus">
+                      <div class="aspect-enforcer">
+                      </div>
+                      <div class="aspect-shape">
+                        Venus
+                      </div>
+                      <h2 class="logo-type">
+                        Venus
+                      </h2>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#earth" class="nav-planet-earth">
+                      <div class="aspect-enforcer">
+                      </div>
+                      <div class="aspect-shape">
+                        Earth
+                      </div>
+                      <h2 class="logo-type">
+                        Earth
+                      </h2>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#mars" class="nav-planet-mars">
+                      <div class="aspect-enforcer">
+                      </div>
+                      <div class="aspect-shape">
+                        Mars
+                      </div>
+                      <h2 class="logo-type">
+                        Mars
+                      </h2>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#jupiter" class="nav-planet-jupiter">
+                      <div class="aspect-enforcer">
+                      </div>
+                      <div class="aspect-shape">
+                        Jupiter
+                      </div>
+                      <h2 class="logo-type">
+                        Jupiter
+                      </h2>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#saturn" class="nav-planet-saturn">
+                      <div class="aspect-enforcer">
+                      </div>
+                      <div class="aspect-shape">
+                        Saturn
+                      </div>
+                      <h2 class="logo-type">
+                        Saturn
+                      </h2>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#uranus" class="nav-planet-uranus">
+                      <div class="aspect-enforcer">
+                      </div>
+                      <div class="aspect-shape">
+                        Uranus
+                      </div>
+                      <h2 class="logo-type">
+                        Uranus
+                      </h2>
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#neptune" class="nav-planet-neptune">
+                      <div class="aspect-enforcer">
+                      </div>
+                      <div class="aspect-shape">
+                        Neptune
+                      </div>
+                      <h2 class="logo-type">
+                        Neptune
+                      </h2>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+              <!-- /navbarPlanets -->
+              
+            </div>
+            
+            <div class="ui-pane-section-footer">
+              
+              <div class="toggle toggle-sound">
+                
+                <div class="state-off">
+                  <img src="img/sound_off_white.svg" class="iconk-large toggle-on">
+                </div>
+                
+                <div class="state-on">
+                  <img src="img/sound_on_white.svg" class="iconk-large toggle-off">
+                  
+                  <div class="iconk-large slider slider-volume">
+                    <div class="track">
+                    </div>
+                    <div class="knob">
+                    </div>
+                  </div>
+                </div>
+                
+              </div>
+              
+            </div>
+            
+          </div>
+          
+        </div>
+        <!-- /ui -->
+        
+      </section>
+      <!-- /user -->
+      
+      <div id="solar-system" class="unselectable" data-sounds="twilight_by_stellardrone/loops,fade,volume:20">
+        
+        <section id="setup" class="system-section">
+          
+          <div class="container-fill">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body container-center">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="span2 offset5">
+                      <div class="toggle toggle-sound">
+                        
+                        <div class="aspect-enforcer">
+                        </div>
+                        <div class="aspect-shape">
+                          
+                          <div class="state-off">
+                            <img src="img/sound_off_white.svg" class="iconk-fillMajority-heightFollow toggle-on">
+                          </div>
+                          
+                          <div class="state-on">
+                            <img src="img/sound_on_white.svg" class="iconk-fillMajority-heightFollow toggle-off">
+                            
+                            <div class="iconk-large-fillWidth slider slider-volume">
+                              <div class="track">
+                              </div>
+                              <div class="knob">
+                              </div>
+                            </div>
+                          </div>
+                          
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                  <h1 class="logo-type-spaced">
+                    Pump up the volume!
+                  </h1>
+                  <p class="dim hidden-desktop">
+                    mobile users: audio may be blocked to save your data
+                  </p>
+                  <h3 class="sidekick-type dim">
+                    ( and start scrolling down )
+                  </h3>
+                  
+                </div>
+                
+              </div>
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- /setup -->
+        
+        <section id="intro" class="system-section no-crop">
+          
+          <div id="intro1" class="container-fill" data-character-modify="Grow/astronaut_drift/down/0,0.3">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="offset9 span3">
+                      
+                      <div class="dialogue">
+                        <p>
+                          Every kid wants to be an astronaut. Spaceships, aliens, planets, stars, black holes... way more than you could explore in a lifetime. But no kid spends their summer days pretending to be a Prospector. Huh, when was the last time you heard about what we do for humankind?
+                        </p>
+                        <div class="separator">
+                        </div>
+                        <h3 class="sidekick-type dim">
+                          I remember the noise that woke me:
+                        </h3>
+                        <h1 class="logo-type">
+                          ...Ni..zko..bsz!
+                        </h1>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /intro1 -->
+          
+          <div id="intro2" class="container-fill">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <h3 class="sidekick-type dim">
+                          Oxygen in the suit felt thin. I must have been drifting for days.
+                        </h3>
+                        <div class="separator">
+                        </div>
+                        <p>
+                          But I didn't need to ask where I was, the crushing heat of the sun told me well enough. As for who I was, I didn't remember. And at that moment I didn't care, because there is nothing as terrifying as free floating in space.
+                        </p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /intro2 -->
+          
+          <div id="intro3" class="container-fill" data-character-modify="Fade/astronaut_drift/up/0,0.25 Fade/astronaut_radio/down/0,0.25">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="offset9 span3">
+                      
+                      <div class="dialogue">
+                        <p>
+                          It felt like my entire body was straining to hear that garbled noise again. As if I could be swept away to safety by a sound.
+                        </p>
+                        <div class="separator">
+                        </div>
+                        <div>
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="astronaut logo-type important-type">
+                          Hello?
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          I managed.
+                        </h3>
+                        <div class="separator">
+                        </div>
+                        <p>
+                          My voice sounded electronic, but not the unpleasant or grating sort. I was expecting a heavier sound, you know, like physical vibrations. This was faster and lighter.
+                        </p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /intro3 -->
+          
+          <div id="intro4" class="container-fill">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="robot logo-type">
+                          Hi Nicolas!
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          someone replied cheerily.
+                        </h3>
+                        <div class="separator">
+                        </div>
+                        <p>
+                          Again I heard an electronic voice, but they sounded much too happy to be floating helplessly towards the sun alongside me.
+                        </p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /intro4 -->
+          
+        </section>
+        <!-- /intro -->
+        
+        <section id="sun" class="system-section no-crop" data-sounds="the_illness_by_dub_terminator/loops,fade,priority:1">
+          
+          <div class="container-fill">
+            
+            <div class="maxground container-center">
+              
+              <h2 class="robot-type warning-type">
+                SOLAR RADIATION WARNING
+              </h2>
+              
+            </div>
+            
+          </div>
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <img src="img/space_sun.svg" class="planetoid" data-stellar-ratio="1.2">
+            
+            <div class="logo container-center hidden" data-stellar-offset-parent="true" data-stellar-offset-vertical="0" data-stellar-offset-horizontal="0" data-stellar-ratio="1.4">
+              <img src="img/logo_prospect_color_light.svg" class="prospect">
+              <div class="prospect-name">
+                <div class="letter-1">
+                  <h2>
+                    Mercury
+                  </h2>
+                  <h1 data-stellar-ratio="1.2">
+                    P
+                  </h1>
+                </div>
+                <div class="letter-2">
+                  <h2>
+                    Venus
+                  </h2>
+                  <h1 data-stellar-ratio="1.5">
+                    R
+                  </h1>
+                </div>
+                <div class="letter-3">
+                  <h2>
+                    Earth
+                  </h2>
+                  <h1 data-stellar-ratio="1.6">
+                    O
+                  </h1>
+                </div>
+                <div class="letter-4">
+                  <h2>
+                    Mars
+                  </h2>
+                  <h1 data-stellar-ratio="1.3">
+                    S
+                  </h1>
+                </div>
+                <div class="letter-5">
+                  <h2>
+                    Jupiter
+                  </h2>
+                  <h1 data-stellar-ratio="2">
+                    P
+                  </h1>
+                </div>
+                <div class="letter-6">
+                  <h2>
+                    Saturn
+                  </h2>
+                  <h1 data-stellar-ratio="1.9">
+                    E
+                  </h1>
+                </div>
+                <div class="letter-7">
+                  <h2>
+                    Uranus
+                  </h2>
+                  <h1 data-stellar-ratio="1.4">
+                    C
+                  </h1>
+                </div>
+                <div class="letter-8">
+                  <h2>
+                    Neptune
+                  </h2>
+                  <h1 data-stellar-ratio="1.1">
+                    T
+                  </h1>
+                </div>
+              </div>
+              <div class="sponsors">
+                <img src="img/logo_nasa_color_light.svg" class="iconk-fillHeight">
+                <img src="img/logo_dlr_color_light.svg" class="iconk-fillHeight">
+                <img src="img/logo_usra_color_light.svg" class="iconk-fillHeight">
+              </div>
+            </div>
+            
+          </div>
+          
+          <div id="rescue" class="container-fill" data-character-modify="Fade/astronaut_radio/up/0,0.25 Fade/rescue/down/0,0.25/0.7">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <p>
+                          Suddenly she was there, a robot like I'd never seen before, extending me what was probably her impression of a helping hand.
+                        </p>
+                        <div class="separator">
+                        </div>
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="robot logo-type important-type">
+                          Come on!
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          she said lightly.
+                        </h3>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /rescue -->
+          
+        </section>
+        <!-- /sun -->
+        
+        <section id="sunToMercury" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/rescue/up/0,0.2/0.7 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
+            
+            <div id="status1" class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+                          <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="robot logo-type">
+                            Are you okay Prospector?
+                          </h1>
+                          <h3 class="sidekick-type dim">
+                            she asked, accelerating quickly.
+                          </h3>
+                        </div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        
+                        <div class="dialogue">
+                          <div>
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="astronaut logo-type">
+                            I...
+                          </h1>
+                          <div class="separator">
+                          </div>
+                          <p>
+                            Before I had a chance to respond, my visor lit up with an array of buttons, panels, and readouts.
+                          </p>
+                          <p class="note">
+                            nicolas&gt; End Hibernation...
+                            <br>
+                            nicolas&gt; Internal Interface ready!
+                            <br>
+                            nicolas&gt; Status Check...
+                            <br>
+                            ----------
+                            <br>
+                            Energy: 37%
+                            <br>
+                            Pressure: Safe
+                          </p>
+                          <h1 class="astronaut logo-type">
+                            think so!
+                          </h1>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div id="status2" class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+                          <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="robot logo-type">
+                            Okay! Here we go...
+                          </h1>
+                          <h3 class="sidekick-type dim">
+                            And with that, we fell into Mercury's atmosphere.
+                          </h3>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- /sunToMercury -->
+        
+        <section id="mercury" class="system-section">
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <div class="middleground">
+              
+              <img src="img/planet_mercury.svg" class="planetoid">
+              
+            </div>
+            
+          </div>
+          <!-- /orbit -->
+          
+          <div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <div>
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="astronaut logo-type">
+                          What are we doing here?
+                        </h1>
+                        <div class="separator">
+                        </div>
+                        <p>
+                          I had no idea how we survived so far, but I couldn't complain about that.
+                        </p>
+                      </div>
+                      
+                    </div>
+                    <div class="offset6 span3">
+                      
+                      <div class="dialogue">
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="robot logo-type">
+                          We're on an adventure!
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          She told me her name was Ema, and that she was a Planet Jumper.
+                        </h3>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /land -->
+          
+          <div class="explore container-fill" data-findable="sounds/group:mercury" data-sounds="wind/loops,disabled,priority:2" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+            
+            <div class="middleground">
+              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:10%; top:40%; left: 20%;" data-findable="trigger/group:mercury">
+            </div>
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid" data-findable="found/group:mercury">
+                    <div class="offset9 span3">
+                      
+                      <div class="dialogue">
+                        <p>
+                          Suddenly I felt something. Something familiar and new at the same time, and it was urging me to find it.
+                        </p>
+                        <h3 class="sidekick-type dim">
+                          Could it be the golden object?
+                        </h3>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  <div class="row-fluid hidden" data-findable="finding/group:mercury">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <p>
+                          As I approached it, I started to hear something incredibly familiar. It felt like something from a past life.
+                        </p>
+                        <div class="separator">
+                        </div>
+                        <div>
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="astronaut logo-type">
+                          Are you hearing this?
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          I said, handing it to Ema.
+                        </h3>
+                      </div>
+                      
+                    </div>
+                    <div class="offset6 span3">
+                      
+                      <div class="dialogue">
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h3 class="sidekick-type dim">
+                          She nodded, turning it.
+                        </h3>
+                        <h1 class="robot logo-type">
+                          Wait, a message!
+                        </h1>
+                        <div class="separator">
+                        </div>
+                        <p class="note">
+                          TODO: add log 2
+                        </p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- explore -->
+          
+          <div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid" data-findable="found/group:mercury">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="logo-type">
+                          Didn't see anything...
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          we said to each other.
+                        </h3>
+                        <div class="separator">
+                        </div>
+                        <p>
+                          There didn't seem to be much here after all. Perhaps we would find what we were looking for somewhere else.
+                        </p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  <div class="row-fluid"  data-findable="finding/group:mercury">
+                    <div class="offset9 span3">
+                      
+                      <div class="dialogue">
+                        <p>
+                          We'd gotten our first golden object without much trouble, aside from the insane temperature fluctuations, and a strange note to boot. Better not push our luck here.
+                        </p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /land -->
+        </section>
+        <!-- /mercury -->
+        
+        <section id="mercuryToVenus" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
+            
+            <div class="container-fill">
+              
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+                          <div>
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="astronaut logo-type">
+                            So...
+                          </h1>
+                          <h3 class="sidekick-type dim">
+                            Everyone knows sound can't travel through space!
+                          </h3>
+                          <div class="separator">
+                          </div>
+                          <h1 class="astronaut logo-type">
+                            why is there sound out here?
+                          </h1>
+                        </div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        
+                        <div class="dialogue">
+                          <p>
+                            Maybe I should have been more concerned with how I got out here, millions of miles away from home, but I couldn't stop thinking about the music.
+                          </p>
+                          <div class="separator">
+                          </div>
+                          <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="robot logo-type">
+                            The electro-magnetic waves?
+                          </h1>
+                          <h3 class="sidekick-type dim">
+                            Ema glanced at me, puzzled.
+                          </h3>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-fill">
+              
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+                          <div>
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="astronaut logo-type">
+                            But humans can't-
+                          </h1>
+                          <h3 class="sidekick-type dim">
+                            I fell silent, thinking.
+                          </h3>
+                        </div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        
+                        <div class="dialogue">
+                          <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="robot logo-type">
+                            Maybe we're not human!
+                          </h1>
+                          <div class="separator">
+                          </div>
+                          <p>
+                            Ema laughed, sarcasm in her voice. Maybe she hadn't looked in a mirror lately. Then again, neither had I.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+                
+              </div>
+            </div>
+          </div>
+          
+        </section>
+        <!-- mercuryToVenus -->
+        
+        <section id="venus" class="system-section">
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <div class="middleground">
+              
+              <img src="img/planet_venus.svg" class="planetoid">
+              
+            </div>
+            
+          </div>
+          <!-- /orbit -->
+          
+          <div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                
+                  
+                  <div class="row-fluid">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <p>
+                          We could see electricity arcing across the clouds, but that only made it more exciting. Every kick-ass adventure needs some thunder and lightning.
+                        </p>
+                        <div class="separator">
+                        </div>
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h3 class="sidekick-type dim">
+                          We grinned together.
+                        </h3>
+                        <h1 class="logo-type">
+                          Let's find some treasure!
+                        </h1>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- /land -->
+          
+          <div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                    <div class="span3" data-findable="finding/group:venus1">
+                      
+                      <div class="dialogue dialogue-left">
+                        <p>
+                          These records must have had thousands of grooves, each creating a perfect circle. Over those was a faint image of Earth, as if to say where the object came from.
+                        </p>
+                        <p class="note">
+                          TODO: add log 4
+                        </p>
+                      </div>
+                      
+                    </div>
+                    
+                    <div class="offset6 span3" data-findable="finding/group:venus2">
+                      
+                      <div class="dialogue">
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="robot logo-type">
+                          That's it!
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          Ema said as I dug out the second record.
+                        </h3>
+                        <p class="note">
+                          TODO: add log 5
+                        </p>
+                      </div>
+                      
+                    </div>
+                    
+                    <div class="span3" data-findable="found/group:venus1">
+                      
+                      <div class="dialogue dialogue-left">
+                        <div>
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="astronaut logo-type">
+                          I'm picking up 2 anomalies!
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          I said excitedly.
+                        </h3>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="middleground">
+              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:10%; top:20%; left: 20%;" data-findable="trigger/group:venus1">
+              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:10%; top:40%; right: 20%;" data-findable="trigger/group:venus2">
+            </div>
+            
+          </div>
+          <!-- /explore -->
+          
+          <div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /land -->
+          
+        </section>
+        <!-- /venus -->
+        
+        <section id="venusToEarth" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+                          <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="robot logo-type important-type">
+                            I feel like a human!
+                          </h1>
+                        </div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        
+                        <div class="dialogue">
+                          <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="robot logo-type">
+                            But look at me!
+                          </h1>
+                          <div class="separator">
+                          </div>
+                          <p>
+                            No matter what, Ema always sounded happy. It was strange enough talking to a robot, but one with a cheerful personality was just bizarre. Still, at that moment, she was... sad?
+                          </p>
+                        </div>
+                        
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      <div class="offset9 span3">
+                        
+                        <div class="dialogue">
+                          <div>
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="astronaut logo-type">
+                            Don't worry, someone on Earth will know.
+                          </h1>
+                          <div class="separator">
+                          </div>
+                          <p>
+                            I tried to comfort Ema, and although I don't think it helped much, she thanked me anyway.
+                          </p>
+                        </div>
+                        
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+        <!-- venusToEarth -->
+        
+        <section id="earth" class="system-section">
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <div class="middleground">
+              
+              <img src="img/planet_earth.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="foreground">
+              
+              <img src="img/planet_earth_foreground.svg" class="planetoid">
+              
+            </div>
+            
+          </div>
+          <!-- /orbit -->
+          
+          <div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <div>
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="astronaut logo-type">
+                          This is Prospector Nicolas,
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          I said automatically as we entered Earth.
+                        </h3>
+                      </div>
+                      
+                    </div>
+                    <div class="offset6 span3">
+                      
+                      <div class="dialogue">
+                        <div>
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="astronaut logo-type important-type">
+                          Can anyone hear me?
+                        </h1>
+                        <div class="separator">
+                        </div>
+                        <p>
+                          We listened and called out over and over, but no one responded. It was only after we gave up on contacting anyone that I noticed the absence of any golden objects.
+                        </p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /land -->
+          
+          <div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+            
+            
+            
+          </div>
+          <!-- /explore -->
+          
+          <div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="robot logo-type">
+                          Where is everyone?
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          Ema said softly as we left.
+                        </h3>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /land -->
+          
+        </section>
+        <!-- /earth -->
+        
+        <section id="earthToMars" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+                          <p>
+                            I don't know why, but I threw on one of the golden records and just started singing. Sometimes, all we need is a little electromagnetic music to get us back on track.
+                          </p>
+                          <p class="note">
+                            TODO: add music
+                          </p>
+                        </div>
+                        
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="container-fill">
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- earthToMars -->
+        
+        <section id="mars" class="system-section">
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <div class="background">
+              
+              <img src="img/planet_mars_background.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="middleground">
+              
+              <img src="img/planet_mars.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="foreground">
+              
+              <img src="img/planet_mars_foreground.svg" class="planetoid">
+              
+            </div>
+            
+          </div>
+          <!-- /orbit -->
+          
+          <div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="robot logo-type">
+                          Maybe we'll meet Curiosity,
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          mused Ema as we landed.
+                        </h3>
+                      </div>
+                      
+                    </div>
+                    <div class="offset6 span3">
+                      
+                      <div class="dialogue">
+                        <p>
+                          Red dust and orange rust kicked up around us as we touched down. I was glad to feel the pulling sensation of a golden object again.
+                        </p>
+                        <div class="separator">
+                        </div>
+                        <div>
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="astronaut logo-type">
+                          I hope he knows where the loot is!
+                        </h1>
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /land -->
+          
+          <div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid" data-findable="finding/group:mars">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="logo-type important-type">
+                          There!
+                        </h1>
+                        <p>
+                          It was Ema that saw it first, and this time we were expecting the message when it appeared.
+                        </p>
+                        <p class="note">
+                          TODO: add log 3
+                        </p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+            <div class="middleground">
+              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:10%; bottom:30%; right: 20%;" data-findable="trigger/group:mars">
+            </div>
+            
+          </div>
+          <!-- /explore -->
+          
+          <div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+            
+          </div>
+          <!-- /land -->
+          
+        </section>
+        <!-- /mars -->
+        
+        <section id="marsToAsteroidBelt" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
+            
+            <div class="container-fill">
+              
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+                          <div>
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="astronaut logo-type">
+                            Ema...
+                          </h1>
+                          <div class="separator">
+                          </div>
+                          <p>
+                            We were speeding towards something, and it wasn't a planet. It looked like a series of spots, stretching so far across that we couldn't see where they started or stopped.
+                          </p>
+                          <h3 class="sidekick-type dim">
+                            Suddenly it hit us.
+                          </h3>
+                        </div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        
+                        <div class="dialogue">
+                          <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="logo-type important-type">
+                            Asteroids!
+                          </h1>
+                          <h3 class="sidekick-type dim">
+                            We shouted together.
+                          </h3>
+                        </div>
+                        
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- marsToAsteroidBelt -->
+        
+        <section id="asteroidBelt" class="system-section">
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <div class="background">
+              
+              <img src="img/space_asteroid_003.svg" class="parallaxable" style="height:8%; top:0%; right: 35%;">
+              <img src="img/space_asteroid_001.svg" class="parallaxable" style="height:7%; top:3%; right: 11%;">
+              <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:5%; top:10%; left: 5%;">
+              <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:6%; top:20%; left: -1%;">
+              <img src="img/space_asteroid_003.svg" class="parallaxable" style="height:7%; top:32%; left: 12%;">
+              <img src="img/space_asteroid_003.svg" class="parallaxable" style="height:8%; top:40%; right: 16%;">
+              <img src="img/space_asteroid_001.svg" class="parallaxable" style="height:8%; top:15%; left: 28%;">
+              <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:9%; bottom:3%; left: 10%;">
+              <img src="img/space_asteroid_003.svg" class="parallaxable" style="height:5%; bottom:8%; left: 32%;">
+              <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:7%; bottom:14%; right: 4%;">
+              <img src="img/space_asteroid_003.svg" class="parallaxable" style="height:6%; bottom:22%; right: 40%;">
+              <img src="img/space_asteroid_001.svg" class="parallaxable" style="height:8%; bottom:31%; right: -1%;">
+              <img src="img/space_asteroid_001.svg" class="parallaxable" style="height:7%; bottom:34%; left: 20%;">
+              <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:7%; bottom:42%; right: 34%;">
+              
+            </div>
+            
+            <div class="middleground">
+              
+              <img src="img/space_asteroid_001.svg" class="parallaxable" style="height:10%; top:30%; left: 10%;">
+              <img src="img/space_asteroid_003.svg" class="parallaxable" style="height:12%; top:40%; left: 40%;">
+              <img src="img/space_asteroid_001.svg" class="parallaxable" style="height:22%; top:30%; right: 27%;">
+              <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:13%; top:20%; right: 8%;">
+              <img src="img/space_asteroid_003.svg" class="parallaxable" style="height:17%; bottom:20%; left: 15%;">
+              <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:19%; bottom:10%; left: -1%;">
+              <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:20%; bottom:0%; right: 23%;">
+              
+              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:10%; bottom:30%; left: 20%;" data-findable="trigger/group:asteroidBelt">
+              
+            </div>
+            
+            <div class="foreground">
+              
+              <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:30%; top:16%; left: 20%;">
+              <img src="img/space_asteroid_001.svg" class="parallaxable" style="height:25%; bottom:-2%; left: 35%;">
+              <img src="img/space_asteroid_003.svg" class="parallaxable" style="height:35%; bottom:26%; right: 9%;">
+              
+            </div>
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid" data-findable="found/group:asteroidBelt">
+                    <div class="offset9 span3">
+                      
+                      <div class="dialogue">
+                        <p>
+                          What with avoiding asteroids left and right, I only just noticed the familiar draw of a golden object.
+                        </p>
+                      </div>
+                      
+                    </div>
+				  </div>
+				  
+				  <div class="row-fluid" data-findable="finding/group:asteroidBelt">
+                    <div class="span3">
+                      
+                      <div class="dialogue dialogue-left">
+                        <div>
+                          <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                        </div>
+                        <h1 class="logo-type">
+                          That was lucky,
+                        </h1>
+                        <h3 class="sidekick-type dim">
+                          We agreed.
+                        </h3>
+                        <div class="separator">
+                        </div>
+                        <p>
+                          It could have been anywhere in the asteroid belt. I mean, this ring swoops all the way around the sun. Can you imagine how long that could have taken us to find?
+                        </p>
+                      </div>
+                      
+                    </div>
+                    <div class="offset6 span3">
+                      
+                      <div class="dialogue">
+                        <p class="note">
+                          TODO: add log 7
+                        </p>
+                      </div>
+                      
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /orbit -->
+          
+        </section>
+        <!-- /asteroidBelt -->
+        
+        <section id="asteroidBeltToJupiter" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- asteroidBeltToJupiter -->
+        
+        <section id="jupiter" class="system-section">
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <div class="background">
+              
+              <img src="img/planet_jupiter_background.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="middleground">
+              
+              <img src="img/planet_jupiter.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="foreground">
+              
+              <img src="img/planet_jupiter_foreground.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /orbit -->
+          
+        </section>
+        <!-- /jupiter -->
+        
+        <section id="jupiterToSaturn" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- jupiterToSaturn -->
+        
+        <section id="saturn" class="system-section">
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <div class="background">
+              
+              <img src="img/planet_saturn_background.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="middleground">
+              
+              <img src="img/planet_saturn.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="foreground">
+              
+              <img src="img/planet_saturn_foreground.svg" class="planetoid">
+              
+            </div>
+            
+          </div>
+          <!-- /orbit -->
+          
+          <div class="container-fill" data-character-modify="Fade/astronaut/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+          <div class="container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- /saturn -->
+        
+        <section id="saturnToUranus" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- saturnToUranus -->
+        
+        <section id="uranus" class="system-section">
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <div class="background">
+              
+              <img src="img/planet_uranus_background.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="middleground">
+              
+              <img src="img/planet_uranus.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="foreground">
+              
+              <img src="img/planet_uranus_foreground.svg" class="planetoid">
+              
+            </div>
+            
+          </div>
+          <!-- /orbit -->
+          
+          <div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /land -->
+          
+          <div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /explore -->
+          
+          <div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /land -->
+          
+        </section>
+        <!-- /uranus -->
+        
+        <section id="uranusToNeptune" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6 Fade/robot_excited/down/0.8,1/0.7/0.4 Fade/astronaut_excited/down/0.8,1/0.7/0.6">
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- uranusToNeptune -->
+        
+        <section id="neptune" class="system-section">
+          
+          <div class="orbit orbit-top container-fill">
+            
+            <div class="background">
+              
+              <img src="img/planet_neptune_background.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="middleground">
+              
+              <img src="img/planet_neptune.svg" class="planetoid">
+              
+            </div>
+            
+            <div class="foreground">
+              
+              <img src="img/planet_neptune_foreground.svg" class="planetoid">
+              
+            </div>
+            
+          </div>
+          <!-- /orbit -->
+          
+          <div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /land -->
+          
+          <div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /explore -->
+          
+          <div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.75,1/0.7/0.6 Fade/astronaut_land/up/0.75,1/0.7/0.6">
+            
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            
+          </div>
+          <!-- /land -->
+          
+        </section>
+        <!-- /neptune -->
+        
+        <section id="neptuneToMap" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
+            
+            <div class="container-fill">
+              <div class="ui-pane-column-middle">
+                <div class="ui-pane-section-body">
+                  <div class="ui-pane-section-quarter-top-middle expandable">
+                    
+                    <div class="row-fluid">
+                      
+                    </div>
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="container-fill">
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- /neptuneToMap -->
+        
+        <section id="map" class="system-section">
+          
+          <div class="container-fill">
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="container-fill">
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                    
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+          
+        </section>
+        <!-- /map -->
+        
+        <section id="mapToAbout" class="system-section interplanet">
+          
+          <div class="stars" data-character-modify="Grow/fly_/concat/0,0.75,in,0,0.25 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6">
+            
+            <div class="container-fill">
+            </div>
+            
+          </div>
+          
+        </section>
+        <!-- /mapToAbout -->
+        
+        
+        <section id="about" class="system-section">
+          
+          <div class="container-fill">
+            
+          </div>
+          
+        </section>
+        <!-- /about -->
+        
+      </div>
+      <!-- /system -->
+      
+    </div>
+    <!-- /main -->
+    
+    <footer class="visuallyhidden">
+      
+      <p>
+        Welcome to NASA Prospect!
+      </p>
+      <p>
+        Prospect is the interactive story of the planet prospectors, left behind by NASA to recover the golden objects of humankind scattered across the solar-system by a global disaster.
+      </p>
+      <p>
+        This episode follows Nicolas and Pyxis, on a mission to find remnants of human music contained in the golden records. Travel with them as they explore new planets, overcome great odds, and make unexpected friends. Space isn't so lonely when you've got friends with you!
+      </p>
+      <p>
+        NASA Prospect was created by a group of designers and developers who each contributed to all aspects of the project. This project was authored by and is copyright to Collin Hover, Amanda Connelly, Amy Gehling, Calvin LaBrie, Ashley Palmer, and Keaton Solomon, 2012.
+      </p>
+      <p>
+        This project and all of its source files may be found at 
+        <a href="http://github.com/collinhover/nasaprospect">
+          http://github.com/collinhover/nasaprospect
+        </a>
+        . We've released the source files under the MIT License in the hopes that they will help others produce something even better!
+      </p>
+      
+    </footer>
+    
+    <!-- javascript -->
+    
+    <script>
+      // simple hook to remove noscript if javascript present
+      ( function () {
+        var noscript = document.getElementById("noscript");
+        if ( noscript ) {
+          noscript.parentNode.removeChild( noscript );
+        }
+      }
+      )();
+    </script>
+    
+    <script data-main="js/main.js" src="js/lib/require-jquery.js">
+    </script>
+    
+  </body>
+  
 </html>
