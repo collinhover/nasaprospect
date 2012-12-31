@@ -639,10 +639,11 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 					
 				}
 				
-				var startToggle = top + boundsDistanceV * toggleRange.pctStart;
-				var endToggle = top + boundsDistanceV * toggleRange.pctEnd;
-				var topToggle = top + boundsDistanceV * toggleRange.pctStartToggle;
-				var bottomToggle = top + boundsDistanceV * toggleRange.pctEndToggle;
+				var topBase = bounds.top;
+				var startToggle = topBase + topToBottom * toggleRange.pctStart;
+				var endToggle = topBase + topToBottom * toggleRange.pctEnd;
+				var topToggle = topBase + topToBottom * toggleRange.pctStartToggle;
+				var bottomToggle = topBase + topToBottom * toggleRange.pctEndToggle;
 				
 				// toggle outside
 				if ( toggle === 'out' ) {
@@ -703,7 +704,7 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 			}
 			
 		}
-		//console.log( 'pct ', pct, 'toggle', toggle, 'top', top, bounds.top, 'bottom', bottom, bounds.bottom, 'scrollPositionCenterY', scrollPositionCenterY, ' distanceV', distanceV );
+		//console.log( 'pct ', pct, 'toggle', toggle, 'top', top, bounds.top, 'bottom', bottom, bounds.bottom, 'scrollPositionCenterY', scrollPositionCenterY, ' distanceV', distanceV, 'pctFromTop', pctFromTop );
 		return pct;
 		
 	}
