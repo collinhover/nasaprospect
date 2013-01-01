@@ -119,7 +119,9 @@
           <img src="img/character_fight_start.svg" id="fight_start" class="character hidden" style="height:90%;">
           <img src="img/character_fight_uppercut.svg" id="fight_uppercut" class="character hidden" style="height:90%;">
           <img src="img/character_fight_victory.svg" id="fight_victory" class="character hidden" style="height:90%;">
-          
+          <img src="img/space_map_assemble.svg" id="map_assemble" class="character hidden" style="height:90%;">
+		  <img src="img/space_map.svg" id="map" class="character hidden" style="height:90%;">
+		  
         </div>
         <!-- /characters -->
         
@@ -1886,7 +1888,7 @@
             
             <div class="middleground">
               
-              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:15%; top:10%; bottom:30%; right: 20%;" data-findable="trigger/group:saturn">
+              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:15%; bottom:30%; right: 10%;" data-findable="trigger/group:saturn">
               
             </div>
 			
@@ -2073,7 +2075,7 @@
           </div>
           <!-- /land -->
           
-          <div class="explore container-fill" data-character-modify="Fade/robot/up/0,0.2/0.7/0.6 Fade/astronaut_land/up/0,0.2/0.7/0.6 Fade/fight_start/all/0,0.7,in,0.2,0.6 Fade/fight_uppercut/down/0.6,0.7">
+          <div class="explore container-fill" data-character-modify="Fade/robot/up/0,0.2/0.7/0.6 Fade/astronaut_land/up/0,0.2/0.7/0.6 Fade/fight_start/all/0,0.7,in,0.2,0.55 Fade/fight_uppercut/down/0.55,0.7">
             
             <div class="ui-pane-column-middle">
               <div class="ui-pane-section-body">
@@ -2113,7 +2115,7 @@
           </div>
           <!-- /explore -->
           
-          <div class="land land-bottom container-fill" data-character-modify="Fade/fight_uppercut/up/0,0.1 Fade/fight_victory/all/0,0.9,in,0.1,0.7 Fade/robot/down/0.7,0.9/0.7/0.4 Fade/astronaut/down/0.7,0.9/0.7/0.6">
+          <div class="land land-bottom container-fill" data-character-modify="Fade/fight_uppercut/up/0,0.15 Fade/fight_victory/all/0,0.9,in,0.15,0.7 Fade/robot/down/0.7,0.9/0.7/0.4 Fade/astronaut/down/0.7,0.9/0.7/0.6">
             
           </div>
           <!-- /land -->
@@ -2131,7 +2133,13 @@
                   <div class="ui-pane-section-quarter-top-middle expandable">
                     
                     <div class="row-fluid">
-                      
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+						  <p>We swapped stories of our fight on Uranus the whole way to Neptune. Ema told me how she melted its face off with lasers, and I reminded her how I shocked it with super-beats from my boombox.</p>
+                        </div>
+                        
+                      </div>
                     </div>
                     
                   </div>
@@ -2145,7 +2153,24 @@
                   <div class="ui-pane-section-quarter-top-middle expandable">
                     
                     <div class="row-fluid">
-                      
+                      <div class="offset9 span3">
+                        
+                        <div class="dialogue">
+						  <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="logo-type important-type">
+                            Kablooie!
+                          </h1>
+						  <h3 class="sidekick-type dim">
+                            We cheered, remembering our simultaneous uppercut.
+						  </h3>
+						  <div class="separator"></div>
+						  <p>We both agreed that was the coolest thing we'd ever seen, and would definitely have to go down in history as one of the ultimate achievements of humanity.</p>
+                        </div>
+                        
+                      </div>
                     </div>
                     
                   </div>
@@ -2190,7 +2215,38 @@
                 <div class="ui-pane-section-quarter-top-middle expandable">
                   
                   <div class="row-fluid">
-                    
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+						  <div>
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="astronaut logo-type">
+                            There's just one here.
+                          </h1>
+						  <h3 class="sidekick-type dim">
+                            I was getting pretty good at this.
+						  </h3>
+                        </div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        
+                        <div class="dialogue">
+						  <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="robot logo-type">
+                            Let's be careful...
+                          </h1>
+						  <h3 class="sidekick-type dim">
+                            Ema trailed off, scanning the surface.
+						  </h3>
+						  <div class="separator"></div>
+						  <p>The cobalt blue of the Planet cut through the shards floating in Neptune's atmosphere and burst into a thousand lights. It'd be absolutely chill if it wasn't so cold.</p>
+                        </div>
+                        
+                      </div>
                   </div>
                   
                 </div>
@@ -2202,12 +2258,41 @@
           
           <div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
             
+			<div class="middleground">
+				
+              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:15%; top:10%; right: 20%;" data-findable="trigger/group:neptune">
+				
+			</div>
+			
             <div class="ui-pane-column-middle">
               <div class="ui-pane-section-body">
                 <div class="ui-pane-section-quarter-top-middle expandable">
                   
-                  <div class="row-fluid">
-                    
+                  <div class="row-fluid" data-findable="finding/group:neptune">
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+						  <p>We were a lot more cautious this time, and snuck as close as we could before pouncing on the golden object. As much fun as it was on Uranus, I think we were both happy at the absence of insane monsters, but it didn't exactly turn out okay either...</p>
+						  <p class="note">TODO: add log 1</p>
+                        </div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        
+                        <div class="dialogue">
+						  <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="logo-type">
+                            Everyone's... gone?
+                          </h1>
+						  <h3 class="sidekick-type dim">
+                            That was it? No more humanity? All this for nothing?
+						  </h3>
+                        </div>
+                        
+                      </div>
                   </div>
                   
                 </div>
@@ -2223,8 +2308,22 @@
               <div class="ui-pane-section-body">
                 <div class="ui-pane-section-quarter-top-middle expandable">
                   
-                  <div class="row-fluid">
-                    
+                  <div class="row-fluid" data-findable="finding/group:neptune">
+                      <div class="offset9 span3">
+                        
+                        <div class="dialogue">
+						  <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+						  <h1 class="logo-type">
+                            Brr.
+						  </h1>
+						  <div class="separator"></div>
+						  <p>The sun may have be terrifyingly hot, but the longer we spent here the fuzzier my memory got. Maybe the sun wasn't so bad. Disappointed, I threw the final object into our collection. This was the last planet and we had all the golden objects, but knowing we were the last...</p>
+                        </div>
+                        
+                      </div>
                   </div>
                   
                 </div>
@@ -2239,22 +2338,34 @@
         
         <section id="neptuneToMap" class="system-section interplanet">
           
-          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6">
+          <div class="stars" data-character-modify="Fade/fly_/concat/0,1,in,0.2,0.8 Fade/robot/all/0,1,out,0.2,0.8/0.7/0.4 Fade/astronaut/all/0,1,out,0.2,0.8/0.7/0.6 Fade/map_assemble/down/0,0.25">
             
             <div class="container-fill">
-              <div class="ui-pane-column-middle">
+			  
+			  <div class="ui-pane-column-middle">
                 <div class="ui-pane-section-body">
                   <div class="ui-pane-section-quarter-top-middle expandable">
                     
                     <div class="row-fluid">
-                      
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+						  <p>As the last golden object fit into our collection, the set started to hum.</p>
+                        </div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        
+                        <div class="dialogue">
+						  <p>As we looked at each other in surprise, we heard another beat, then another, and then a wave of noise as the golden objects started to circle us.</p>
+                        </div>
+                        
+                      </div>
                     </div>
                     
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="container-fill">
             </div>
             
           </div>
@@ -2264,13 +2375,42 @@
         
         <section id="map" class="system-section">
           
-          <div class="container-fill">
+          <div class="container-fill" data-character-modify="Fade/map_assemble/up/0,0.2 Fade/map/down/0,0.2">
             <div class="ui-pane-column-middle">
               <div class="ui-pane-section-body">
                 <div class="ui-pane-section-quarter-top-middle expandable">
                   
                   <div class="row-fluid">
-                    
+                      <div class="span3">
+                        
+                        <div class="dialogue dialogue-left">
+                          <h3 class="sidekick-type dim">
+							Over everything we heard a voice.	
+						  </h3>
+						  <h1 class="logo-type">
+                            It worked! They've found the pieces!
+                          </h1>
+						  <div class="separator"></div>
+						  <p>It was followed by millions of voices cheering, whooping, and clapping. There were even a few whistles.</p>
+                        </div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        
+                        <div class="dialogue">
+						  <h1 class="logo-type">
+                            Don't worry!
+                          </h1>
+						  <div class="separator"></div>
+                          <h3 class="sidekick-type dim">
+							The voice continued as a final log opened up.
+						  </h3>
+						  <h1 class="logo-type">
+                            You're not alone, just follow the map!
+                          </h1>
+                        </div>
+                        
+                      </div>
                   </div>
                   
                 </div>
@@ -2284,7 +2424,27 @@
                 <div class="ui-pane-section-quarter-top-middle expandable">
                   
                   <div class="row-fluid">
-                    
+                      <div class="span3">
+                        <div class="dialogue dialogue-left">
+						  <p class="note">TODO: add final note</p>
+						</div>
+					  </div>
+					  <div class="offset6 span3">
+						<div class="dialogue">
+						  <p>A large glowing map took our attention as the voice faded. At the top left was the solar system, and stretching from it in every direction were paths through the stars. One path was brighter than the others. Who knows what we'd find out there.</p>
+						  <div class="separator"></div>
+						  <h3 class="sidekick-type dim">
+                            I turned to Ema.
+						  </h3>
+						  <div>
+                            <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="astronaut logo-type">
+                            That's a long way to go.
+                          </h1>
+                        </div>
+                        
+                      </div>
                   </div>
                   
                 </div>
@@ -2297,9 +2457,34 @@
         
         <section id="mapToAbout" class="system-section interplanet">
           
-          <div class="stars" data-character-modify="Grow/fly_/concat/0,0.75,in,0,0.25 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6">
+          <div class="stars" data-character-modify="Fade/map/up/0,0.2 Grow/fly_/concat/0,0.75,in,0,0.25 Fade/robot/up/0,0.2/0.7/0.4 Fade/astronaut/up/0,0.2/0.7/0.6">
             
             <div class="container-fill">
+            <div class="ui-pane-column-middle">
+              <div class="ui-pane-section-body">
+                <div class="ui-pane-section-quarter-top-middle expandable">
+                  
+                  <div class="row-fluid">
+                      <div class="offset9 span3">
+                        
+                        <div class="dialogue">
+						  <h3 class="sidekick-type dim">
+                            But she didn't hesitate for a moment.
+						  </h3>
+						  <div class="separator"></div>
+						  <div>
+                            <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
+                          </div>
+                          <h1 class="robot logo-type">
+                            Remember? We're on an adventure!
+                          </h1>
+                        </div>
+                        
+                      </div>
+                  </div>
+                  
+                </div>
+              </div>
             </div>
             
           </div>
