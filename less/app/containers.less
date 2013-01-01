@@ -102,6 +102,10 @@
 	min-width: @uiPaneMinWidth;
 	min-height: @uiPaneMinHeight;
 	.ignore-pointer;
+	
+	&.expandable {
+		height: auto;
+	}
 }
 
 .ui-pane-column,
@@ -141,10 +145,6 @@
 [class^="ui-pane-section"],
 [class*=" ui-pane-section"]  {
 	width: 100%;
-	
-	&.expandable {
-		height: auto;
-	}
 }
 
 .ui-pane-section-header,

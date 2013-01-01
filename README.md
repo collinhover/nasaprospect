@@ -14,12 +14,14 @@ The core goal of this project is to increase interest in space exploration.
 
 ####Design and Development
 
-[Collin Hover](http://collinhover.com "Collin Hover")  
 Amanda Connelly  
 Amy Gehling  
 Calvin LaBrie  
 Ashley Palmer  
-Keaton Solomon  
+Keaton Solomon
+
+####Advanced Coding Assistance
+[Collin Hover](http://collinhover.com "Collin Hover")  
 
 ####Music
   

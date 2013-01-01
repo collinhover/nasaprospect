@@ -3,4 +3,47 @@
 
 #about {
     #gradient-transparent > .vertical-three-colors( fade( @logoDark, 0% ), @logoDark, 25%, @logoDark );
+    padding-bottom: @uiPaneMinHeight;
+    
+    .ui-pane-column-middle {
+        position: relative;
+        margin: 0 auto;
+        left: 0;
+        right: 0;
+    }
+    
+    h3 {
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        border-bottom-color: @grayLight;
+        border-bottom-color: rgba(255,255,255,0.4);
+    }
+    
+    .video-container {
+        position: relative;
+        max-width: 100%;
+    }
+    
+    .sponsors {
+        position: relative;
+        
+        a {
+            position: relative;
+            display: inline-block;
+            width: 30%;
+            margin: 0 1%;
+            
+            &:first-child {
+                margin-left: 0;
+            }
+            
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+    }
+    
+    .description {
+        padding-top: 20px;
+    }
 }
