@@ -124,7 +124,7 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 	function Enter () {
 		
 		if ( this.inside !== true ) {
-			console.log( this.id, 'entered' );
+			
 			this.inside = true;
 			
 			this.onEntered.dispatch( this );
@@ -140,7 +140,7 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 	function Exit () {
 		
 		if ( this.inside !== false ) {
-			console.log( this.id, 'exited' );
+			
 			this.inside = false;
 			
 			_s.signals.onUpdated.remove( this.Update, this );
@@ -167,7 +167,7 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 			this.active = true;
 			
 			this.onActivated.dispatch( this );
-			console.log( this.id, ' activate' );
+			
 			this.soundHandlers.element.Play();
 			
 			_navi.RemoveTriggers( this.triggers );
@@ -183,7 +183,6 @@ function ( $, _s, _ui, _navi, _snd, Signal ) {
 			this.active = false;
 			
 			this.onDeactivated.dispatch( this );
-			console.log( this.id, ' deactivate' );
 			
 			this.soundHandlers.element.Pause();
 			

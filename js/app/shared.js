@@ -97,9 +97,34 @@ function ( $, Signal ) {
 	_s.w = _de.$window.width();
     _s.h = _de.$window.height();
 	
+	/*===================================================
+	
+	support
+	
+	=====================================================*/
+	
 	_s.supports = {
 		pointerEvents: Modernizr.testProp('pointerEvents')
 	};
+	
+	// svg not correctly supported, fallback on png
+	
+	if ( !Modernizr.svg || !Modernizr.svgclippaths ) {
+		
+		$( 'img' ).each( function () {
+			
+			var $element = $( this );
+			var src = $element.attr( 'src' ) || '';
+			var index = src.lastIndexOf( '.svg' );
+			
+			if ( index !== -1 ) {
+				
+				$element.attr( 'src', src.slice( 0, index ) + '.png' );
+				
+			}
+		} );
+		
+	}
 	
 	return _s;
 	

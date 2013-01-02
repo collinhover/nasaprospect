@@ -2,9 +2,17 @@
 -------------------------------------------------------------------------------*/
 
 #earth {
+    @earthSky: #42A3C9;
+    @earthSkyTop: lighten( @earthSky, 10% );
     
-    .orbit {
-        
+    .land {
+        #gradient-transparent > .vertical( fade( @earthSkyTop, 0 ), @earthSkyTop );
+    }
+    .explore {
+        #gradient-transparent > .vertical( @earthSkyTop, @earthSky );
+    }
+    .land-bottom {
+        #gradient-transparent > .vertical( @earthSky, fade( @earthSky, 0 ) );
     }
     
 }

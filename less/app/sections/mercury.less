@@ -1,0 +1,18 @@
+/* mercury
+-------------------------------------------------------------------------------*/
+
+#mercury {
+    @mercurySky: #AF813B;
+    @mercurySkyTop: lighten( @mercurySky, 10% );
+    
+    .land {
+        #gradient-transparent > .vertical( fade( @mercurySkyTop, 0 ), @mercurySkyTop );
+    }
+    .explore {
+        #gradient-transparent > .vertical( @mercurySkyTop, @mercurySky );
+    }
+    .land-bottom {
+        #gradient-transparent > .vertical( @mercurySky, fade( @mercurySky, 0 ) );
+    }
+    
+}
