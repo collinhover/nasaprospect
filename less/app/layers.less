@@ -1,0 +1,76 @@
+/* parallax
+-------------------------------------------------------------------------------*/
+
+.parallaxable {
+	position: absolute;
+	width: auto;
+	height: auto;
+}
+
+.center-horizontal {
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+}
+
+.center-vertical {
+	margin-top: auto;
+	margin-bottom: auto;
+	top: 0;
+	bottom: 0;
+}
+
+.full-height {
+	.fillHeight;
+	.center-horizontal;
+	top: 0;
+}
+
+.fullWidth {
+	.fillWidth;
+	.center-vertical;
+}
+
+/* layers 
+-------------------------*/
+
+.minground {
+	z-index: @zMinground;
+}
+
+.characterbackground {
+	z-index: @zMinGtoBG;
+}
+
+.background {
+	z-index: @zBackground;
+}
+
+.middleground {
+	z-index: @zMiddleground;
+}
+
+.characterforeground {
+	z-index: @zMGtoFG;
+}
+
+.foreground {
+	z-index: @zForeground;
+}
+
+.maxground {
+	z-index: @zMaxground;
+}
+
+.overlay {
+	z-index: @zMax;
+	
+	&.blocking {
+		z-index: @zBlock;
+	}
+	
+	&.blockable {
+		z-index: @zMaxBlockable;
+	}
+}

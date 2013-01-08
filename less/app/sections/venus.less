@@ -1,0 +1,18 @@
+/* venus
+-------------------------------------------------------------------------------*/
+
+#venus {
+    @venusSky: #52382C;
+    @venusSkyTop: lighten( @venusSky, 10% );
+    
+    .land {
+        #gradient-transparent > .vertical( fade( @venusSkyTop, 0 ), @venusSkyTop );
+    }
+    .explore {
+        #gradient-transparent > .vertical( @venusSkyTop, @venusSky );
+    }
+    .land-bottom {
+        #gradient-transparent > .vertical( @venusSky, fade( @venusSky, 0 ) );
+    }
+    
+}

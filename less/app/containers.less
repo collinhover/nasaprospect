@@ -93,40 +93,35 @@
 }
 
 /* panes 
--------------------------------------------------------------------------------*/
+-------------------------*/
 
-.ui-pane,
-[class^="ui-pane-"],
-[class*=" ui-pane-"] {
+.ui-pane, [class^="ui-pane-"], [class*=" ui-pane-"] {
 	position: absolute;
 	min-width: @uiPaneMinWidth;
 	min-height: @uiPaneMinHeight;
 	.ignore-pointer;
-	
-	&.expandable {
-		height: auto;
-	}
 }
 
-.ui-pane-column,
-[class^="ui-pane-column"],
-[class*=" ui-pane-column"] {
+.ui-pane-overlay {
+	z-index: 9999;
+}
+
+.ui-pane-column, [class^="ui-pane-column"], [class*=" ui-pane-column"] {
 	height: 100%;
 	top: 0;
 }
 
-.ui-pane-column-left,
-.ui-pane-column-right {
-	min-width: @uiPaneColumnSidesWidth;
-}
-
-.ui-pane-column-middle {
+.ui-pane-middle {
 	width: 100% - @uiPaneColumnSidesWidth * 2;
 	left: @uiPaneColumnSidesWidth;
 	right: @uiPaneColumnSidesWidth;
 }
 
-.ui-pane-column-right {
+.ui-pane-left, .ui-pane-right {
+	min-width: @uiPaneColumnSidesWidth;
+}
+
+.ui-pane-right {
 	right: 0;
 	
 	& > * {
@@ -140,15 +135,31 @@
 	}
 	
 }
-
-.ui-pane-section,
-[class^="ui-pane-section"],
-[class*=" ui-pane-section"]  {
-	width: 100%;
+.ui-pane-top {
+	top: 0;
 }
 
-.ui-pane-section-header,
-.ui-pane-section-footer {
+.ui-pane-bottom {
+	bottom: 0;
+}
+
+.ui-pane-body-top {
+	top: @uiPaneMinHeight;
+}
+
+.ui-pane-body-bottom {
+	bottom: @uiPaneMinHeight;
+}
+
+.ui-pane-section, [class^="ui-pane-section"], [class*=" ui-pane-section"]  {
+	width: 100%;
+	
+	&.expandable {
+		height: auto;
+	}
+}
+
+.ui-pane-section-header, .ui-pane-section-footer {
 	min-height: @uiPaneMinHeight;
 }
 
@@ -161,13 +172,32 @@
 }
 
 .ui-pane-section-body {
-	top: @uiPaneMinHeight;
-	bottom: @uiPaneMinHeight;
+	.ui-pane-body-top;
+	.ui-pane-body-bottom;
 }
 
-.ui-pane-section-half-top,
-.ui-pane-section-half-bottom {
+.ui-pane-section-half-top, .ui-pane-section-half-bottom {
 	height: 50%;
+}
+
+.ui-pane-section-third-top, .ui-pane-section-third-middle, .ui-pane-section-third-bottom {
+	height: 33%;
+}
+
+.ui-pane-section-quarter-top, .ui-pane-section-quarter-top-middle, .ui-pane-section-quarter-bottom-middle, .ui-pane-section-quarter-bottom {
+	height: 25%;
+}
+
+.ui-pane-section-third-middle {
+	top: 33%;
+}
+
+.ui-pane-section-quarter-top-middle {
+	top: 25%;
+}
+
+.ui-pane-section-quarter-bottom-middle {
+	bottom: 25%;
 }
 
 .ui-pane-section-third-top,

@@ -1,22 +1,8 @@
-/* user
--------------------------------------------------------------------------------*/
-
-#user {
-	position: absolute;
-}
-
-#user, #userCharacters, #userUI, .character {
-	.ignore-pointer;
-}
-
 /* characters
 -------------------------------------------------------------------------------*/
 
-#userCharacters {
-	.fillTopLeft;
-}
-
 .character {
+	.ignore-pointer;
 	.parallaxable;
 	.characterforeground;
 	max-width: 50%;
@@ -25,11 +11,7 @@
 /* ui
 -------------------------------------------------------------------------------*/
 
-#userUI {
-	.fillTopLeft;
-	z-index: @zMaxBlockable;
-	
-	#navbarPlanets {
+#navbarPlanets {
 		position: relative;
 		width: 7%;
 		min-width: 40px;
@@ -44,7 +26,7 @@
 			position: absolute;
 			list-style: none;
 			width: 100%;
-			height: 60%;
+			height: 100%;
 			top: 0;
 			bottom: 0;
 			margin: auto 0;
@@ -161,9 +143,9 @@
 			}
 		}
 		
-	}
-	
-	.toggle-sound {
+}
+
+#userToggleSound {
 		margin-left: @uiPanePaddingLeft;
 		
 		.state-on, .state-off {
@@ -173,6 +155,4 @@
 		.slider-volume {
 			margin: 0;
 		}
-	}
-	
 }

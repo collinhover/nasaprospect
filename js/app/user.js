@@ -25,12 +25,10 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 	=====================================================*/
 	
 	var _$element = _de.$user;
-	var _$ui = _$element.find( '#userUI' );
 	
 	// init characters
 	
-	var _$charactersContainer = _$element.find( '#userCharacters' );
-	var _$characters = _$charactersContainer.find( '.character' );
+	var _$characters = _de.$body.find( '.character' );
 	var _charactersById = {};
 	var _charactersActive = [];
 	
@@ -191,8 +189,6 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 		}
 		
 	} );
-	
-	var _offset = _$element.offset();
 	
 	_s.signals.onResized.add( Resize );
 	_s.signals.onReady.addOnce( function () {
