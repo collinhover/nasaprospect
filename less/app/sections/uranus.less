@@ -1,0 +1,17 @@
+/* uranus
+-------------------------------------------------------------------------------*/
+
+#uranus {
+    @uranusSky: #306b89;
+    @uranusSkyTop: lighten( @uranusSky, 10% );
+    
+    .land {
+        #gradient-transparent > .vertical( fade( @uranusSkyTop, 0 ), @uranusSkyTop );
+    }
+    .explore {
+        #gradient-transparent > .vertical( @uranusSkyTop, @uranusSky );
+    }
+    .land-bottom {
+        #gradient-transparent > .vertical( @uranusSky, fade( @uranusSky, 0 ) );
+    }
+}
