@@ -406,11 +406,13 @@ var HAMMER = ( function ( main ) {
 		}
 		// multitouch, return array with positions
 		else {
+			
 			var pos = [], src, touches = event.touches.length > 0 ? event.touches : event.changedTouches;
 			for(var t=0, len=touches.length; t<len; t++) {
 				src = touches[t];
-				pos.push({ x: src.pageX, y: src.pageY });
+				pos.push( { x: src.pageX, y: src.pageY } );
 			}
+			
 			return pos;
 		}
 	}
@@ -591,8 +593,8 @@ var HAMMER = ( function ( main ) {
 				
 				// update event object
 				
-				eventObject.touches = getXYfromEvent( eventObject.originalEvent );
-				eventObject.position = eventObject.position || eventObject.touches;
+				eventObject.touches = getXYfromEvent( eventObject.originalEvent || eventObject );
+				eventObject.position = eventObject.touches || eventObject.position;
 				eventObject.type = eventName;
 				
 				// if event does not yet have a target
@@ -627,11 +629,7 @@ var HAMMER = ( function ( main ) {
 	function on_start ( hammerInstance, event ) {
 		
 		var element,
-			box,
-			clientTop,
-			clientLeft,
-			scrollTop,
-			scrollLeft;
+			$element;
 		
 		// must stop before starting again
 		
@@ -644,27 +642,17 @@ var HAMMER = ( function ( main ) {
 			_event_start = event;
 			_fingers = countFingers( event );
 			_touch_start_time = new Date().getTime();
-			_pos.start = getXYfromEvent(event);
+			_pos.start = getXYfromEvent( event.originalEvent || event );
 			_first = true;
 			_mousedown = true;
 			_distance = 0;
 			_angle = 0;
 			
 			// get offset
-			// borrowed from jquery offset https://github.com/jquery/jquery/blob/master/src/offset.js
 			
 			element = hammerInstance.element;
-			
-			box = element.getBoundingClientRect();
-			clientTop  = element.clientTop  || document.body.clientTop  || 0;
-			clientLeft = element.clientLeft || document.body.clientLeft || 0;
-			scrollTop  = window.pageYOffset || element.scrollTop  || document.body.scrollTop;
-			scrollLeft = window.pageXOffset || element.scrollLeft || document.body.scrollLeft;
-			
-			_offset = {
-				top: box.top + scrollTop - clientTop,
-				left: box.left + scrollLeft - clientLeft
-			};
+			$element = $( element );
+			_offset = $element.offset();
 			
 			// disable text selection
 			
@@ -703,7 +691,7 @@ var HAMMER = ( function ( main ) {
 				
 				// event properties
 				
-				_pos.move = getXYfromEvent( event );
+				_pos.move = getXYfromEvent( event.originalEvent || event );
 				
 				// gestures
 
