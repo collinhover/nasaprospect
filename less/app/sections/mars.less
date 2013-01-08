@@ -3,8 +3,16 @@
 
 #mars {
     
-    .orbit {
-        
-    }
+    @marsSky: #EFA84D;//#EDB561;
+    @marsSkyTop: lighten( @marsSky, 10% );
     
+    .land {
+        #gradient-transparent > .vertical( fade( @marsSkyTop, 0 ), @marsSkyTop );
+    }
+    .explore {
+        #gradient-transparent > .vertical( @marsSkyTop, @marsSky );
+    }
+    .land-bottom {
+        #gradient-transparent > .vertical( @marsSky, fade( @marsSky, 0 ) );
+    }
 }
