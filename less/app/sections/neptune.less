@@ -1,0 +1,17 @@
+/* neptune
+-------------------------------------------------------------------------------*/
+
+#neptune {
+    @neptuneSky: #282460;
+    @neptuneSkyTop: lighten( @neptuneSky, 10% );
+    
+    .land {
+        #gradient-transparent > .vertical( fade( @neptuneSkyTop, 0 ), @neptuneSkyTop );
+    }
+    .explore {
+        #gradient-transparent > .vertical( @neptuneSkyTop, @neptuneSky );
+    }
+    .land-bottom {
+        #gradient-transparent > .vertical( @neptuneSky, fade( @neptuneSky, 0 ) );
+    }
+}

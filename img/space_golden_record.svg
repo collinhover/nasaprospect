@@ -5,14 +5,14 @@
 	 width="256px" height="256px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
 <g>
 	<defs>
-		<path id="SVGID_3_" d="M168.705,10.042C103.561-12.442,32.521,22.145,10.039,87.293c-22.479,65.148,12.108,136.186,77.254,158.666
+		<path id="SVGID_1_" d="M168.705,10.042C103.561-12.442,32.521,22.145,10.039,87.293c-22.479,65.148,12.108,136.186,77.254,158.666
 			c65.149,22.483,136.186-12.106,158.666-77.252C268.441,103.558,233.853,32.52,168.705,10.042z M140.956,132.471
 			c-2.47,7.157-10.272,10.957-17.427,8.486c-7.158-2.47-10.958-10.272-8.487-17.429c2.47-7.157,10.272-10.956,17.429-8.486
 			C139.627,117.511,143.425,125.316,140.956,132.471z"/>
 	</defs>
-	<use xlink:href="#SVGID_3_"  overflow="visible" fill="#F09121"/>
+	<use xlink:href="#SVGID_1_"  overflow="visible" fill="#F09121"/>
 	<clipPath id="SVGID_2_">
-		<use xlink:href="#SVGID_3_"  overflow="visible"/>
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
 	</clipPath>
 	<g id="Ocean" clip-path="url(#SVGID_2_)">
 		<polygon fill="#FBCC1E" points="234.339,13.722 176.764,69.936 265.858,179.472 		"/>

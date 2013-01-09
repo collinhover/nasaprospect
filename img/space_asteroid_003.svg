@@ -3,26 +3,6 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="256px" height="256px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
-<g id="Sun">
-	<defs>
-		<path id="SVGID_1_" d="M-341.88,1156.084c-390.521,391.604-1023.702,391.604-1414.233-0.018
-			c-390.521-391.607-390.521-1026.522,0-1418.155c390.532-391.602,1023.682-391.602,1414.233,0.049
-			C48.615,129.515,48.65,764.459-341.88,1156.084z"/>
-	</defs>
-	<use xlink:href="#SVGID_1_"  overflow="visible" fill="#F5B81C"/>
-	<clipPath id="SVGID_2_">
-		<use xlink:href="#SVGID_1_"  overflow="visible"/>
-	</clipPath>
-	<polygon clip-path="url(#SVGID_2_)" fill="#E27E26" points="-594.077,900.313 -913.492,-295.869 -662.167,-167.245 
-		-463.494,-67.273 23.7,181.625 	"/>
-	<polygon clip-path="url(#SVGID_2_)" fill="#F09121" points="10.085,173.302 -706.434,-579.943 -913.492,-295.869 -671.39,-148.657 
-		-463.494,-67.273 	"/>
-	<polygon clip-path="url(#SVGID_2_)" fill="#DC7427" points="20.109,173.302 -116.441,734.796 -410.558,1101.131 -595.544,890.234 	
-		"/>
-	<polygon clip-path="url(#SVGID_2_)" fill="#E37D25" points="-254.33,-260.384 25.771,187.183 -463.494,-67.273 	"/>
-	<polygon clip-path="url(#SVGID_2_)" fill="#E06926" points="25.6,176.757 -181.812,407.976 -458.836,339.423 	"/>
-	<polygon clip-path="url(#SVGID_2_)" fill="#974021" points="28.782,171.736 -65.414,776.613 -234.709,643.925 	"/>
-</g>
 <g id="asteroid_x5F_b">
 	<polygon fill="#47394A" points="171.035,18.237 171.109,18.446 171.107,18.446 171.035,18.237 90.484,22.16 33.334,46.626 
 		1.381,114.88 11.453,192.919 50.816,179.129 74.734,163.393 87.598,228.511 125.65,239.979 170.562,165.173 254.619,166.734 
@@ -58,7 +38,7 @@
 				<polygon id="SVGID_26_" enable-background="new    " points="197.277,174.967 321.589,63.723 752.237,63.723 876.549,174.967 
 									"/>
 			</defs>
-			<clipPath id="SVGID_4_">
+			<clipPath id="SVGID_2_">
 				<use xlink:href="#SVGID_26_"  overflow="visible"/>
 			</clipPath>
 		</g>

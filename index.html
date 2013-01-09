@@ -46,12 +46,12 @@
       soundManager.setup({
         url: 'swf/',
         flashVersion: 9,
+		debugMode: false,
+		preferFlash: true,
         useFlashBlock: true,
-        preferFlash: true,
         useHighPerformance: true,
         waitForWindowLoad: true
-      }
-                        );
+      } );
     </script>
     
     <!-- LESS -->
@@ -70,10 +70,9 @@
   
   <body>
     
-    <div id="sm2-container">
-    </div>
-    
-    <div id="preloader" class="container-center overlay">
+	<div id="sm2-container" class="center-horizontal"></div>
+	
+    <div id="preloader" class="container-center overlay blocking">
       
       <div class="ui-pane-column ui-pane-middle">
         <div class="ui-pane-section-body">
@@ -95,6 +94,27 @@
       
     </div>
     <!-- /preloader -->
+	
+    <div id="noflash" class="container-center overlay hidden">
+      
+      <div class="ui-pane-column ui-pane-middle">
+        <div class="ui-pane-section-body">
+          <div class="ui-pane-section-quarter-top-middle expandable">
+            
+			<div id="sm2-placeholder"></div>
+            <h1 class="logo-type-spaced">
+              Click anywhere to continue without Flash
+            </h1>
+            <h3 class="sidekick-type dim">
+              ( or unblock Flash and refresh for the full experience )
+            </h3>
+            
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <!-- /noflash -->
 	
     <div id="main" class="scrollable unscrollable">
       
@@ -140,7 +160,7 @@
                     Pump up the volume!
                   </h1>
                   <p class="dim hidden-desktop">
-                    mobile users: audio may be blocked to save your data
+                    mobile users: audio may be blocked by your device
                   </p>
                   <h3 class="sidekick-type dim">
                     ( and start scrolling down )
@@ -303,6 +323,8 @@
         
         <section id="sun" class="system-section no-crop" data-sounds="the_illness_by_dub_terminator/loops,fade,priority:1">
           
+          <img id="sunGlow" src="img/space_sun_glow.svg" class="parallaxable minground">
+				
           <div class="container-fill">
             
             <div class="maxground container-center">
@@ -317,7 +339,7 @@
           
           <div class="orbit orbit-top container-fill">
             
-            <img src="img/space_sun.svg" class="planetoid" data-stellar-ratio="1.2">
+            <img src="img/space_sun.svg" class="planetoid">
             
             <div class="logo container-center hidden" data-stellar-offset-parent="true" data-stellar-offset-vertical="0" data-stellar-offset-horizontal="0" data-stellar-ratio="1.4">
               <img src="img/logo_prospect_color_light.svg" class="prospect">
@@ -1527,7 +1549,7 @@
               <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:19%; bottom:10%; left: -1%;">
               <img src="img/space_asteroid_002.svg" class="parallaxable" style="height:20%; bottom:0%; right: 23%;">
               
-              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:10%; bottom:30%; left: 20%;" data-findable="trigger/group:asteroidBelt">
+              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:20%; bottom:30%; left: 20%;" data-findable="trigger/group:asteroidBelt">
               
             </div>
             
@@ -2224,6 +2246,13 @@
           
           <div class="land land-top container-fill" data-character-modify="Fade/robot_excited/up/0,0.25/0.7/0.4 Fade/robot/down/0,0.25/0.7/0.4 Fade/astronaut_excited/up/0,0.25/0.7/0.6 Fade/astronaut_land/down/0,0.25/0.7/0.6">
             
+            <div class="background">
+                <img src="img/neptune_wind_001.svg" class="parallaxable" style="width: 100%; left: 0%; bottom: 0%; ">
+			</div>
+            <div class="middleground">
+                <img src="img/neptune_shards.svg" class="parallaxable" style="width: 100%; left: 0%; bottom: 0%; ">
+			</div>
+			
             <div class="ui-pane-column ui-pane-middle">
               <div class="ui-pane-section-body">
                 <div class="ui-pane-section-quarter-top-middle expandable">
@@ -2272,11 +2301,25 @@
           
           <div class="explore container-fill" data-character-modify="Fade/astronaut_land/all/0,1,out,0.1,0.9/0.7/0.6 Fade/astronaut_walk_right/down/0,1,in,2/0.7/0.6 Fade/astronaut_walk_left/down/0,1,in,2,2/0.7/0.6">
             
-			<div class="middleground">
-				
-              <img src="img/space_golden_record.svg" class="parallaxable golden-object" style="height:15%; top:10%; right: 20%;" data-findable="trigger/group:neptune">
-				
+			<div class="minground">
+                <img src="img/planet_neptune_foreground.svg" class="parallaxable center-horizontal" style="height: 100%; bottom: 25%;">
+				<img src="img/space_wind_003.svg" class="parallaxable" style="width: 100%; left: 0%; bottom: 30%; ">
 			</div>
+			<div class="background">
+                <img src="img/neptune_wind_002.svg" class="parallaxable" style="width: 100%; left: 0%; bottom: 20%; ">
+                <img src="img/neptune_ground.svg" class="parallaxable" style="width: 100%; left: 0%; bottom: 0%; ">
+                <img src="img/neptune_icicle_001.svg" class="parallaxable" style="height: 10%; left: 20%; bottom: 45%;">
+                <img src="img/neptune_icicle_002.svg" class="parallaxable" style="height: 8%; right: 20%; bottom: 38%;">
+                <img src="img/space_wisps_001.svg" class="parallaxable" style="width: 100%; left: 0%; bottom: 0%; ">
+			</div>
+            <div class="middleground">
+                <img src="img/neptune_icicle_001.svg" class="parallaxable" style="height: 12%; right: 0%; bottom: 10%;">
+                <img src="img/neptune_icicle_002.svg" class="parallaxable" style="height: 15%; left: 30%; bottom: 18%;">
+                <img src="img/space_golden_record.svg" class="parallaxable golden-object center-horizontal" style="height:20%; top:40%;" data-findable="trigger/group:neptune">
+            </div>
+            <div class="foreground">
+                <img src="img/neptune_icicle_003.svg" class="parallaxable" style="height: 15%; left: 10%; bottom: 5%;">
+            </div>
 			
             <div class="ui-pane-column ui-pane-middle">
               <div class="ui-pane-section-body">
@@ -2286,8 +2329,13 @@
                       <div class="span3">
                         
                         <div class="dialogue dialogue-left">
-						  <p>We were a lot more cautious this time, and snuck as close as we could before pouncing on the golden object. As much fun as it was on Uranus, I think we were both happy at the absence of insane monsters, but it didn't exactly turn out okay either.</p>
-						  <div class="separator"></div>
+						  <p>We were a lot more cautious this time, and snuck as close as we could before pouncing on the golden object.</p>
+						  <p class="note">[ LOG 1 / 7 ]<br>Greetings!<br>If you are reading this, we are awfully sorry to say that humankind is in great danger. There is no time to explain, but suffice to say we are currently facing an extinction event. As you are the very last effort of humanity...</p>
+						</div>
+                        
+                      </div>
+                      <div class="offset6 span3">
+                        <div class="dialogue">
 						  <div>
                             <img src="img/character_robot_icon_white.svg" class="iconk-medium dim">
                             <img src="img/character_astronaut_icon_white.svg" class="iconk-medium dim">
@@ -2295,15 +2343,8 @@
                           <h1 class="logo-type">
                             Everyone's... gone?
                           </h1>
-                        
-						</div>
-                        
-                      </div>
-                      <div class="offset6 span3">
-                        <div class="dialogue">
-						  <p class="note">[ LOG 1 / 7 ]<br>Greetings!<br>If you are reading this, we are awfully sorry to say that humankind is in great danger. There is no time to explain, but suffice to say we are currently facing an extinction event. As you are the very last effort of humanity...</p>
 						  <h3 class="sidekick-type dim">
-                            That was it? No more humanity? All this for nothing?
+                            That was it? No more humanity?
 						  </h3>
                         </div>
                       </div>
@@ -2318,6 +2359,16 @@
           
           <div class="land land-bottom container-fill" data-character-modify="Fade/astronaut/down/0.8,1/0.7/0.6 Fade/astronaut_land/up/0.8,1/0.7/0.6">
             
+            <div class="background">
+                <img src="img/neptune_wind_004.svg" class="parallaxable" style="width: 100%; left: 0%; top: 0%; ">
+			</div>
+            <div class="middleground">
+                <img src="img/neptune_shards.svg" class="parallaxable" style="width: 100%; left: 0%; bottom: 0%; ">
+			</div>
+            <div class="foreground">
+                <img src="img/neptune_wind_003.svg" class="parallaxable" style="width: 100%; left: 0%; top: 20%; ">
+			</div>
+			
             <div class="ui-pane-column ui-pane-middle">
               <div class="ui-pane-section-body">
                 <div class="ui-pane-section-quarter-top-middle expandable">
@@ -2414,14 +2465,14 @@
                         
                         <div class="dialogue">
 						  <h1 class="logo-type">
-                            Don't worry!
+                            We're still alive in here!
                           </h1>
 						  <div class="separator"></div>
                           <h3 class="sidekick-type dim">
-							The voice continued.
+							The voice reassured us as another voice chimed in.
 						  </h3>
 						  <h1 class="logo-type">
-                            Follow the map and find us a new home!
+                            Will you find us a new home?
                           </h1>
                         </div>
                         

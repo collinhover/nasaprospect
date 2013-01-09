@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="1999.911px" height="3347.133px" viewBox="0 0 1999.911 3347.133" enable-background="new 0 0 1999.911 3347.133"
+	 xml:space="preserve">
+<g>
+	<defs>
+		<rect id="SVGID_66_" width="1999.911" height="3408.323"/>
+	</defs>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_66_"  overflow="visible"/>
+	</clipPath>
+	<radialGradient id="SVGID_3_" cx="999.9062" cy="1673.8193" r="1673.8179" gradientUnits="userSpaceOnUse">
+		<stop  offset="0" style="stop-color:#FACD1E"/>
+		<stop  offset="1" style="stop-color:#F36E3A;stop-opacity:0"/>
+	</radialGradient>
+	<circle clip-path="url(#SVGID_2_)" fill="url(#SVGID_3_)" cx="999.906" cy="1673.819" r="1673.817"/>
+</g>
+</svg>

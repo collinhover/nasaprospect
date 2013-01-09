@@ -42,6 +42,7 @@ function ( $, Signal ) {
 	_de.$body = _de.$document.find( "body" );
 	_de.$main = $( "#main" );
 	_de.$preloader = $( "#preloader" );
+	_de.$noflash = $( "#noflash" );
 	_de.$user = $( "#user" );
 	
 	_de.$scrollable = $( ".scrollable" );

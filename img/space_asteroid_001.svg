@@ -3,19 +3,6 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="256px" height="256px" viewBox="0 0 256 256" enable-background="new 0 0 256 256" xml:space="preserve">
-<g id="Sun">
-	<defs>
-		<path id="SVGID_1_" d="M-341.88,1733.084c-390.521,391.604-1023.702,391.604-1414.233-0.018
-			c-390.521-391.607-390.521-1026.522,0-1418.155C-1365.582-76.691-732.432-76.691-341.88,314.96
-			C48.615,706.515,48.65,1341.459-341.88,1733.084z"/>
-	</defs>
-	<use xlink:href="#SVGID_1_"  overflow="visible" fill="#F5B81C"/>
-	<clipPath id="SVGID_2_">
-		<use xlink:href="#SVGID_1_"  overflow="visible"/>
-	</clipPath>
-	<polygon clip-path="url(#SVGID_2_)" fill="#F09121" points="10.085,750.302 -706.434,-2.943 -913.492,281.131 -671.39,428.343 
-		-463.494,509.727 	"/>
-</g>
 <g id="asteroid_x5F_a">
 	<polygon fill="#47394A" points="147.07,25.753 80.058,75.036 79.785,75.518 79.579,75.67 79.688,75.691 39.787,146.139 
 		9.156,200.225 74.576,236.491 138.209,238.065 229.222,121.064 239.906,108.057 239.418,107.956 239.648,107.66 206.583,50.258 
@@ -57,17 +44,17 @@
 </g>
 <g>
 	<defs>
-		<path id="SVGID_3_" d="M458.705,10.042c-65.145-22.484-136.184,12.103-158.666,77.251
+		<path id="SVGID_1_" d="M458.705,10.042c-65.145-22.484-136.184,12.103-158.666,77.251
 			c-22.479,65.148,12.108,136.186,77.254,158.666c65.149,22.483,136.186-12.106,158.666-77.252
 			C558.441,103.558,523.853,32.52,458.705,10.042z M430.956,132.471c-2.47,7.157-10.272,10.957-17.427,8.486
 			c-7.158-2.47-10.958-10.272-8.487-17.429c2.47-7.157,10.272-10.956,17.429-8.486C429.627,117.511,433.425,125.316,430.956,132.471
 			z"/>
 	</defs>
-	<use xlink:href="#SVGID_3_"  overflow="visible" fill="#F09121"/>
-	<clipPath id="SVGID_4_">
-		<use xlink:href="#SVGID_3_"  overflow="visible"/>
+	<use xlink:href="#SVGID_1_"  overflow="visible" fill="#F09121"/>
+	<clipPath id="SVGID_2_">
+		<use xlink:href="#SVGID_1_"  overflow="visible"/>
 	</clipPath>
-	<path opacity="0.3" clip-path="url(#SVGID_4_)" fill="#FFFFFF" d="M295.019,201.333c0,0,173.706-191.495,378.699-181.853
+	<path opacity="0.3" clip-path="url(#SVGID_2_)" fill="#FFFFFF" d="M295.019,201.333c0,0,173.706-191.495,378.699-181.853
 		c0,0-275.944-22.229-405.602,86.308C138.461,214.323,295.019,201.333,295.019,201.333z"/>
 </g>
 </svg>

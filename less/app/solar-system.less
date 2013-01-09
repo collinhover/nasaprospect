@@ -1,7 +1,7 @@
 /* solar-system
 -------------------------------------------------------------------------------*/
 
-#solar-system, #preloader {
+#solar-system, #preloader, #noflash {
 	background-color: @logoDark;
     background-image: url( "../img/space_stars_static.png" );
     background-image: url( "../img/space_stars_static.svg" );
@@ -29,9 +29,11 @@
 	min-height: @pageHeightMin;
 }
 
-#preloader {
+#preloader, #noflash {
 	.fillTopLeft;
-	z-index: @zBlock;
+}
+
+#preloader {
 	
 	h1 {
 		.animation-pulse( 1.5s );

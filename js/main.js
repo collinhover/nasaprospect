@@ -1,62 +1,123 @@
-requirejs.config({
-	// by default load any module IDs from js/lib
-	baseUrl: 'js/lib',
-	// exceptions
-	paths: {
-		app: '../app'
-	}
-});
-
-// assumes we have already loaded sound manager
-// sound manager tends to not load properly in module format
-
-soundManager.onready( function () {
+( function (requirejs, soundManager ) {
+	
+	requirejs.config({
+		// by default load any module IDs from js/lib
+		baseUrl: 'js/lib',
+		// exceptions
+		paths: {
+			app: '../app'
+		}
+	});
 	
 	require(
 	[
 		"jquery",
 		"app/shared",
 		"app/utilities",
-		"app/ui",
-		"app/navigator",
-		"app/solarSystem",
-		"app/user",
-		"overthrow",
-		"RequestAnimationFrame"
+		"hammer.custom"
 	],
-	function ( $, _s, _utils, _ui, _navi, _solarSystem, _user ) {
+	function ( $, _s, _utils ) {
 		
 		var _de = _s.domElements;
 		
-		// main update loop
+		// assumes we have already loaded sound manager
+		// sound manager tends to not load properly in module format
 		
-		function Update () {
+		soundManager.ontimeout( function ( status ) {
+			console.log( 'sm2 timeout', status );
+			// allow no flash to be ignored
 			
-			_s.signals.onUpdated.dispatch();
+			_de.$document.one( 'tap.smreset', function () {
+				
+				_utils.FadeDOM( {
+					element: _de.$noflash,
+					duration: 0
+				} );
+				
+				// reset and init sound manager preferring html5
+				
+				soundManager.reset();
+				soundManager.setup( {
+					url: 'swf/',
+					flashVersion: 9,
+					debugMode: false,
+					useHTML5Audio: true,
+					preferFlash: false,
+					onready: init
+				  } );
+				
+			} );
 			
-			window.requestAnimationFrame( Update );
+			// notify user of no flash
+			
+			$( "#sm2-placeholder" )
+				.after( $( "#sm2-container" ) )
+				.remove();
+			
+			_utils.FadeDOM( {
+				element: _de.$noflash,
+				easing: 'easeInCubic',
+				opacity: 1,
+				duration: 1000
+			} );
+			
+		} );
+		
+		soundManager.onready( init );
+		
+		function init () {
+			console.log( 'init');
+			require(
+			[
+				"app/ui",
+				"app/navigator",
+				"app/solarSystem",
+				"app/user",
+				"overthrow",
+				"RequestAnimationFrame"
+			],
+			function ( _ui, _navi, _solarSystem, _user ) {
+				
+				_de.$document.off( '.smreset' );
+				
+				$( "#sm2-container" ).addClass( 'swf_loaded' );
+				
+				_utils.FadeDOM( {
+					element: _de.$noflash,
+					duration: 0
+				} );
+				
+				Update();
+				
+				// ready
+				
+				_s.signals.onReady.dispatch();
+				
+				// resize once on start
+				
+				_de.$window.trigger( 'resize' );
+				_navi.CheckTriggers( true );
+				
+				// fade preloader
+				
+				_utils.FadeDOM( {
+					element: _de.$preloader,
+					easing: 'easeInCubic',
+					duration: 1000
+				} );
+				
+				function Update () {
+					
+					_s.signals.onUpdated.dispatch();
+					
+					window.requestAnimationFrame( Update );
+					
+				}
+				
+			} );
 			
 		}
 		
-		Update();
-		
-		// ready
-		
-		_s.signals.onReady.dispatch();
-		
-		// resize once on start
-		
-		_de.$window.trigger( 'resize' );
-		_navi.CheckTriggers( true );
-		
-		// fade preloader
-		
-		_utils.FadeDOM( {
-			element: _de.$preloader,
-			easing: 'easeInCubic',
-			duration: 1000
-		} );
-		
 	} );
-	
-} );
+
+}( requirejs, soundManager ) );

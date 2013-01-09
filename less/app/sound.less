@@ -73,15 +73,19 @@
 -------------------------------------------------------------------------------*/
 
 #sm2-container {
-	position: absolute;
+	.fillTopLeft;
 	z-index: @zMax;
-	top: 0;
-	left: 0;
+	opacity: 0.05;
 	
-	&.swf_loaded {
-		z-index: -1;
-		top: auto;
-		bottom: 100%;
+	&.swf_timedout, &.swf_error {
+		position: static;
+		opacity: 1;
 	}
 	
+	&.swf_loaded, &.swf_unblocked {
+		left:-100%;
+		top:-100%;
+		z-index: -1;
+		.ignore-pointer;
+	}
 }
