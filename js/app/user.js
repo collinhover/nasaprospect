@@ -212,55 +212,63 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 			var type = part[ 0 ];
 			var optionsString = part[ 1 ];
 			var options = typeof optionsString === 'string' ? $.trim( optionsString.toLowerCase() ).split( ',' ) : [];
-			var groupId = _utils.FindDataOptionValue( options, 'group' );
+			var groupIdString = _utils.FindDataOptionValue( options, 'group' );
+			var groupIds = typeof groupIdString === 'string' ? $.trim( groupIdString ).split( ',' ) : [];
 			var groupData;
 			
 			// handle defaults
 			
 			if ( typeof type !== 'string' || type.length === 0 ) type = 'finding';
-			if ( typeof groupId !== 'string'|| groupId.length === 0 ) groupId = 'all';
 			
-			// init and find group data
-			
-			if ( typeof _findables[ groupId ] === 'undefined' ) {
+			for ( var j = 0, jl = groupIds.length; j < jl; j++ ) {
 				
-				_findables[ groupId ] = {
-					id: groupId,
-					found: false,
-					$trigger: $(),
-					$found: $(),
-					$finding: $(),
-					$sounds: $()
-				};
+				var groupId = groupIds[ j ];
 				
-			}
-			
-			groupData = _findables[ groupId ];
-			
-			// store and init by type
-			
-			groupData[ '$' + type ] = groupData[ '$' + type ] instanceof $ ? groupData[ '$' + type ].add( $element ) : $element;
-			
-			if ( type === 'trigger' ) {
+				if ( typeof groupId !== 'string'|| groupId.length === 0 ) groupId = 'all';
 				
-				$element.one( 'tap.findable', function () {
+				// init and find group data
+				
+				if ( typeof _findables[ groupId ] === 'undefined' ) {
 					
-					Find( groupData );
+					_findables[ groupId ] = {
+						id: groupId,
+						found: false,
+						$trigger: $(),
+						$found: $(),
+						$finding: $(),
+						$sounds: $()
+					};
 					
-				} );
+				}
+				
+				groupData = _findables[ groupId ];
+				
+				// store and init by type
+				
+				groupData[ '$' + type ] = groupData[ '$' + type ] instanceof $ ? groupData[ '$' + type ].add( $element ) : $element;
+				
+				if ( type === 'trigger' ) {
+					
+					$element.one( 'tap.findable', function () {
+						
+						Find( groupData );
+						
+					} );
+					
+				}
+				else if ( type === 'sounds' ) {
+					
+					_snd.DisableSounds( { $element: $element } );
+					
+				}
+				else if ( type === 'finding' ) {
+					
+					$element.addClass( 'hidden' );
+					
+				}
 				
 			}
-			else if ( type === 'sounds' ) {
 				
-				_snd.DisableSounds( { $element: $element } );
-				
-			}
-			else if ( type === 'finding' ) {
-				
-				$element.addClass( 'hidden' );
-				
-			}
-			
 		}
 		
 	} );
