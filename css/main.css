@@ -111,15 +111,15 @@ textarea {
 -------------------------------------------------------------------------------*/
 @font-face {
   font-family: 'BebasNeue';
-  src: url('http://127.0.0.1:8000/less/webfonts/bebas-neue.eot');
-  src: url('http://127.0.0.1:8000/less/webfonts/bebas-neue.eot?#iefix') format('embedded-opentype'), url('http://127.0.0.1:8000/less/webfonts/bebas-neue.woff') format('woff'), url('http://127.0.0.1:8000/less/webfonts/bebas-neue.ttf') format('truetype'), url('http://127.0.0.1:8000/less/webfonts/bebas-neue.svg#bebas-neue') format('svg');
+  src: url('webfonts/bebas-neue.eot');
+  src: url('webfonts/bebas-neue.eot?#iefix') format('embedded-opentype'), url('webfonts/bebas-neue.woff') format('woff'), url('webfonts/bebas-neue.ttf') format('truetype'), url('webfonts/bebas-neue.svg#bebas-neue') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: 'Copperplate';
-  src: url('http://127.0.0.1:8000/less/webfonts/copperplate.eot');
-  src: url('http://127.0.0.1:8000/less/webfonts/copperplate.eot?#iefix') format('embedded-opentype'), url('http://127.0.0.1:8000/less/webfonts/copperplate.woff') format('woff'), url('http://127.0.0.1:8000/less/webfonts/copperplate.ttf') format('truetype'), url('http://127.0.0.1:8000/less/webfonts/copperplate.svg#copperplate') format('svg');
+  src: url('webfonts/copperplate.eot');
+  src: url('webfonts/copperplate.eot?#iefix') format('embedded-opentype'), url('webfonts/copperplate.woff') format('woff'), url('webfonts/copperplate.ttf') format('truetype'), url('webfonts/copperplate.svg#copperplate') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -2081,7 +2081,7 @@ table [class*=span],
   *margin-right: .3em;
   line-height: 14px;
   vertical-align: text-top;
-  background-image: url("http://127.0.0.1:8000/less/lib/bootstrap/../img/glyphicons-halflings.png");
+  background-image: url("../img/glyphicons-halflings.png");
   background-position: 14px 14px;
   background-repeat: no-repeat;
   margin-top: 1px;
@@ -2100,7 +2100,7 @@ table [class*=span],
 .dropdown-menu > li > a:hover > [class*=" icon-"],
 .dropdown-menu > .active > a > [class^="icon-"],
 .dropdown-menu > .active > a > [class*=" icon-"] {
-  background-image: url("http://127.0.0.1:8000/less/lib/bootstrap/../img/glyphicons-halflings-white.png");
+  background-image: url("../img/glyphicons-halflings-white.png");
 }
 .icon-glass {
   background-position: 0      0;
@@ -6160,8 +6160,8 @@ p {
 #preloader,
 #noflash {
   background-color: #061b2b;
-  background-image: url("http://127.0.0.1:8000/less/app/../img/space_stars_static.png");
-  background-image: url("http://127.0.0.1:8000/less/app/../img/space_stars_static.svg");
+  background-image: url("../img/space_stars_static.png");
+  background-image: url("../img/space_stars_static.svg");
   background-size: 25%;
 }
 .interplanet {
@@ -6188,8 +6188,8 @@ p {
   background-repeat: no-repeat;
 }
 .interplanet .stars {
-  background-image: url("http://127.0.0.1:8000/less/app/../img/space_stars_moving.png");
-  background-image: url("http://127.0.0.1:8000/less/app/../img/space_stars_moving.svg");
+  background-image: url("../img/space_stars_moving.png");
+  background-image: url("../img/space_stars_moving.svg");
   background-size: 25%;
 }
 #solar-system,
