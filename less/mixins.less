@@ -893,6 +893,19 @@ a.dim:hover, button.dim:hover, .btn.dim:hover {
   .transform( rotate( 180deg ) );
 }
 
+.highlightable {
+  .transition(e('opacity .3s linear'));
+  
+  &:not(.dim) {
+	opacity: 0.4;
+  }
+  
+  &:hover, &:active {
+	opacity: 1 !important;
+  }
+  
+}
+
 /* type
 -------------------------------------------------------------------------------*/
 

@@ -1,7 +1,8 @@
 define( [ 
 	"jquery",
 	"signals",
-	"jquery.easing"
+	"jquery.easing",
+	"mdetect"
 ],
 function ( $, Signal ) {
 	
@@ -48,6 +49,7 @@ function ( $, Signal ) {
 	_de.$scrollable = $( ".scrollable" );
 	_de.$stickable = $( ".stickyme, .is-sticky" );
 	_de.$toggleSound = $( ".toggle-sound" );
+	_de.$playSound = $( ".play-sound" );
 	_de.$findable = $( "[data-findable]" );
 	
 	_de.$containerFill = $( ".container-fill" );
@@ -104,6 +106,7 @@ function ( $, Signal ) {
 	
 	=====================================================*/
 	
+	_s.mobile = DetectTierIphone() || DetectTierTablet();
 	_s.supports = {
 		pointerEvents: Modernizr.testProp('pointerEvents')
 	};

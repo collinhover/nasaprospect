@@ -24,7 +24,9 @@
 		// sound manager tends to not load properly in module format
 		
 		soundManager.ontimeout( function ( status ) {
-			console.log( 'sm2 timeout', status );
+			
+			soundManager.reset();
+			
 			// allow no flash to be ignored
 			
 			_de.$document.one( 'tap.smreset', function () {
@@ -36,7 +38,6 @@
 				
 				// reset and init sound manager preferring html5
 				
-				soundManager.reset();
 				soundManager.setup( {
 					url: 'swf/',
 					flashVersion: 9,
@@ -66,7 +67,7 @@
 		soundManager.onready( init );
 		
 		function init () {
-			console.log( 'init');
+			
 			require(
 			[
 				"app/ui",

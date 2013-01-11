@@ -146,7 +146,9 @@
 }
 
 #userToggleSound {
+		display: inline-block;
 		margin-left: @uiPanePaddingLeft;
+		width: auto;
 		
 		.state-on, .state-off {
 			position: relative;
@@ -155,4 +157,10 @@
 		.slider-volume {
 			margin: 0;
 		}
+}
+
+#userPlaySound {
+		display: inline-block;
+		margin-left: @uiPanePaddingLeft;
+		cursor: pointer;
 }

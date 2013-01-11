@@ -260,6 +260,19 @@ button.dim:hover,
   -ms-transform-style: preserve-3d;
   transform-style: preserve-3d;
 }
+.highlightable {
+  -webkit-transition: opacity .3s linear;
+  -moz-transition: opacity .3s linear;
+  -o-transition: opacity .3s linear;
+  transition: opacity .3s linear;
+}
+.highlightable:not(.dim) {
+  opacity: 0.4;
+}
+.highlightable:hover,
+.highlightable:active {
+  opacity: 1 !important;
+}
 /* type
 -------------------------------------------------------------------------------*/
 .inline-type {
@@ -409,6 +422,17 @@ button.dim:hover,
   left: 0;
   right: 0;
   margin: auto auto;
+}
+.visible-mobile {
+  display: none !important;
+}
+@media (min-width: 768px) and (max-width: 979px), (max-width: 767px), (max-width: 950px), (max-height: 550px) {
+  .visible-mobile {
+    display: inherit !important;
+  }
+  .highlightable {
+    opacity: 1 !important;
+  }
 }
 /* lib
 -------------------------------------------------------------------------------*/
@@ -5159,7 +5183,6 @@ a.badge:hover {
 .affix {
   position: fixed;
 }
-/* @import "lib/bootstrap/responsive.less"; */
 /*
  * CSS Styles that are needed by jScrollPane for it to operate correctly.
  *
@@ -5322,6 +5345,8 @@ h5 {
 h6 {
   font-size: 75%;
   line-height: 125%;
+  text-transform: uppercase;
+  font-weight: bold;
 }
 h1 small {
   font-size: 150%;
@@ -5546,33 +5571,8 @@ p {
 .ui-pane-section-quarter-top-middle {
   top: 25%;
 }
-.ui-pane-section-quarter-bottom-middle {
-  bottom: 25%;
-}
-.ui-pane-section-third-top,
-.ui-pane-section-third-middle,
-.ui-pane-section-third-bottom {
-  height: 33%;
-}
-.ui-pane-section-quarter-top,
-.ui-pane-section-quarter-top-middle,
-.ui-pane-section-quarter-bottom-middle,
-.ui-pane-section-quarter-bottom {
-  height: 25%;
-}
-.ui-pane-section-half-bottom,
-.ui-pane-section-third-bottom,
-.ui-pane-section-quarter-bottom {
-  bottom: 0;
-}
-.ui-pane-section-third-middle {
-  top: 33%;
-}
-.ui-pane-section-third-bottom {
-  bottom: 0;
-}
-.ui-pane-section-quarter-top-middle {
-  top: 25%;
+.ui-pane-section-eighth-top-middle {
+  top: 12.5%;
 }
 .ui-pane-section-quarter-bottom-middle {
   bottom: 25%;
@@ -5592,6 +5592,63 @@ p {
 .is-sticky.container-fill {
   top: 0;
   left: 0;
+}
+/* info box 
+-------------------------------------------------------------------------------*/
+.info-box {
+  display: inline-block;
+  position: relative;
+  background-color: #555555;
+  background-color: rgba(50, 50, 50, 0.8);
+  -webkit-background-clip: padding-box;
+  -moz-background-clip: padding-box;
+  background-clip: padding-box;
+  padding: 11px;
+  margin: 11px 0;
+  border: 1px solid #222;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+.info-box .arrow,
+.info-box .arrow:after {
+  position: absolute;
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+}
+.info-box .content,
+.info-box .title {
+  margin: 0;
+  padding: 11px 0;
+}
+.info-box i + .title,
+.info-box img + .title {
+  padding-top: 0;
+}
+.info-box .title {
+  border-bottom: 1px solid #444;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  -webkit-border-radius: 5px 5px 0 0;
+  -moz-border-radius: 5px 5px 0 0;
+  border-radius: 5px 5px 0 0;
+}
+.info-box.bottom {
+  margin-top: 10px;
+}
+.info-box.bottom .arrow {
+  top: -10px;
+  left: 50%;
+  margin-left: -10px;
+  border-width: 0 10px 10px;
+  border-bottom-color: #555555;
+  border-bottom-color: rgba(50, 50, 50, 0.8);
 }
 /* icons 
 -------------------------*/.iconk,
@@ -5783,7 +5840,7 @@ p {
   display: none;
 }
 .toggle.on .state-on {
-  display: block;
+  display: inline-block;
 }
 /* parallax
 -------------------------------------------------------------------------------*/
@@ -5861,11 +5918,6 @@ p {
   position: relative;
   display: inline-block;
   width: 100%;
-  opacity: 0.4;
-  -webkit-transition: opacity .3s linear;
-  -moz-transition: opacity .3s linear;
-  -o-transition: opacity .3s linear;
-  transition: opacity .3s linear;
 }
 .toggle-sound .state-on,
 .toggle-sound .state-off {
@@ -5920,9 +5972,6 @@ p {
   -moz-transition: opacity .3s linear;
   -o-transition: opacity .3s linear;
   transition: opacity .3s linear;
-}
-.toggle-sound:hover {
-  opacity: 1;
 }
 /* sound manager
 -------------------------------------------------------------------------------*/
@@ -6143,7 +6192,9 @@ p {
   height: 50%;
 }
 #userToggleSound {
+  display: inline-block;
   margin-left: 20px;
+  width: auto;
 }
 #userToggleSound .state-on,
 #userToggleSound .state-off {
@@ -6151,6 +6202,11 @@ p {
 }
 #userToggleSound .slider-volume {
   margin: 0;
+}
+#userPlaySound {
+  display: inline-block;
+  margin-left: 20px;
+  cursor: pointer;
 }
 /* sections
 -------------------------------------------------------------------------------*/
@@ -6415,6 +6471,9 @@ p {
 #setup h1 {
   margin-top: 20px;
   margin-bottom: 0;
+}
+#setup .info-box {
+  width: 35%;
 }
 /* sun
 -------------------------------------------------------------------------------*/

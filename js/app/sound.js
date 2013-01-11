@@ -208,7 +208,7 @@ function ( $, _s, _utils ) {
 			element: datum.$element,
 			callback: function () {
 				
-				PlaySound.call( datum );
+				WaitCheckSound.call( datum );
 				
 			},
 			callbackRemove: function () {
@@ -357,10 +357,10 @@ function ( $, _s, _utils ) {
 	function EnableSound () {
 		
 		this.enabled = true;
-		
+		console.log( 'play on enable', this.id, this.playOnEnable );
 		if ( this.playOnEnable === true ) {
 			
-			PlaySound.call( this );
+			WaitCheckSound.call( this );
 			
 		}
 		
@@ -403,7 +403,7 @@ function ( $, _s, _utils ) {
 		
 		if ( this.data.length > 0 ) {
 			
-			this.ForData( parameters, PlaySound );
+			this.ForData( parameters, WaitCheckSound );
 			
 		}
 		
@@ -412,36 +412,82 @@ function ( $, _s, _utils ) {
 	function PlaySound () {
 		
 		if ( this.enabled === true ) {
-			
-			this.playOnEnable = false;
-			
-			var sound = SoundCheck( this );
-			
-			if ( sound ) {
 				
-				var paused = sound.paused;
+				OnCleanSound.call( this );
 				
-				sound.play( {
-					onplay: $.proxy( OnPlaySound, this ),
-					onfinish: $.proxy( OnFinishSound, this )
-				} );
+				var sound = SoundCheck( this );
 				
-				if ( paused ) {
-					
-					OnPlaySound.call( this );
-					
-					sound.resume();
-					
+				if ( sound ) {
+						
+						var paused = sound.paused;
+						
+						sound.play( {
+							onfinish: $.proxy( OnFinishSound, this )
+						} );
+						
+						if ( paused ) {
+							
+							sound.resume();
+							
+						}
+						
+						if ( this.loopCount === 0 ) {
+								
+								SetVolumeSound.call( this, { volume: 0 } );
+								
+						}
+						
+						if ( this.volume !== this.volumeBase ) {
+								
+								if ( this.fade !== false ) {
+										
+										FadeSound.call( this, { volume: this.volumeBase } );
+		
+								}
+								else {
+										
+										SetVolumeSound.call( this, { volume: this.volumeBase } );
+		
+								}
+								
+						}
+						
 				}
 				
-			}
-			
 		}
 		else {
 			
 			this.playOnEnable = true;
 			
 		}
+		
+	}
+	
+	function ActivatePlayButton () {
+		
+		_de.$playSound
+				.off( '.sound' )
+				.one( 'tap.sound', $.proxy( function () {
+						
+						DeactivatePlayButton.call( this );
+						PlaySound.call( this );
+						
+				}, this ) );
+		
+		_utils.FadeDOM( {
+			element: _de.$playSound,
+			opacity: 1
+		} );
+		
+	}
+	
+	function DeactivatePlayButton () {
+		
+		_de.$playSound.off( '.sound' );
+		
+		_utils.FadeDOM( {
+			element: _de.$playSound
+		} );
 		
 	}
 	
@@ -463,13 +509,17 @@ function ( $, _s, _utils ) {
 	
 	function PauseSound () {
 		
-		this.playOnEnable = false;
+		OnCleanSound.call( this );
+		
+		if ( this.priority > -1 ) {
+			
+			UnwaitSound.call( this );
+			
+		}
 		
 		var sound = this.sound;
 		
 		if ( sound ) {
-			
-			OnPauseSound.call( this );
 			
 			if ( sound.playState === 1 && this.fade !== false ) {
 				
@@ -485,66 +535,6 @@ function ( $, _s, _utils ) {
 				sound.pause();
 				
 			}
-			
-		}
-		
-	}
-	
-	/*===================================================
-	
-	wait
-	
-	=====================================================*/
-	
-	function WaitSound () {
-		
-		var sound = this.sound;
-		
-		if ( sound ) {
-			
-			if ( this.priority > -1 ) {
-				
-				_utils.ArrayCautiousAdd( _waiting, this );
-				
-				_waiting.sort( SoundPriorityCompare );
-				
-			}
-			
-			if ( sound.playState === 1 && this.fade !== false ) {
-				
-				FadeSound.call( this, {
-					onComplete: function () {
-						sound.pause();
-					}
-				} );
-				
-			}
-			else {
-				
-				sound.pause();
-				
-			}
-			
-		}
-		
-	}
-	
-	function WaitCycle () {
-		
-		if ( this === _playing ) {
-			
-			_playing = undefined;
-			
-			if ( _waiting.length > 0 ) {
-				
-				PlaySound.call( _waiting[ 0 ] );
-				
-			}
-			
-		}
-		else {
-			
-			_utils.ArrayCautiousRemove( _waiting, this );
 			
 		}
 		
@@ -568,13 +558,19 @@ function ( $, _s, _utils ) {
 	
 	function StopSound () {
 		
-		this.playOnEnable = false;
+		OnCleanSound.call( this );
 		
+		this.loopCount = 0;
+		
+		if ( this.priority > -1 ) {
+			
+			UnwaitSound.call( this );
+			
+		}
+			
 		var sound = this.sound;
 		
 		if ( sound ) {
-			
-			OnStopSound.call( this );
 			
 			if ( sound.playState === 1 && this.fade !== false ) {
 				
@@ -597,64 +593,130 @@ function ( $, _s, _utils ) {
 	
 	/*===================================================
 	
+	wait
+	
+	=====================================================*/
+	
+	function WaitCheckSound () {
+		
+		if ( this.priority > -1 ) {
+				
+				if ( _playing !== this ) {
+						
+						this.timestamp = Date.now();
+						
+						WaitSound.call( this );
+						
+						WaitCycle();
+						
+				}
+				
+		}
+		else {
+				
+			PlaySound.call( this );	
+				
+		}
+		
+	}
+	
+	function WaitSound () {
+		
+		var l = _waiting.length;
+		
+		_utils.ArrayCautiousAdd( _waiting, this );
+		
+		if ( l !== _waiting.length ) _waiting.sort( SoundPriorityCompare );
+		
+		var sound = this.sound;
+		
+		if ( sound && sound.playState === 1 ) {
+			
+			if ( this.fade !== false ) {
+				
+				FadeSound.call( this, {
+					onComplete: function () {
+						sound.pause();
+					}
+				} );
+				
+			}
+			else {
+				
+				sound.pause();
+				
+			}
+			
+		}
+		
+	}
+	
+	function UnwaitSound () {
+		
+		if ( this === _playing ) {
+				
+				_playing = undefined;
+				
+				if ( _s.mobile ) {
+						
+						DeactivatePlayButton.call( this );
+						
+				}
+			
+		}
+		else {
+			
+			_utils.ArrayCautiousRemove( _waiting, this );
+			
+		}
+		
+		WaitCycle();
+		
+	}
+	
+	function WaitCycle () {
+		
+		if ( _waiting.length > 0 && ( typeof _playing === 'undefined' || SoundPriorityCompare( _waiting[ 0 ], _playing ) < 0 ) ) {
+				
+				if ( _waiting[ 0 ].enabled !== true ) {
+						
+						_waiting[ 0 ].playOnEnable = true;
+						
+				}
+				else {
+						
+						if ( _playing ) WaitSound.call( _playing );
+						
+						_playing = _waiting.shift();
+						
+						if ( _s.mobile === true ) {
+								
+								ActivatePlayButton.call( _playing );
+								
+						}
+						else {
+							
+							PlaySound.call( _playing );
+								
+						}
+						
+				}
+				
+		}
+		
+	}
+	
+	/*===================================================
+	
 	events
 	
 	=====================================================*/
 	
-	function OnPlaySound () {
+	function OnCleanSound () {
 		
-		this.timestamp = Date.now();
+		this.playOnEnable = false;
 		
-		_utils.ArrayCautiousRemove( _waiting, this );
-		
-		// handle priority
-		
-		if ( this.priority > -1 && _playing !== this ) {
-			
-			// no prioritized playing
-			
-			if ( typeof _playing === 'undefined' ) {
-				
-				_playing = this;
-				
-			}
-			// this has higher priority than playing
-			else if ( SoundPriorityCompare( this, _playing ) < 0 ) {
-				WaitSound.call( _playing );
-				
-				_playing = this;
-				
-			}
-			// lower priority than playing, pause
-			else {
-				WaitSound.call( this );
-				
-				return;
-				
-			}
-			
-		}
-		
-		if ( this.loopCount === 0 ) {
-			
-			SetVolumeSound.call( this, { volume: 0 } );
-			
-		}
-		
-		if ( this.volume !== this.volumeBase ) {
-			
-			if ( this.fade !== false ) {
-				
-				FadeSound.call( this, { volume: this.volumeBase } );
-				
-			}
-			else {
-				
-				SetVolumeSound.call( this, { volume: this.volumeBase } );
-				
-			}
-			
-		}
+		ClearFadeSound.call( this );
 		
 	}
 	
@@ -684,28 +746,6 @@ function ( $, _s, _utils ) {
 	
 	}
 	
-	function OnPauseSound () {
-		
-		if ( this.priority > -1 ) {
-			
-			WaitCycle.call( this );
-			
-		}
-		
-	}
-	
-	function OnStopSound () {
-		
-		this.loopCount = 0;
-		
-		if ( this.priority > -1 ) {
-			
-			WaitCycle.call( this );
-			
-		}
-		
-	}
-	
 	/*===================================================
 	
 	volume
@@ -723,9 +763,9 @@ function ( $, _s, _utils ) {
 		var me = this;
 		var sound = this.sound;
 		
-		if ( sound ) {
-			
-			if ( parameters ) {
+		ClearFadeSound.call( this );
+		
+		if ( sound && parameters ) {
 				
 				parameters = parameters || {};
 				parameters.volume = _utils.Clamp( _utils.IsNumber( parameters.volume ) ? parameters.volume : this.volume, 0, 100 );
@@ -751,12 +791,10 @@ function ( $, _s, _utils ) {
 						
 					}
 					
-					TweenMax.to( this, parameters.duration, parameters );
+					this.tween = TweenMax.to( this, parameters.duration, parameters );
 					
 				}
 				
-			}
-			
 		}
 		
 	}
@@ -847,6 +885,17 @@ function ( $, _s, _utils ) {
 			
 			SetVolumeSound.call( this, parameters );
 			
+		}
+		
+	}
+	
+	
+	function ClearFadeSound () {
+		
+		if ( this.tween && this.tween.progress() !== 1 ) {
+				
+				this.tween.progress( 1 );
+				
 		}
 		
 	}
