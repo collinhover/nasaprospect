@@ -765,7 +765,9 @@ function ( $, _s, _utils ) {
 		
 		CleanSound.call( this );
 		
-		if ( this.sound ) {
+		// if sound still buffering/loading, destroy so we don't load unnecessarily
+		
+		if ( this.sound && ( this.sound.loaded && this.sound.readyState !== 3 ) ) {
 				
 				this.positionResumed = false;
 				this.position = this.sound.position;
