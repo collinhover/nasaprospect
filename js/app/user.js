@@ -41,8 +41,6 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 		
 			// record original inline styles and init options
 			
-			var hide = $character.hasClass( 'hidden' );
-			
 			$character
 				.removeClass( 'hidden' )
 				.data( 'options', {
@@ -180,11 +178,7 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 			
 			// hide after init complete
 			
-			if ( hide === true ) {
-				
-				Fade( $character, { opacity: 0 } );
-				
-			}
+			Fade( $character, { opacity: 0 } );
 			
 		}
 		
