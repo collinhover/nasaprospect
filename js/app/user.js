@@ -6,12 +6,13 @@ define( [
 	"app/solarSystem",
 	"app/section",
 	"app/sound",
+	"jquery.imagesloaded",
 	"TweenMax"
 ],
 function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 	
 	var _de = _s.domElements;
-	var _user = {};
+	var _user = { ready: false };
 	var _findables = {};
 	var _sectionActive;
 	var _sectionTriggers = [];
@@ -30,6 +31,7 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 	
 	var _$characters = _de.$body.find( '.character' );
 	var _charactersById = {};
+	var _charactersLoaded = [];
 	var _charactersActive = [];
 	
 	_$characters.each( function () {
@@ -39,146 +41,160 @@ function ( $, _s, _utils, _navi, _ss, _section, _snd ) {
 		
 		if ( typeof id === 'string' ) {
 		
-			// record original inline styles and init options
+			$character.imagesLoaded( function () {
+						
+						// record original inline styles and init options
+						
+						$character
+						.removeClass( 'hidden' )
+						.data( 'options', {
+							base: {
+								widthCSS: $character.prop("style")[ 'width' ],
+								heightCSS: $character.prop("style")[ 'height' ],
+								opacityCSS: $character.prop("style")[ 'opacity' ],
+								size: 1,
+								offsetH: 0.5,
+								offsetV: 0.5
+							},
+							adjust: {}
+						} );
+					
+					var options = $character.data( 'options' );
+					var width = parseFloat( options.base.widthCSS );
+					var height = parseFloat( options.base.heightCSS );
+					var opacity = parseFloat( options.base.opacityCSS );
+					
+					// width
+					
+					if ( _utils.IsNumber( width ) ) {
+						
+						options.base.width = options.width = width;
+						options.adjust.width = true;
+						
+					}
+					else {
+						
+						options.base.width = options.width = $character.width();
+						
+					}
+					
+					// height
+					
+					if ( _utils.IsNumber( height ) ) {
+						
+						options.base.height = options.height = height;
+						options.adjust.height = true;
+						
+					}
+					else {
+						
+						options.base.height = options.height = $character.height();
+						
+					}
+					
+					// position
+					
+					// horizontal
+					
+					options.base.leftCSS = $character.prop("style")[ 'left' ];
+					options.base.rightCSS = $character.prop("style")[ 'right' ];
+					options.base.left = options.left = parseFloat( options.base.leftCSS );
+					options.base.right = options.right = parseFloat( options.base.rightCSS );
+					
+					if ( _utils.IsNumber( options.base.right  ) ) {
+						
+						options.adjust.right = true;
+						options.base.offsetH = options.base.right / ( 100 - ( options.adjust.width === true ? options.base.width : 0 ) );
+						if ( _utils.IsNumber( options.base.offsetH ) !== true ) options.base.offsetH = 0;
+						
+					}
+					
+					if ( _utils.IsNumber( options.base.left  ) ) {
+						
+						options.adjust.left = true;
+						options.base.offsetH = options.base.left / ( 100 - ( options.adjust.width === true ? options.base.width : 0 ) );
+						if ( _utils.IsNumber( options.base.offsetH ) !== true ) options.base.offsetH = 0;
+						
+					}
+					
+					// fallback to adjusting left
+					
+					if ( options.adjust.left !== true && options.adjust.right !== true ) {
+						
+						options.base.left = options.left = options.right = options.base.right = 50;
+						options.adjust.left = true;
+						
+					}
+					
+					// vertical
+					
+					options.base.topCSS = $character.prop("style")[ 'top' ];
+					options.base.bottomCSS = $character.prop("style")[ 'bottom' ];
+					options.base.top = options.top = parseFloat( options.base.topCSS );
+					options.base.bottom = options.bottom = parseFloat( options.base.bottomCSS );
+					
+					if ( _utils.IsNumber( options.base.bottom  ) ) {
+						
+						options.adjust.bottom = true;
+						options.base.offsetV = options.base.bottom / ( 100 - ( options.adjust.height === true ? options.base.height : 0 ) );
+						if ( _utils.IsNumber( options.base.offsetV ) !== true ) options.base.offsetV = 0;
+						
+					}
+					
+					if ( _utils.IsNumber( options.base.top  ) ) {
+						
+						options.adjust.top = true;
+						options.base.offsetV = options.base.top / ( 100 - ( options.adjust.height === true ? options.base.height : 0 ) );
+						if ( _utils.IsNumber( options.base.offsetV ) !== true ) options.base.offsetV = 0;
+						
+					}
+					
+					// fallback to adjusting top
+					
+					if ( options.adjust.top !== true && options.adjust.bottom !== true ) {
+						
+						options.base.top = options.top = options.bottom = options.base.bottom = 50;
+						options.adjust.top = true;
+						
+					}
+					
+					// opacity
+					
+					if ( _utils.IsNumber( opacity ) ) {
+						
+						options.base.opacity = options.opacity = opacity;
+						
+					}
+					else {
+						
+						options.base.opacity = options.opacity = 1;
+						
+					}
+					
+					
+					// store
+					
+					_charactersById[ id ] = $character;
+					_charactersLoaded.push( $character );
+					
+					// update once
+					
+					UpdateCharacter( $character );
+					
+					// hide after init complete
+					
+					Fade( $character, { opacity: 0 } );
+					
+					// set ready
+					
+					if ( _charactersLoaded.length >= _$characters.length ) {
+						
+						_user.ready = true;
+						_s.signals.onUserReady.dispatch();
+						
+					}
 			
-			$character
-				.removeClass( 'hidden' )
-				.data( 'options', {
-					base: {
-						widthCSS: $character.prop("style")[ 'width' ],
-						heightCSS: $character.prop("style")[ 'height' ],
-						opacityCSS: $character.prop("style")[ 'opacity' ],
-						size: 1,
-						offsetH: 0.5,
-						offsetV: 0.5
-					},
-					adjust: {}
-				} );
-			
-			var options = $character.data( 'options' );
-			var width = parseFloat( options.base.widthCSS );
-			var height = parseFloat( options.base.heightCSS );
-			var opacity = parseFloat( options.base.opacityCSS );
-			
-			// width
-			
-			if ( _utils.IsNumber( width ) ) {
-				
-				options.base.width = options.width = width;
-				options.adjust.width = true;
-				
-			}
-			else {
-				
-				options.base.width = options.width = $character.width();
-				
-			}
-			
-			// height
-			
-			if ( _utils.IsNumber( height ) ) {
-				
-				options.base.height = options.height = height;
-				options.adjust.height = true;
-				
-			}
-			else {
-				
-				options.base.height = options.height = $character.height();
-				
-			}
-			
-			// position
-			
-			// horizontal
-			
-			options.base.leftCSS = $character.prop("style")[ 'left' ];
-			options.base.rightCSS = $character.prop("style")[ 'right' ];
-			options.base.left = options.left = parseFloat( options.base.leftCSS );
-			options.base.right = options.right = parseFloat( options.base.rightCSS );
-			
-			if ( _utils.IsNumber( options.base.right  ) ) {
-				
-				options.adjust.right = true;
-				options.base.offsetH = options.base.right / ( 100 - ( options.adjust.width === true ? options.base.width : 0 ) );
-				if ( _utils.IsNumber( options.base.offsetH ) !== true ) options.base.offsetH = 0;
-				
-			}
-			
-			if ( _utils.IsNumber( options.base.left  ) ) {
-				
-				options.adjust.left = true;
-				options.base.offsetH = options.base.left / ( 100 - ( options.adjust.width === true ? options.base.width : 0 ) );
-				if ( _utils.IsNumber( options.base.offsetH ) !== true ) options.base.offsetH = 0;
-				
-			}
-			
-			// fallback to adjusting left
-			
-			if ( options.adjust.left !== true && options.adjust.right !== true ) {
-				
-				options.base.left = options.left = options.right = options.base.right = 50;
-				options.adjust.left = true;
-				
-			}
-			
-			// vertical
-			
-			options.base.topCSS = $character.prop("style")[ 'top' ];
-			options.base.bottomCSS = $character.prop("style")[ 'bottom' ];
-			options.base.top = options.top = parseFloat( options.base.topCSS );
-			options.base.bottom = options.bottom = parseFloat( options.base.bottomCSS );
-			
-			if ( _utils.IsNumber( options.base.bottom  ) ) {
-				
-				options.adjust.bottom = true;
-				options.base.offsetV = options.base.bottom / ( 100 - ( options.adjust.height === true ? options.base.height : 0 ) );
-				if ( _utils.IsNumber( options.base.offsetV ) !== true ) options.base.offsetV = 0;
-				
-			}
-			
-			if ( _utils.IsNumber( options.base.top  ) ) {
-				
-				options.adjust.top = true;
-				options.base.offsetV = options.base.top / ( 100 - ( options.adjust.height === true ? options.base.height : 0 ) );
-				if ( _utils.IsNumber( options.base.offsetV ) !== true ) options.base.offsetV = 0;
-				
-			}
-			
-			// fallback to adjusting top
-			
-			if ( options.adjust.top !== true && options.adjust.bottom !== true ) {
-				
-				options.base.top = options.top = options.bottom = options.base.bottom = 50;
-				options.adjust.top = true;
-				
-			}
-			
-			// opacity
-			
-			if ( _utils.IsNumber( opacity ) ) {
-				
-				options.base.opacity = options.opacity = opacity;
-				
-			}
-			else {
-				
-				options.base.opacity = options.opacity = 1;
-				
-			}
-			
-			
-			// store
-			
-			_charactersById[ id ] = $character;
-			
-			// update once
-			
-			UpdateCharacter( $character );
-			
-			// hide after init complete
-			
-			Fade( $character, { opacity: 0 } );
+			} );
 			
 		}
 		

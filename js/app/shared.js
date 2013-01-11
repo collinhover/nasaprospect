@@ -24,6 +24,7 @@ function ( $, Signal ) {
 	
 	_s.signals = {
 		onReady: new Signal(),
+		onUserReady: new Signal(),
 		onScrolled: new Signal(),
 		onUpdated: new Signal(),
 		onResized: new Signal(),

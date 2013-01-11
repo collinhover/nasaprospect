@@ -91,6 +91,7 @@ function ( $, _s, _utils ) {
 		this.fade = ParseAttribute( parameters.fade, _durationFade, false );
 		this.loops = ParseAttribute( parameters.loops, _infinite, 1 );
 		this.loopCount = 0;
+		this.position = 0;
 		this.volumeBase = parseInt( parameters.volume );
 		if ( _utils.IsNumber( this.volumeBase ) !== true || this.volumeBase < 0 ) this.volumeBase = 100;
 		this.volume = this.volumeBase;
@@ -357,7 +358,7 @@ function ( $, _s, _utils ) {
 	function EnableSound () {
 		
 		this.enabled = true;
-		console.log( 'play on enable', this.id, this.playOnEnable );
+		
 		if ( this.playOnEnable === true ) {
 			
 			WaitCheckSound.call( this );
@@ -413,17 +414,35 @@ function ( $, _s, _utils ) {
 		
 		if ( this.enabled === true ) {
 				
-				OnCleanSound.call( this );
+				CleanSound.call( this );
 				
 				var sound = SoundCheck( this );
 				
 				if ( sound ) {
 						
 						var paused = sound.paused;
-						
-						sound.play( {
+						var position = this.position;
+						var parameters = {
 							onfinish: $.proxy( OnFinishSound, this )
-						} );
+						};
+						
+						if ( this.positionResumed === false ) {
+								
+								parameters.whileloading = $.proxy( function () {
+										
+										if ( this.positionResumed === false ) {
+												
+												if ( sound.duration >= position ) this.positionResumed = true;
+												
+												sound.setPosition( Math.min( position, sound.duration ) );
+												
+										}
+										
+								}, this );
+								
+						}
+						
+						sound.play( parameters );
 						
 						if ( paused ) {
 							
@@ -509,13 +528,19 @@ function ( $, _s, _utils ) {
 	
 	function PauseSound () {
 		
-		OnCleanSound.call( this );
-		
 		if ( this.priority > -1 ) {
 			
 			UnwaitSound.call( this );
 			
 		}
+		
+		PauseInternalSound.call( this );
+		
+	}
+	
+	function PauseInternalSound () {
+		
+		ClearSound.call( this );
 		
 		var sound = this.sound;
 		
@@ -558,16 +583,22 @@ function ( $, _s, _utils ) {
 	
 	function StopSound () {
 		
-		OnCleanSound.call( this );
-		
-		this.loopCount = 0;
-		
 		if ( this.priority > -1 ) {
 			
 			UnwaitSound.call( this );
 			
 		}
-			
+		
+		StopInternalSound.call( this );
+		
+	}
+	
+	function StopInternalSound () {
+		
+		ClearSound.call( this );
+		
+		this.loopCount = 0;
+		
 		var sound = this.sound;
 		
 		if ( sound ) {
@@ -628,26 +659,7 @@ function ( $, _s, _utils ) {
 		
 		if ( l !== _waiting.length ) _waiting.sort( SoundPriorityCompare );
 		
-		var sound = this.sound;
-		
-		if ( sound && sound.playState === 1 ) {
-			
-			if ( this.fade !== false ) {
-				
-				FadeSound.call( this, {
-					onComplete: function () {
-						sound.pause();
-					}
-				} );
-				
-			}
-			else {
-				
-				sound.pause();
-				
-			}
-			
-		}
+		PauseInternalSound.call( this );
 		
 	}
 	
@@ -712,26 +724,15 @@ function ( $, _s, _utils ) {
 	
 	=====================================================*/
 	
-	function OnCleanSound () {
-		
-		this.playOnEnable = false;
-		
-		ClearFadeSound.call( this );
-		
-	}
-	
 	function OnFinishSound () {
 		
 		this.loopCount++;
+		this.position = 0;
+		if ( this.sound ) this.sound.setPosition( this.position );
 		
 		if ( this.fadingOut !== true ) {
 			
-			if ( this.loops === true ) {
-				
-				PlaySound.call( this );
-				
-			}
-			else if ( _utils.IsNumber( this.loops ) && this.loopCount < this.loops ) {
+			if ( this.loops === true || ( _utils.IsNumber( this.loops ) && this.loopCount < this.loops ) ) {
 				
 				PlaySound.call( this );
 				
@@ -744,6 +745,37 @@ function ( $, _s, _utils ) {
 			
 		}
 	
+	}
+	
+	/*===================================================
+	
+	reset
+	
+	=====================================================*/
+	
+	function CleanSound () {
+		
+		this.playOnEnable = false;
+		
+		ClearFadeSound.call( this );
+		
+	}
+	
+	function ClearSound () {
+		
+		CleanSound.call( this );
+		
+		if ( this.sound ) {
+				
+				this.positionResumed = false;
+				this.position = this.sound.position;
+				
+				this.sound.destruct();
+				
+				this.sound = undefined;
+				
+		}
+		
 	}
 	
 	/*===================================================
@@ -892,9 +924,10 @@ function ( $, _s, _utils ) {
 	
 	function ClearFadeSound () {
 		
-		if ( this.tween && this.tween.progress() !== 1 ) {
+		if ( typeof this.tween !== 'undefined' && this.tween.progress() !== 1 ) {
 				
 				this.tween.progress( 1 );
+				this.tween = undefined;
 				
 		}
 		

@@ -44,7 +44,7 @@
 					debugMode: false,
 					useHTML5Audio: true,
 					preferFlash: false,
-					onready: init
+					onready: Init
 				  } );
 				
 			} );
@@ -64,9 +64,9 @@
 			
 		} );
 		
-		soundManager.onready( init );
+		soundManager.onready( Init );
 		
-		function init () {
+		function Init () {
 			
 			require(
 			[
@@ -83,35 +83,50 @@
 				
 				$( "#sm2-container" ).addClass( 'swf_loaded' );
 				
-				_utils.FadeDOM( {
-					element: _de.$noflash,
-					duration: 0
-				} );
-				
-				Update();
-				
-				// ready
-				
-				_s.signals.onReady.dispatch();
-				
-				// resize once on start
-				
-				_de.$window.trigger( 'resize' );
-				_navi.CheckTriggers( true );
-				
-				// fade preloader
-				
-				_utils.FadeDOM( {
-					element: _de.$preloader,
-					easing: 'easeInCubic',
-					duration: 1000
-				} );
-				
-				function Update () {
+				if ( _user.ready !== true ) {
 					
-					_s.signals.onUpdated.dispatch();
+					_s.signals.onUserReady.add( InitInternal );
 					
-					window.requestAnimationFrame( Update );
+				}
+				else {
+					
+					InitInternal();
+					
+				}
+				
+				function InitInternal () {
+					
+					_utils.FadeDOM( {
+						element: _de.$noflash,
+						duration: 0
+					} );
+					
+					Update();
+					
+					// ready
+					
+					_s.signals.onReady.dispatch();
+					
+					// resize once on start
+					
+					_de.$window.trigger( 'resize' );
+					_navi.CheckTriggers( true );
+					
+					// fade preloader
+					
+					_utils.FadeDOM( {
+						element: _de.$preloader,
+						easing: 'easeInCubic',
+						duration: 1000
+					} );
+					
+					function Update () {
+						
+						_s.signals.onUpdated.dispatch();
+						
+						window.requestAnimationFrame( Update );
+						
+					}
 					
 				}
 				
