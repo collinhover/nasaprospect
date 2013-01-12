@@ -540,7 +540,7 @@ function ( $, _s, _utils ) {
 	
 	function PauseInternalSound () {
 		
-		ClearSound.call( this );
+		CleanSound.call( this );
 		
 		var sound = this.sound;
 		
@@ -549,15 +549,21 @@ function ( $, _s, _utils ) {
 			if ( sound.playState === 1 && this.fade !== false ) {
 				
 				FadeSound.call( this, {
-					onComplete: function () {
+					onComplete: $.proxy( function () {
+						
 						sound.pause();
-					}
+						
+						ClearSound.call( this );
+						
+					}, this )
 				} );
 				
 			}
 			else {
 				
 				sound.pause();
+				
+				ClearSound.call( this );
 				
 			}
 			
@@ -595,7 +601,7 @@ function ( $, _s, _utils ) {
 	
 	function StopInternalSound () {
 		
-		ClearSound.call( this );
+		CleanSound.call( this );
 		
 		this.loopCount = 0;
 		
@@ -606,15 +612,21 @@ function ( $, _s, _utils ) {
 			if ( sound.playState === 1 && this.fade !== false ) {
 				
 				FadeSound.call( this, {
-					onComplete: function () {
+					onComplete: $.proxy( function () {
+						
 						sound.stop();
-					}
+						
+						ClearSound.call( this );
+						
+					}, this )
 				} );
 				
 			}
 			else {
 				
 				sound.stop();
+				
+				ClearSound.call( this );
 				
 			}
 			
@@ -767,11 +779,12 @@ function ( $, _s, _utils ) {
 		
 		// if sound still buffering/loading, destroy so we don't load unnecessarily
 		
-		if ( this.sound && ( this.sound.loaded && this.sound.readyState !== 3 ) ) {
+		if ( this.sound && ( !this.sound.loaded && this.sound.readyState !== 3 ) ) {
 				
 				this.positionResumed = false;
 				this.position = this.sound.position;
 				
+				this.sound.unload();
 				this.sound.destruct();
 				
 				this.sound = undefined;
