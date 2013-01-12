@@ -131,22 +131,34 @@
 						
 						_s.timeLast = _s.time;
 						_s.time = new Date().getTime();
+						_s.timeDeltaLastLast = _s.timeDeltaLast;
+						_s.timeDeltaLast = _s.timeDelta;
 						_s.timeDelta = _s.time - _s.timeLast;
 						
 						// test performance
 						
 						if ( _s.lowPerformance !== true && _s.testPerformance === true ) {
 							
+							// special case for when user gets a huge spike for 1 or 2 frames
+							
+							var timeDeltaLastHalf = _s.timeDeltaLast * 0.5;
+							
+							if ( _s.timeDeltaLast >= _s.timeDeltaLowPerformance && _s.timeDeltaLastLast < timeDeltaLastHalf && _s.timeDelta < timeDeltaLastHalf ) {
+								
+								_s.timeDeltaLast = 0;
+								
+							}
+							
 							if ( _s.timeTestPerformancePause < _s.timeTestPerformancePauseThreshold ) {
 								
-								_s.timeTestPerformancePause += _s.timeDelta;
+								_s.timeTestPerformancePause += _s.timeDeltaLast;
 								
 							}
 							else {
 								
 								if ( _s.timeDelta >= _s.timeDeltaLowPerformance ) {
 									
-									_s.timeTestPerformance += _s.timeDelta;
+									_s.timeTestPerformance += _s.timeDeltaLast;
 									
 									if ( _s.timeTestPerformance >= _s.timeTestPerformanceThreshold ) {
 										
@@ -177,7 +189,7 @@
 								// reset low performance time if too long inbetween instances of low performance
 								else {
 									
-									_s.timeTestPerformanceReset += _s.timeDelta;
+									_s.timeTestPerformanceReset += _s.timeDeltaLast;
 									
 									if ( _s.timeTestPerformanceReset >= _s.timeTestPerformanceResetThreshold ) {
 										

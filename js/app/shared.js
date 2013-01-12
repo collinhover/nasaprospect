@@ -79,9 +79,11 @@ function ( $, Signal ) {
 	=====================================================*/
 	
 	_s.time = _s.timeLast = new Date().getTime();
+	_s.timeDelta = _s.timeDeltaLast = _s.timeDeltaLastLast = 0;
 	
 	_s.lowPerformance = false;
 	_s.testLowPerformance = false;
+	_s.timeDeltaMax = 1000 / 5;
 	_s.timeDeltaLowPerformance = 1000 / 20;
 	_s.timeTestPerformance = 0;
 	_s.timeTestPerformanceThreshold = 1000;
