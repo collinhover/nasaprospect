@@ -427,6 +427,7 @@
     background-image: -o-linear-gradient(left, @startColor, @endColor); // Opera 11.10
     background-image: linear-gradient(to right, @startColor, @endColor); // Standard, IE10
     background-repeat: repeat-x;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=1)",argb(@startColor),argb(@endColor))); // IE9 and down
   }
   .vertical(@startColor: #555, @endColor: #333) {
     background-color: mix(@startColor, @endColor, 60%);
@@ -436,6 +437,7 @@
     background-image: -o-linear-gradient(top, @startColor, @endColor); // Opera 11.10
     background-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10
     background-repeat: repeat-x;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down
   }
   .directional(@startColor: #555, @endColor: #333, @deg: 45deg) {
     background-color: @endColor;
@@ -453,6 +455,7 @@
     background-image: -o-linear-gradient(@startColor 0%, @midColor @colorStop, @endColor 100%);
     background-image: linear-gradient(@startColor 0%, @midColor @colorStop, @endColor 100%);
     background-repeat: no-repeat;
+    filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down, gets no color-stop at all for proper fallback
   }
   .vertical-four-colors(@color1: #00b3ee, @color1Stop: 0%, @color2: #7a43b6, @color2Stop: 33%, @color3: #7a43b6, @color3Stop: 66%, @color4: #c3325f, @color4Stop: 100%) {
     background-image: -moz-linear-gradient(top, @color1 @color1Stop, @color2 @color2Stop, @color3 @color3Stop, @color4 @color4Stop); /* FF3.6+ */
@@ -461,6 +464,7 @@
     background-image: -o-linear-gradient(top, @color1 @color1Stop,@color2 @color2Stop,@color3 @color3Stop,@color4 @color4Stop); /* Opera 11.10+ */
     background-image: -ms-linear-gradient(top, @color1 @color1Stop,@color2 @color2Stop,@color3 @color3Stop,@color4 @color4Stop); /* IE10+ */
     background-image: linear-gradient(to bottom, @color1 @color1Stop,@color2 @color2Stop,@color3 @color3Stop,@color4 @color4Stop); /* W3C */
+    filter: e("progid:DXImageTransform.Microsoft.gradient(startColorstr='@color1', endColorstr='@color4', GradientType=0)"); // IE9 and down, gets no color-stop at all for proper fallback
     background-repeat: no-repeat;
   }
   .radial(@innerColor: #555, @outerColor: #333, @shape: circle, @size: contain)  {
@@ -779,6 +783,7 @@
 		background-image: -o-linear-gradient(top, @startColor, @endColor); // Opera 11.10
 		background-image: linear-gradient(to bottom, @startColor, @endColor); // Standard, IE10
 		background-repeat: repeat-x;
+		filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down
 	}
 	.vertical-three-colors(@startColor: #00b3ee, @midColor: #7a43b6, @colorStop: 50%, @endColor: #c3325f) {
 		background-color: transparent;
@@ -788,6 +793,7 @@
 		background-image: -o-linear-gradient(@startColor 0%, @midColor @colorStop, @endColor 100%);
 		background-image: linear-gradient(@startColor 0%, @midColor @colorStop, @endColor 100%);
 		background-repeat: no-repeat;
+		filter: e(%("progid:DXImageTransform.Microsoft.gradient(startColorstr='%d', endColorstr='%d', GradientType=0)",argb(@startColor),argb(@endColor))); // IE9 and down, gets no color-stop at all for proper fallback
 	}
 }
 
