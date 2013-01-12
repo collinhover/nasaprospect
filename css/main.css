@@ -6234,7 +6234,8 @@ p {
 -------------------------------------------------------------------------------*/
 #solar-system,
 #preloader,
-#noflash {
+#noflash,
+#nosupport {
   background-color: #061b2b;
   background-image: url("../img/space_stars_static.png");
   background-image: url("../img/space_stars_static.svg");
@@ -6262,6 +6263,7 @@ p {
 
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='@color1', endColorstr='@color4', GradientType=0);
   background-repeat: no-repeat;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
 }
 .interplanet .stars {
   background-image: url("../img/space_stars_moving.png");
@@ -6282,7 +6284,8 @@ p {
   min-height: 550px;
 }
 #preloader,
-#noflash {
+#noflash,
+#nosupport {
   width: 100%;
   padding: 0;
   margin: 0;

@@ -1,7 +1,7 @@
 /* solar-system
 -------------------------------------------------------------------------------*/
 
-#solar-system, #preloader, #noflash {
+#solar-system, #preloader, #noflash, #nosupport {
 	background-color: @logoDark;
     background-image: url( "../img/space_stars_static.png" );
     background-image: url( "../img/space_stars_static.svg" );
@@ -11,6 +11,7 @@
 .interplanet {
 	background: @logoDark;
 	#gradient > .vertical-four-colors( fade( @logoDark, 0% ), 0%, @logoDark, 15%, @logoDark, 85%, fade( @logoDark, 0% ) 100% );
+	.reset-filter();
 	
 	.stars {
 		background-image: url( "../img/space_stars_moving.png" );
@@ -29,7 +30,7 @@
 	min-height: @pageHeightMin;
 }
 
-#preloader, #noflash {
+#preloader, #noflash, #nosupport {
 	.fillTopLeft;
 }
 

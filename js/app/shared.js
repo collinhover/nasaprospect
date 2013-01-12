@@ -41,11 +41,16 @@ function ( $, Signal ) {
 	
 	_de.$window = $( window );
 	_de.$document = $( document );
+	_de.$html = _de.$document.find( "html" );
 	_de.$body = _de.$document.find( "body" );
 	_de.$main = $( "#main" );
 	_de.$preloader = $( "#preloader" );
 	_de.$noflash = $( "#noflash" );
+	_de.$nosupport = $( "#nosupport" );
 	_de.$user = $( "#user" );
+	_de.$userToggleSound = $( "#userToggleSound" );
+	_de.$userPlaySound = $( "#userPlaySound" );
+	_de.$userScroll = $( "#userScroll" );
 	_de.$userLowPerformance = $( "#userLowPerformance" );
 	
 	_de.$scrollable = $( ".scrollable" );
@@ -66,6 +71,7 @@ function ( $, Signal ) {
 	
 	_de.$solarSystem = $( "#solar-system" );
 	_de.$sections = $( ".system-section" );
+	_de.$setup = $( "#setup" );
 	
 	_de.$maxgrounds = $( ".maxground" );
 	_de.$foregrounds = $( ".foreground" );
@@ -123,6 +129,8 @@ function ( $, Signal ) {
 	=====================================================*/
 	
 	_s.mobile = DetectTierIphone() || DetectTierTablet();
+	_s.unsupported = _de.$html.hasClass( 'lt-ie9' );
+	_s.ie9 = _de.$html.hasClass( 'ie9' );
 	_s.supports = {
 		pointerEvents: Modernizr.testProp('pointerEvents')
 	};
@@ -131,7 +139,21 @@ function ( $, Signal ) {
 	
 	if ( !Modernizr.svg || !Modernizr.svgclippaths ) {
 		
-		$( 'img' ).each( function () {
+		SVGtoPNG( $( 'img' ) );
+		
+	}
+	
+	// ie9 fixes for user ui
+	
+	if ( _s.ie9 === true ) {
+		
+		SVGtoPNG( $().add( _de.$setup ).add( _de.$userToggleSound ).add( _de.$userPlaySound ).add( _de.$userScroll ).add( _de.$userLowPerformance ).find( 'img' ) );
+		
+	}
+	
+	function SVGtoPNG ( $elements ) {
+		
+		$elements.each( function () {
 			
 			var $element = $( this );
 			var src = $element.attr( 'src' ) || '';

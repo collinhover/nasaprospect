@@ -57,9 +57,7 @@
 			
 			_utils.FadeDOM( {
 				element: _de.$noflash,
-				easing: 'easeInCubic',
-				opacity: 1,
-				duration: 1000
+				opacity: 1
 			} );
 			
 		} );
@@ -83,7 +81,15 @@
 				
 				$( "#sm2-container" ).addClass( 'swf_loaded' );
 				
-				if ( _user.ready !== true ) {
+				if ( _s.unsupported === true ) {
+					
+					_utils.FadeDOM( {
+						element: _de.$nosupport,
+						opacity: 1
+					} );
+					
+				}
+				else if ( _user.ready !== true ) {
 					
 					_s.signals.onUserReady.add( InitInternal );
 					
