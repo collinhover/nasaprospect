@@ -88,6 +88,8 @@
 						opacity: 1
 					} );
 					
+					$( ".video-container" ).append( '<iframe width="640" height="400" src="http://www.youtube.com/embed/bDMSJ2rFRqg" frameborder="0" allowfullscreen></iframe>' ); 
+					
 				}
 				else if ( _user.ready !== true ) {
 					
