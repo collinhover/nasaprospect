@@ -57,19 +57,19 @@ function ( $, _s, _utils ) {
 			horizontalScrolling: false
 		} );
 		
-		_de.$containerFill.each( function ( index ) {
+		_de.$scrollContainer.each( function ( index ) {
 				
 				var $element = $( this );
 				
-				if ( index < _de.$containerFill.length - 1 ) {
+				if ( index < _de.$scrollContainer.length - 1 ) {
 						
-						$element.data( '$scrollTargetNext', _de.$containerFill.eq( index + 1 ) );
+						$element.data( '$scrollTargetNext', _de.$scrollContainer.eq( index + 1 ) );
 						
 				}
 				
 				if ( index > 0 ) {
 						
-						$element.data( '$scrollTargetPrev', _de.$containerFill.eq( index - 1 ) );
+						$element.data( '$scrollTargetPrev', _de.$scrollContainer.eq( index - 1 ) );
 						
 				}
 				
@@ -764,7 +764,7 @@ function ( $, _s, _utils ) {
 		
 		var $scrollContainer;
 		
-		_de.$containerFill.each( function () {
+		_de.$scrollContainer.each( function () {
 			
 				var $element = $( this );
 				var bounds = GetTriggerBounds( $element );

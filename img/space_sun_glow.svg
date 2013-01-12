@@ -11,10 +11,10 @@
 	<clipPath id="SVGID_2_">
 		<use xlink:href="#SVGID_66_"  overflow="visible"/>
 	</clipPath>
-	<radialGradient id="SVGID_3_" cx="999.9062" cy="1673.8193" r="1673.8179" gradientUnits="userSpaceOnUse">
+	<radialGradient id="SVGID_4_" cx="999.9062" cy="1673.8193" r="1673.8179" gradientUnits="userSpaceOnUse">
 		<stop  offset="0" style="stop-color:#FACD1E"/>
 		<stop  offset="1" style="stop-color:#F36E3A;stop-opacity:0"/>
 	</radialGradient>
-	<circle clip-path="url(#SVGID_2_)" fill="url(#SVGID_3_)" cx="999.906" cy="1673.819" r="1673.817"/>
+	<circle clip-path="url(#SVGID_2_)" fill="url(#SVGID_4_)" cx="999.906" cy="1673.819" r="1673.817"/>
 </g>
 </svg>

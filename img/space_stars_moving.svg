@@ -173,23 +173,23 @@
 		<path id="SVGID_50_" opacity="0.1" d="M529.773,159.27c155.992,59.793,327.486,99.787,479.984,76.897
 			c26.969-4.048,50.717-8.571,71.549-13.49L1081.305,1.33c0,0-256.303,73.732-551.535,50.724L529.773,159.27z"/>
 	</defs>
-	<clipPath id="SVGID_3_">
+	<clipPath id="SVGID_4_">
 		<use xlink:href="#SVGID_50_"  overflow="visible"/>
 	</clipPath>
-	<polygon clip-path="url(#SVGID_3_)" fill="#F1F2F2" points="58.023,-218.555 -82.725,24.443 544.469,-2.876 	"/>
-	<polygon clip-path="url(#SVGID_3_)" fill="#E6E7E8" points="-82.725,24.443 544.469,-2.876 379.029,332.962 	"/>
-	<polygon clip-path="url(#SVGID_3_)" fill="#F1F2F2" points="544.469,-2.876 379.029,332.962 860.537,-23.649 	"/>
-	<polygon clip-path="url(#SVGID_3_)" fill="#D1D3D4" points="860.537,-23.649 379.029,332.962 907.453,388.871 	"/>
+	<polygon clip-path="url(#SVGID_4_)" fill="#F1F2F2" points="58.023,-218.555 -82.725,24.443 544.469,-2.876 	"/>
+	<polygon clip-path="url(#SVGID_4_)" fill="#E6E7E8" points="-82.725,24.443 544.469,-2.876 379.029,332.962 	"/>
+	<polygon clip-path="url(#SVGID_4_)" fill="#F1F2F2" points="544.469,-2.876 379.029,332.962 860.537,-23.649 	"/>
+	<polygon clip-path="url(#SVGID_4_)" fill="#D1D3D4" points="860.537,-23.649 379.029,332.962 907.453,388.871 	"/>
 </g>
 <g opacity="0.1">
 	<defs>
 		<path id="SVGID_52_" opacity="0.1" d="M1081.302,413.939c-155.991,59.793-327.486,99.787-479.983,76.897
 			c-26.969-4.048-50.717-8.571-71.549-13.49L529.771,256c0,0,256.303,73.732,551.535,50.724L1081.302,413.939z"/>
 	</defs>
-	<clipPath id="SVGID_4_">
+	<clipPath id="SVGID_6_">
 		<use xlink:href="#SVGID_52_"  overflow="visible"/>
 	</clipPath>
-	<polygon clip-path="url(#SVGID_4_)" fill="#F1F2F2" points="703.623,643.541 750.539,231.021 311.009,419.766 	"/>
-	<polygon clip-path="url(#SVGID_4_)" fill="#E6E7E8" points="311.009,419.766 750.539,231.021 513.489,139.388 	"/>
+	<polygon clip-path="url(#SVGID_6_)" fill="#F1F2F2" points="703.623,643.541 750.539,231.021 311.009,419.766 	"/>
+	<polygon clip-path="url(#SVGID_6_)" fill="#E6E7E8" points="311.009,419.766 750.539,231.021 513.489,139.388 	"/>
 </g>
 </svg>

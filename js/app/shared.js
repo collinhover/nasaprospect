@@ -47,6 +47,7 @@ function ( $, Signal ) {
 	_de.$preloader = $( "#preloader" );
 	_de.$noflash = $( "#noflash" );
 	_de.$nosupport = $( "#nosupport" );
+	
 	_de.$user = $( "#user" );
 	_de.$userToggleSound = $( "#userToggleSound" );
 	_de.$userPlaySound = $( "#userPlaySound" );
@@ -59,19 +60,20 @@ function ( $, Signal ) {
 	_de.$playSound = $( ".play-sound" );
 	_de.$findable = $( "[data-findable]" );
 	
-	_de.$containerFill = $( ".container-fill" );
-	
 	_de.$logo = $( ".logo" );
 	_de.$logoName = _de.$logo.find( ".prospect-name" );
-	
-	_de.$navbarPlanets = $( "#navbarPlanets" );
-	_de.$navPlanets = $( ".nav-planets" );
-	_de.$scrollButtonUp = $( ".scroll-button-up" );
-	_de.$scrollButtonDown = $( ".scroll-button-down" );
 	
 	_de.$solarSystem = $( "#solar-system" );
 	_de.$sections = $( ".system-section" );
 	_de.$setup = $( "#setup" );
+	
+	_de.$containerFill = $( ".container-fill" );
+	_de.$scrollContainer = $( ".scroll-container" ).add( _de.$containerFill );
+	_de.$scrollButtonUp = $( ".scroll-button-up" );
+	_de.$scrollButtonDown = $( ".scroll-button-down" );
+	
+	_de.$navbarPlanets = $( "#navbarPlanets" );
+	_de.$navPlanets = $( ".nav-planets" );
 	
 	_de.$maxgrounds = $( ".maxground" );
 	_de.$foregrounds = $( ".foreground" );
