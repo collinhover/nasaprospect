@@ -131,7 +131,11 @@ function ( $, Signal ) {
 	=====================================================*/
 	
 	_s.mobile = DetectTierIphone() || DetectTierTablet();
-	_s.unsupported = _de.$html.hasClass( 'lt-ie9' );
+	_s.unsupported = _de.$html.hasClass( 'lt-ie9' )
+		|| !_de.$html.hasClass( 'fontface' )
+		|| !_de.$html.hasClass( 'backgroundsize' )
+		|| !_de.$html.hasClass( 'opacity' )
+		|| !Modernizr.mq( '(min-width: 0px)' );
 	_s.ie9 = _de.$html.hasClass( 'ie9' );
 	_s.supports = {
 		pointerEvents: Modernizr.testProp('pointerEvents')
