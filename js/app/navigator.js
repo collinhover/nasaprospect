@@ -2,8 +2,10 @@ define( [
 	"jquery",
 	"app/shared",
 	"app/utilities",
+	"hammer.custom",
 	"jquery.throttle-debounce.custom",
-	"jquery.stellar.custom"
+	"jquery.stellar.custom",
+	"jquery.smooth-scroll"
 ],
 function ( $, _s, _utils ) {
 	
@@ -30,6 +32,10 @@ function ( $, _s, _utils ) {
 	var _scrollCenterPosition = { x: 0, y: 0 };
 	var _scrollDirection = { x: 0, y: 0 };
 	var _triggerCheckPosition = { x: 0, y: 0 };
+	var _$scrollContainer;
+	var _triggerScrollContainer;
+	var _triggerScrollContainerNext;
+	var _triggerScrollContainerPrev;
 	
 	/*===================================================
 	
@@ -50,7 +56,39 @@ function ( $, _s, _utils ) {
 		.stellar( {
 			horizontalScrolling: false
 		} );
-	
+		
+		_de.$containerFill.each( function ( index ) {
+				
+				var $element = $( this );
+				
+				if ( index < _de.$containerFill.length - 1 ) {
+						
+						$element.data( '$scrollTargetNext', _de.$containerFill.eq( index + 1 ) );
+						
+				}
+				
+				if ( index > 0 ) {
+						
+						$element.data( '$scrollTargetPrev', _de.$containerFill.eq( index - 1 ) );
+						
+				}
+				
+		} );
+		
+		FindUserScrollContainer();
+		
+		_de.$scrollButtonUp.on( 'tap', function () {
+				
+				UserScroll( _$scrollContainer.data( '$scrollTargetPrev' ) );
+				
+		} );
+		
+		_de.$scrollButtonDown.on( 'tap', function () {
+				
+				UserScroll( _$scrollContainer.data( '$scrollTargetNext' ) );
+				
+		} );
+		
 	_s.signals.onContentRefreshed.add( Resize );
 	
 	/*===================================================
@@ -274,7 +312,7 @@ function ( $, _s, _utils ) {
 				}
 				
 				if ( triggerEmpty === true ) {
-					
+						
 					_triggers.splice( index, 1 );
 					
 					// changed
@@ -675,6 +713,10 @@ function ( $, _s, _utils ) {
 		
 		_$navi.stellar( 'refresh' );
 		
+		// refind user scroll container
+		
+		FindUserScrollContainer();
+		
 	}
 	
 	/*===================================================
@@ -694,6 +736,153 @@ function ( $, _s, _utils ) {
 		CheckTriggers();
 		
 		_s.signals.onScrolled.dispatch();
+		
+	}
+	
+	function UserScroll ( $scrollTarget ) {
+		
+		if ( $scrollTarget instanceof $ ) {
+				
+				OnScrollContainerChange( $scrollTarget );
+				
+				var parameters = {
+						scrollElement: _$navi,
+						offset: $scrollTarget.offset().top,
+						easing: 'easeInOutCubic',
+						speed: _s.scrollDuration
+				};
+				
+				if ( _s.mobile === true || _s.lowPerformance === true ) parameters.speed = 0;
+				
+				$.smoothScroll( parameters );
+				
+		}
+		
+	}
+	
+	function FindUserScrollContainer () {
+		
+		var $scrollContainer;
+		
+		_de.$containerFill.each( function () {
+			
+				var $element = $( this );
+				var bounds = GetTriggerBounds( $element );
+				var intersects = _utils.AABBIntersectsAABB( _scrollPosition.x, _scrollPosition.y, _scrollPosition.x, _scrollPosition.y, bounds.left, bounds.top, bounds.right, bounds.bottom );
+				
+				// take first intersection
+				
+				if ( intersects === true ) {
+						
+						$scrollContainer = $element;
+						
+						return false;
+						
+				}
+				
+		} );
+		
+		if ( $scrollContainer instanceof $ && $scrollContainer.is( _$scrollContainer ) !== true ) {
+				
+				if ( _$scrollContainer instanceof $ ) {
+						
+						RemoveTrigger( $scrollContainer.data( 'triggerScrollContainer' ) );
+						
+						var $scrollTargetNext = _$scrollContainer.data( '$scrollTargetNext' );
+						var $scrollTargetPrev = _$scrollContainer.data( '$scrollTargetPrev' );
+						
+						if ( $scrollTargetPrev instanceof $ ) {
+								RemoveTrigger( $scrollTargetPrev.data( 'triggerScrollContainer' ) );
+						}
+						
+						if ( $scrollTargetNext instanceof $ ) {
+								RemoveTrigger( $scrollTargetNext.data( 'triggerScrollContainer' ) );
+						}
+						
+				}
+				
+				$scrollContainer.data( 'triggerScrollContainer', AddTrigger( {
+						$element: $scrollContainer,
+						callbackCenter: function () {
+								OnScrollContainerChange( $scrollContainer );
+						}
+				} ) );
+				
+				OnScrollContainerChange( $scrollContainer );
+				
+		}
+		
+	}
+	
+	function OnScrollContainerChange ( $scrollContainer ) {
+		
+		if ( $scrollContainer.is( _$scrollContainer ) !== true ) {
+				
+				var $scrollContainerLast = _$scrollContainer;
+				_$scrollContainer = $scrollContainer;
+				
+				if ( $scrollContainerLast instanceof $ ) {
+						
+						ReverseResetTriggers( $scrollContainerLast.data( 'triggerScrollContainer' ) );
+						
+				}
+				
+				var $scrollTargetNext = _$scrollContainer.data( '$scrollTargetNext' );
+				var $scrollTargetPrev = _$scrollContainer.data( '$scrollTargetPrev' );
+				
+				if ( $scrollTargetPrev instanceof $ ) {
+						
+						if ( $scrollTargetPrev.is( $scrollContainerLast ) ) {
+								
+								var $lastLast = $scrollContainerLast.data( '$scrollTargetPrev' );
+								
+								if ( $lastLast instanceof $ ) {
+										
+										RemoveTrigger( $lastLast.data( 'triggerScrollContainer' ) );
+										
+								}
+								
+						}
+						else {
+								
+								$scrollTargetPrev.data( 'triggerScrollContainer', AddTrigger( {
+									$element: $scrollTargetPrev,
+									callbackCenter: function () {
+										OnScrollContainerChange( $scrollTargetPrev );
+									}
+								} ) );
+								
+						}
+						
+				}
+				
+				if ( $scrollTargetNext instanceof $ ) {
+						
+						if ( $scrollTargetNext.is( $scrollContainerLast ) ) {
+								
+								var $nextNext = $scrollContainerLast.data( '$scrollTargetNext' );
+								
+								if ( $nextNext instanceof $ ) {
+										
+										RemoveTrigger( $nextNext.data( 'triggerScrollContainer' ) );
+										
+								}
+								
+						}
+						else {
+								
+								$scrollTargetNext.data( 'triggerScrollContainer', AddTrigger( {
+									$element: $scrollTargetNext,
+									callbackCenter: function () {
+										OnScrollContainerChange( $scrollTargetNext );
+									}
+								} ) );
+								
+						}
+						
+				}
+				
+		}
 		
 	}
 	

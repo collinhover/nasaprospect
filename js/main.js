@@ -101,6 +101,7 @@
 						duration: 0
 					} );
 					
+					_s.time = _s.timeLast = new Date().getTime();
 					Update();
 					
 					// ready
@@ -109,18 +110,86 @@
 					
 					// resize once on start
 					
+					_de.$window.on( 'resize', function () { _s.timeTestPerformancePause = 0; } );
+					_s.signals.onContentRefreshed.addOnce( function () { _navi.CheckTriggers( true ); } );
 					_de.$window.trigger( 'resize' );
-					_navi.CheckTriggers( true );
 					
 					// fade preloader
 					
 					_utils.FadeDOM( {
 						element: _de.$preloader,
 						easing: 'easeInCubic',
-						duration: 1000
+						duration: 1000,
+						callback: function () {
+							
+							_s.testPerformance = true;
+							
+						}
 					} );
 					
 					function Update () {
+						
+						_s.timeLast = _s.time;
+						_s.time = new Date().getTime();
+						_s.timeDelta = _s.time - _s.timeLast;
+						
+						// test performance
+						
+						if ( _s.lowPerformance !== true && _s.testPerformance === true ) {
+							
+							if ( _s.timeTestPerformancePause < _s.timeTestPerformancePauseThreshold ) {
+								
+								_s.timeTestPerformancePause += _s.timeDelta;
+								
+							}
+							else {
+								
+								if ( _s.timeDelta >= _s.timeDeltaLowPerformance ) {
+									
+									_s.timeTestPerformance += _s.timeDelta;
+									
+									if ( _s.timeTestPerformance >= _s.timeTestPerformanceThreshold ) {
+										
+										_s.lowPerformance = true;
+										_s.testPerformance = false;
+										
+										// let user know of low performance
+										
+										_utils.FadeDOM( {
+											element: _de.$userLowPerformance,
+											opacity: 1
+										} );
+										
+										// allow user to force high performance
+										
+										_de.$userLowPerformance.one( 'tap', function () {
+											
+											_utils.FadeDOM( {
+												element: _de.$userLowPerformance
+											} );
+											_s.lowPerformance = false;
+											
+										} );
+										
+									}
+									
+								}
+								// reset low performance time if too long inbetween instances of low performance
+								else {
+									
+									_s.timeTestPerformanceReset += _s.timeDelta;
+									
+									if ( _s.timeTestPerformanceReset >= _s.timeTestPerformanceResetThreshold ) {
+										
+										_s.timeTestPerformance = _s.timeTestPerformanceReset = 0;
+										
+									}
+									
+								}
+								
+							}
+							
+						}
 						
 						_s.signals.onUpdated.dispatch();
 						

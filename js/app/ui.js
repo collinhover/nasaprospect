@@ -50,7 +50,7 @@ function ( $, _s, _utils, _navi ) {
 	
 	// resize
 	
-	_de.$window.on( 'resize', $.throttle( _s.throttleTimeLong, OnWindowResized ) );
+	_de.$window.on( 'resize', $.debounce( _s.throttleTimeMedium, OnWindowResized ) );
 	
 	/*===================================================
 	
@@ -59,7 +59,7 @@ function ( $, _s, _utils, _navi ) {
 	=====================================================*/
     
     function OnWindowResized () {
-       
+	   
 		_s.w = _de.$window.width();
 		_s.h = _de.$window.height();
 		
@@ -87,11 +87,11 @@ function ( $, _s, _utils, _navi ) {
 		// refresh scroll panes
 		
 		OnContentChanged();
-        
+		
     }
 	
 	function OnContentChanged ( changed ) {
-		
+	   
 		var $changed = $( changed );
 		var $scrollable;
 		

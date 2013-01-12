@@ -6208,6 +6208,22 @@ p {
   margin-left: 20px;
   cursor: pointer;
 }
+#userLowPerformance {
+  display: inline-block;
+  float: right;
+  margin-right: 20px;
+  margin-top: 11px;
+  cursor: pointer;
+}
+#userScroll {
+  display: inline-block;
+  float: right;
+  margin-right: 20px;
+}
+#userScroll .scroll-button-up,
+#userScroll .scroll-button-down {
+  cursor: pointer;
+}
 /* sections
 -------------------------------------------------------------------------------*/
 /* solar-system

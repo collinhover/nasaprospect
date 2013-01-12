@@ -46,6 +46,7 @@ function ( $, Signal ) {
 	_de.$preloader = $( "#preloader" );
 	_de.$noflash = $( "#noflash" );
 	_de.$user = $( "#user" );
+	_de.$userLowPerformance = $( "#userLowPerformance" );
 	
 	_de.$scrollable = $( ".scrollable" );
 	_de.$stickable = $( ".stickyme, .is-sticky" );
@@ -60,6 +61,8 @@ function ( $, Signal ) {
 	
 	_de.$navbarPlanets = $( "#navbarPlanets" );
 	_de.$navPlanets = $( ".nav-planets" );
+	_de.$scrollButtonUp = $( ".scroll-button-up" );
+	_de.$scrollButtonDown = $( ".scroll-button-down" );
 	
 	_de.$solarSystem = $( "#solar-system" );
 	_de.$sections = $( ".system-section" );
@@ -75,10 +78,19 @@ function ( $, Signal ) {
 	
 	=====================================================*/
 	
-	_s.timeDeltaExpected = 1000 / 60;
+	_s.time = _s.timeLast = new Date().getTime();
+	
+	_s.lowPerformance = false;
+	_s.testLowPerformance = false;
+	_s.timeDeltaLowPerformance = 1000 / 20;
+	_s.timeTestPerformance = 0;
+	_s.timeTestPerformanceThreshold = 1000;
+	_s.timeTestPerformanceReset = 0;
+	_s.timeTestPerformanceResetThreshold = 1000;
+	_s.timeTestPerformancePause = _s.timeTestPerformancePauseThreshold = 2000;
+	
 	_s.throttleTimeShort = _s.timeDeltaExpected * 3;
 	_s.throttleTimeMedium = 100;
-	_s.throttleTimeLong = 250;
 	_s.throttleTimeLong = 250;
 	
 	_s.wMin = 950;
@@ -88,6 +100,7 @@ function ( $, Signal ) {
 	_s.fontSizeMin = 0.8;
 	_s.fontSizeMax = 1;
 	
+	_s.scrollDuration = 2000;
 	_s.fadeDuration = 500;
 	_s.collapseDuration = 500;
 	_s.fadeEasing = 'easeInOutCubic';
