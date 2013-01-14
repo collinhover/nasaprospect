@@ -1,11 +1,15 @@
 .visible-mobile { display: none !important; }
 
-// 1. Tablets & small desktops only
-// 2. Phones
-// 3. Devices below min dimensions
-@media (min-width: 768px) and (max-width: 979px), (max-width: 767px), (max-width: @pageWidthMin), (max-height: @pageHeightMin) {
+// Devices below min dimensions ~ tablets
+@media (max-width: @pageWidthMin) {
     .visible-mobile { display: inherit !important; }
+    
     .highlightable {
+        .transition(e('none'));
         opacity: 1 !important;
+    }
+    
+    .warning, .warning-type {
+        .animation(e('none'));
     }
 }

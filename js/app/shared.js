@@ -103,7 +103,7 @@ function ( $, Signal ) {
 	_s.throttleTimeMedium = 100;
 	_s.throttleTimeLong = 250;
 	
-	_s.wMin = 950;
+	_s.wMin = 979;
 	_s.hMin = 550;
 	_s.wBase = 1200;
 	_s.hBase = _s.hMin;

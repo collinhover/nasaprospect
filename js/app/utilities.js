@@ -449,53 +449,57 @@ function ( $, _s ) {
 	
 	function IgnorePointerDOM ( $element, state ) {
 		
-		// use native pointer-events when available
-		
-		if ( _s.supports.pointerEvents ) {
-			
-			if ( state === true ) {
+		if ( $element instanceof $ ) {
 				
-				$element.addClass( 'ignore-pointer-temporary' );
+				// use native pointer-events when available
 				
-			}
-			else {
-				
-				$element.removeClass( 'ignore-pointer-temporary' );
-			
-			}
-			
-		}
-		else {
-			
-			// fallback in-case browser does not support pointer-events property
-			// this method is incredibly slow, as it has to hide element, retrigger event to find what is under, then show again
-			
-			if ( state === true ) {
-				
-				$element.on( 'tap.pointer doubletap.pointer hold.pointer dragstart.pointer drag.pointer, dragend.pointer', 
-					function ( e ) { 
+				if ( _s.supports.pointerEvents ) {
+					
+					if ( state === true ) {
 						
-						e.preventDefault();
-						e.stopPropagation();
-						
-						$element.stop( true ).addClass( 'invisible' );
-						
-						$( document.elementFromPoint( e.clientX, e.clientY ) ).trigger( e );
-						
-						$element.stop( true ).removeClass( 'invisible' );
-						
-						return false;
+						$element.addClass( 'ignore-pointer-temporary' );
 						
 					}
-				);
+					else {
+						
+						$element.removeClass( 'ignore-pointer-temporary' );
+					
+					}
+					
+				}
+				else {
+					
+					// fallback in-case browser does not support pointer-events property
+					// this method is incredibly slow, as it has to hide element, retrigger event to find what is under, then show again
+					
+					if ( state === true ) {
+						
+						$element.on( 'tap.pointer doubletap.pointer hold.pointer dragstart.pointer drag.pointer, dragend.pointer', 
+							function ( e ) { 
+								
+								e.preventDefault();
+								e.stopPropagation();
+								
+								$element.stop( true ).addClass( 'invisible' );
+								
+								$( document.elementFromPoint( e.clientX, e.clientY ) ).trigger( e );
+								
+								$element.stop( true ).removeClass( 'invisible' );
+								
+								return false;
+								
+							}
+						);
+						
+					}
+					else {
+						
+						$element.off( '.pointer' );
+						
+					}
+					
+				}
 				
-			}
-			else {
-				
-				$element.off( '.pointer' );
-				
-			}
-			
 		}
 		
 	}
@@ -575,8 +579,6 @@ function ( $, _s ) {
 			
 			$element.stop( true ).removeClass( 'invisible hiding hidden collapsed' );
 			
-			$ignore = $element.find( 'a, button, .btn' ).add( $element );
-			
 			// if should start at 0 opacity
 			
 			if ( isHidden === true || isCollapsed === true || parameters.initHidden === true ) {
@@ -587,25 +589,49 @@ function ( $, _s ) {
 			
 			// handle opacity
 			
-			if ( opacity === 0 ) {
+			if ( _s.mobile === true || _s.lowPerformance === true ) {
 				
-				$element.addClass( 'hiding' ).trigger( 'hide' );
+				if ( opacity === 0 ) {
+					
+					$element.trigger( 'hide' );
+					
+				}
+				else {
+					
+					$element.trigger( 'show' );
+					
+				}
 				
-				// temporarily disable all buttons and links
+				$element.css( 'opacity', opacity );
 				
-				IgnorePointerDOM( $ignore, true );
+				fadeComplete();
 				
 			}
 			else {
 				
-				IgnorePointerDOM( $ignore, false );
+				$ignore = $element.find( 'a, button, .btn' ).add( $element );
 				
-				$element.trigger( 'show' );
+				if ( opacity === 0 ) {
+					
+					$element.addClass( 'hiding' ).trigger( 'hide' );
+					
+					// temporarily disable all buttons and links
+					
+					IgnorePointerDOM( $ignore, true );
+					
+				}
+				else {
+					
+					IgnorePointerDOM( $ignore, false );
+					
+					$element.trigger( 'show' );
+					
+				}
+				
+				$element.animate( { opacity: opacity }, { duration: duration, easing: easing, complete: fadeComplete } );
 				
 			}
 			
-			$element.animate( { opacity: opacity }, { duration: duration, easing: easing, complete: fadeComplete } );
-				
 		} );
 		
 	}
@@ -691,43 +717,59 @@ function ( $, _s ) {
 				
 				$element.stop( true ).removeClass( 'invisible hiding hidden collapsed' );
 				
-				$ignore = $element.find( 'a, button, .btn' ).add( $element );
-				
 				if ( show === true ) {
-					
-					// find correct current height and target height
-					
-					$element.placeholdme().appendTo( 'body' );
-					
-					heightCurrent = $element.height();
-					$element.css( 'height', '' );
-					heightTarget = $element.height();
-					$element.css( 'height', heightCurrent );
-					
-					$element.placeholdme( 'revert' );
-					
-					// enable pointer
-					
-					IgnorePointerDOM( $ignore, false );
-					
-					// show
-					
-					$element.trigger( 'show' );
-					
+						
+						// find correct current height and target height
+						
+						$element.placeholdme().appendTo( 'body' );
+						
+						heightCurrent = $element.height();
+						$element.css( 'height', '' );
+						heightTarget = $element.height();
+						$element.css( 'height', heightCurrent );
+						
+						$element.placeholdme( 'revert' );
+						
+						$element.trigger( 'show' );
+						
 				}
 				else {
-					
-					// temporarily ignore pointer
-					
-					IgnorePointerDOM( $ignore, true );
 					
 					$element.addClass( 'collapsed' ).trigger( 'hide' );
 					
 				}
 				
-				// animate
-				
-				$element.animate( { height: heightTarget }, { duration: duration, easing: easing, complete: collapseComplete } );
+				if ( _s.mobile === true || _s.lowPerformance === true ) {
+					
+					$element.css( 'height', heightTarget );
+					
+					collapseComplete();
+					
+				}
+				else {
+								
+						$ignore = $element.find( 'a, button, .btn' ).add( $element );
+						
+						if ( show === true ) {
+							
+							// enable pointer
+							
+							IgnorePointerDOM( $ignore, false );
+							
+						}
+						else {
+							
+							// temporarily ignore pointer
+							
+							IgnorePointerDOM( $ignore, true );
+							
+						}
+						
+						// animate
+						
+						$element.animate( { height: heightTarget }, { duration: duration, easing: easing, complete: collapseComplete } );
+						
+				}
 				
 			}
 			

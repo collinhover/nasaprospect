@@ -746,6 +746,7 @@
     -moz-animation: @animation;
     -ms-animation: @animation;
     -o-animation: @animation;
+    -ms-animation: @animation;
     animation: @animation;
 }
 
@@ -753,6 +754,7 @@
 	-webkit-animation-iteration-count: @count;
 	-moz-animation-iteration-count: @count;
 	-o-animation-iteration-count: @count;
+	-ms-animation-iteration-count: @count;
 	animation-iteration-count: @count;
 }
 
@@ -770,6 +772,9 @@
         from { opacity: 0.25; } 50% { opacity: 0.75; } to { opacity: 0.25; }
     }
     @-o-keyframes pulse {
+        from { opacity: 0.25; } 50% { opacity: 0.75; } to { opacity: 0.25; }
+    }
+    @-ms-keyframes pulse {
         from { opacity: 0.25; } 50% { opacity: 0.75; } to { opacity: 0.25; }
     }
 }
@@ -906,6 +911,10 @@ a.dim:hover, button.dim:hover, .btn.dim:hover {
   
 }
 
+.warning {
+  .animation-pulse( 1.5s );
+}
+
 /* type
 -------------------------------------------------------------------------------*/
 
@@ -928,8 +937,8 @@ a.dim:hover, button.dim:hover, .btn.dim:hover {
 }
 
 .warning-type {
+	.warning;
 	color: #FF5283;
-	.animation-pulse( 1.5s );
 }
 
 /* dimensions

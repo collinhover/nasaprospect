@@ -273,35 +273,16 @@ button.dim:hover,
 .highlightable:active {
   opacity: 1 !important;
 }
-/* type
--------------------------------------------------------------------------------*/
-.inline-type {
-  display: inline-block;
-  *display: inline;
-  zoom: 1;
-  vertical-align: middle;
-  padding: 0 5px;
-  margin: 0;
-}
-.sidekick-type {
-  font-family: Georgia, "Times New Roman", Times, serif;
-  font-style: italic;
-  font-weight: normal;
-}
-.robot-type {
-  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-  font-weight: normal;
-}
-.warning-type {
-  color: #FF5283;
+.warning {
   -webkit-animation: pulse 1.5s ease;
   -moz-animation: pulse 1.5s ease;
-  -ms-animation: pulse 1.5s ease;
   -o-animation: pulse 1.5s ease;
+  -ms-animation: pulse 1.5s ease;
   animation: pulse 1.5s ease;
   -webkit-animation-iteration-count: infinite;
   -moz-animation-iteration-count: infinite;
   -o-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
   animation-iteration-count: infinite;
 }
 @keyframes pulse {
@@ -338,6 +319,104 @@ button.dim:hover,
   }
 }
 @-o-keyframes pulse {
+  from {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+@-ms-keyframes pulse {
+  from {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+/* type
+-------------------------------------------------------------------------------*/
+.inline-type {
+  display: inline-block;
+  *display: inline;
+  zoom: 1;
+  vertical-align: middle;
+  padding: 0 5px;
+  margin: 0;
+}
+.sidekick-type {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-style: italic;
+  font-weight: normal;
+}
+.robot-type {
+  font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+  font-weight: normal;
+}
+.warning-type {
+  -webkit-animation: pulse 1.5s ease;
+  -moz-animation: pulse 1.5s ease;
+  -o-animation: pulse 1.5s ease;
+  -ms-animation: pulse 1.5s ease;
+  animation: pulse 1.5s ease;
+  -webkit-animation-iteration-count: infinite;
+  -moz-animation-iteration-count: infinite;
+  -o-animation-iteration-count: infinite;
+  -ms-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
+  color: #FF5283;
+}
+@keyframes pulse {
+  from {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+@-webkit-keyframes pulse {
+  from {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+@-moz-keyframes pulse {
+  from {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+@-o-keyframes pulse {
+  from {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.75;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+@-ms-keyframes pulse {
   from {
     opacity: 0.25;
   }
@@ -426,12 +505,24 @@ button.dim:hover,
 .visible-mobile {
   display: none !important;
 }
-@media (min-width: 768px) and (max-width: 979px), (max-width: 767px), (max-width: 950px), (max-height: 550px) {
+@media (max-width: 979px) {
   .visible-mobile {
     display: inherit !important;
   }
   .highlightable {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
     opacity: 1 !important;
+  }
+  .warning,
+  .warning-type {
+    -webkit-animation: none;
+    -moz-animation: none;
+    -o-animation: none;
+    -ms-animation: none;
+    animation: none;
   }
 }
 /* lib
@@ -5858,10 +5949,6 @@ p {
 }
 .toggle-sound.on .slider-volume {
   opacity: 1;
-  -webkit-transition: opacity .3s linear;
-  -moz-transition: opacity .3s linear;
-  -o-transition: opacity .3s linear;
-  transition: opacity .3s linear;
 }
 /* sound manager
 -------------------------------------------------------------------------------*/
@@ -6031,10 +6118,6 @@ p {
   color: #196fb1;
   color: rgba(255, 255, 255, 0.3);
   opacity: 0;
-  -webkit-transition: opacity .3s linear;
-  -moz-transition: opacity .3s linear;
-  -o-transition: opacity .3s linear;
-  transition: opacity .3s linear;
 }
 #navbarPlanets .nav-planets [class^="nav-planet-"]:hover .aspect-shape {
   background-color: #d0e7f9;
@@ -6044,10 +6127,6 @@ p {
   opacity: 1;
   color: #77b9ec;
   color: rgba(255, 255, 255, 0.6);
-  -webkit-transition-delay: .5s;
-  -moz-transition-delay: .5s;
-  -o-transition-delay: .5s;
-  transition-delay: .5s;
 }
 #navbarPlanets .nav-planet-mercury .aspect-shape {
   width: 30%;
@@ -6166,7 +6245,7 @@ p {
 #solar-system,
 .system-section,
 .container-fill {
-  min-width: 950px;
+  min-width: 979px;
   min-height: 550px;
 }
 #preloader,
@@ -6179,61 +6258,6 @@ p {
   position: absolute;
   left: 0;
   top: 0;
-}
-#preloader h1 {
-  -webkit-animation: pulse 1.5s ease;
-  -moz-animation: pulse 1.5s ease;
-  -ms-animation: pulse 1.5s ease;
-  -o-animation: pulse 1.5s ease;
-  animation: pulse 1.5s ease;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  -o-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-}
-@keyframes pulse {
-  from {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.75;
-  }
-  to {
-    opacity: 0.25;
-  }
-}
-@-webkit-keyframes pulse {
-  from {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.75;
-  }
-  to {
-    opacity: 0.25;
-  }
-}
-@-moz-keyframes pulse {
-  from {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.75;
-  }
-  to {
-    opacity: 0.25;
-  }
-}
-@-o-keyframes pulse {
-  from {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.75;
-  }
-  to {
-    opacity: 0.25;
-  }
 }
 /* sections
 -------------------------------------------------------------------------------*/
@@ -6321,59 +6345,6 @@ p {
 -------------------------------------------------------------------------------*/
 .golden-object {
   cursor: pointer;
-  -webkit-animation: pulse 1s ease;
-  -moz-animation: pulse 1s ease;
-  -ms-animation: pulse 1s ease;
-  -o-animation: pulse 1s ease;
-  animation: pulse 1s ease;
-  -webkit-animation-iteration-count: infinite;
-  -moz-animation-iteration-count: infinite;
-  -o-animation-iteration-count: infinite;
-  animation-iteration-count: infinite;
-}
-@keyframes pulse {
-  from {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.75;
-  }
-  to {
-    opacity: 0.25;
-  }
-}
-@-webkit-keyframes pulse {
-  from {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.75;
-  }
-  to {
-    opacity: 0.25;
-  }
-}
-@-moz-keyframes pulse {
-  from {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.75;
-  }
-  to {
-    opacity: 0.25;
-  }
-}
-@-o-keyframes pulse {
-  from {
-    opacity: 0.25;
-  }
-  50% {
-    opacity: 0.75;
-  }
-  to {
-    opacity: 0.25;
-  }
 }
 /* setup
 -------------------------------------------------------------------------------*/
