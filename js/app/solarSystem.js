@@ -3,11 +3,14 @@ define( [
 	"app/shared",
 	"app/sound",
 	"app/section",
-	"signals"
+	"app/navigator",
+	"signals",
+	"jquery.imagesloaded"
 ],
-function ( $, _s, _snd, _section, Signal ) {
+function ( $, _s, _snd, _section, _navi, Signal ) {
 	
 	var _de = _s.domElements;
+	var _$navi = _navi.$element;
 	var _solarSystem = {};
 	var _$element = _de.$solarSystem;
 	var _sound = new _snd.SoundHandler( { element: _$element } );
@@ -37,13 +40,17 @@ function ( $, _s, _snd, _section, Signal ) {
 	
 	_sectionsById[ 'sun' ].$element.find( _de.$logo ).removeClass( 'hidden' );
 	
-	// play system sound
-	
-	_sound.Play();
-	
 	// state change signals
 	
 	_solarSystem.onSectionActivated = new Signal();
+	
+	// play system sound after all images loaded, else sound may block
+	
+	_$navi.imagesLoaded( function () {
+		
+		_sound.Play();
+		
+	} );
 	
 	/*===================================================
 	
