@@ -3,14 +3,11 @@ define( [
 	"app/shared",
 	"app/sound",
 	"app/section",
-	"app/navigator",
-	"signals",
-	"jquery.imagesloaded"
+	"signals"
 ],
-function ( $, _s, _snd, _section, _navi, Signal ) {
+function ( $, _s, _snd, _section, Signal ) {
 	
 	var _de = _s.domElements;
-	var _$navi = _navi.$element;
 	var _solarSystem = {};
 	var _$element = _de.$solarSystem;
 	var _sound = new _snd.SoundHandler( { element: _$element } );
@@ -44,9 +41,9 @@ function ( $, _s, _snd, _section, _navi, Signal ) {
 	
 	_solarSystem.onSectionActivated = new Signal();
 	
-	// play system sound after all images loaded, else sound may block
+	// play system sound after first time volume changed, else sound may block loading
 	
-	_$navi.imagesLoaded( function () {
+	_snd.onVolumeChanged.addOnce( function () {
 		
 		_sound.Play();
 		

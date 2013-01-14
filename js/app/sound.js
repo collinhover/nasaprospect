@@ -2,11 +2,12 @@ define( [
 	"jquery",
 	"app/shared",
 	"app/utilities",
+	"signals",
 	"TweenMax",
 	"MobileRangeSlider",
 	"jquery.throttle-debounce.custom"
 ],
-function ( $, _s, _utils ) {
+function ( $, _s, _utils, Signal ) {
 	
 	var _de = _s.domElements;
 	var _snd = {
@@ -23,8 +24,8 @@ function ( $, _s, _utils ) {
 	var _durationFadeMax = 2500;
 	var _durationSoundBase = 10000;
 	var _durationSoundMinToFade = 1000;
-	var _volume = 50;
-	var _volumeLast = 0;
+	var _volume = 0;
+	var _volumeLast = 50;
 	
 	Object.defineProperty( _snd, 'volume', { 
 		get : function () { return _volume; },
@@ -34,6 +35,8 @@ function ( $, _s, _utils ) {
 				
 				_volumeLast = _volume;
 				_volume = volume;
+				
+				_snd.onVolumeChanged.dispatch( _volume );
 				
 			}
 			
@@ -61,6 +64,92 @@ function ( $, _s, _utils ) {
 			
 		}
 	});
+	
+
+	/*===================================================
+	
+	init
+	
+	=====================================================*/
+	
+	// state change signals
+	
+	_snd.onVolumeChanged = new Signal();
+	
+	// for each sound toggle
+	
+	_de.$toggleSound.each( function () {
+		
+		var $element = $( this );
+		var $toggleOn = $element.find( '.toggle-on' );
+		var $toggleOff = $element.find( '.toggle-off' );
+		var $slider = $element.find( '.slider' );
+		var sliderAPI;
+		
+		if ( $slider.length > 0 ) {
+			
+			sliderAPI = new MobileRangeSlider( $slider.get( 0 ), {
+				min: 0,
+				max: 100,
+				value: _volume,
+				change: $.throttle( _s.throttleTimeLong, function( volume ){
+					
+					if ( _volume !== volume ) {
+						
+						_snd.volume = volume;
+						
+					}
+					
+				} )
+			} );
+			
+			$slider.data( 'sliderAPI', sliderAPI );
+			$element.data( '$slider', $slider );
+			
+		}
+		
+		if ( $toggleOn.length === 0 && $toggleOff.length === 0 ) {
+			
+			$element.on( 'tap', function () {
+				
+				var $element = $( this );
+				
+				if ( $element.hasClass( 'on' ) ) {
+					
+					MuteAll();
+					
+				}
+				else {
+					
+					UnmuteAll();
+					
+				}
+				
+			} );
+			
+		}
+		else {
+			
+			$toggleOn.on( 'tap', function () {
+				
+				UnmuteAll();
+				
+			} );
+			
+			$toggleOff.on( 'tap', function () {
+				
+				MuteAll();
+				
+			} );
+			
+		}
+		
+		
+	} );
+	
+	// start unmuted and at 0 volume
+	
+	UnmuteAll( { volume: 0 } );
 	
 	/*===================================================
 	
@@ -1165,87 +1254,6 @@ function ( $, _s, _utils ) {
 		}
 		
 	}
-	
-	/*===================================================
-	
-	init
-	
-	=====================================================*/
-	
-	// for each sound toggle
-	
-	_de.$toggleSound.each( function () {
-		
-		var $element = $( this );
-		var $toggleOn = $element.find( '.toggle-on' );
-		var $toggleOff = $element.find( '.toggle-off' );
-		var $slider = $element.find( '.slider' );
-		var sliderAPI;
-		
-		if ( $slider.length > 0 ) {
-			
-			sliderAPI = new MobileRangeSlider( $slider.get( 0 ), {
-				min: 0,
-				max: 100,
-				value: _volume,
-				change: $.throttle( _s.throttleTimeLong, function( volume ){
-					
-					if ( _volume !== volume ) {
-						
-						_snd.volume = volume;
-						
-					}
-					
-				} )
-			} );
-			
-			$slider.data( 'sliderAPI', sliderAPI );
-			$element.data( '$slider', $slider );
-			
-		}
-		
-		if ( $toggleOn.length === 0 && $toggleOff.length === 0 ) {
-			
-			$element.on( 'tap', function () {
-				
-				var $element = $( this );
-				
-				if ( $element.hasClass( 'on' ) ) {
-					
-					MuteAll();
-					
-				}
-				else {
-					
-					UnmuteAll();
-					
-				}
-				
-			} );
-			
-		}
-		else {
-			
-			$toggleOn.on( 'tap', function () {
-				
-				UnmuteAll();
-				
-			} );
-			
-			$toggleOff.on( 'tap', function () {
-				
-				MuteAll();
-				
-			} );
-			
-		}
-		
-		
-	} );
-	
-	// start unmuted and at 0 volume
-	
-	UnmuteAll( { volume: 0 } );
 	
 	/*===================================================
 	
