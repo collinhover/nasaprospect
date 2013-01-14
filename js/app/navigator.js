@@ -76,17 +76,17 @@ function ( $, _s, _utils ) {
 				
 		} );
 		
-		FindUserScrollContainer();
+		FindTargetScrollContainer();
 		
 		_de.$scrollButtonUp.on( 'tap', function () {
 				
-				UserScroll( _$scrollContainer.data( '$scrollTargetPrev' ) );
+				TargetScroll( _$scrollContainer.data( '$scrollTargetPrev' ) );
 				
 		} );
 		
 		_de.$scrollButtonDown.on( 'tap', function () {
 				
-				UserScroll( _$scrollContainer.data( '$scrollTargetNext' ) );
+				TargetScroll( _$scrollContainer.data( '$scrollTargetNext' ) );
 				
 		} );
 		
@@ -716,7 +716,7 @@ function ( $, _s, _utils ) {
 		
 		// refind user scroll container
 		
-		FindUserScrollContainer();
+		FindTargetScrollContainer();
 		
 	}
 	
@@ -740,20 +740,23 @@ function ( $, _s, _utils ) {
 		
 	}
 	
-	function UserScroll ( $scrollTarget ) {
+	function TargetScroll ( $scrollTarget ) {
 		
 		if ( $scrollTarget instanceof $ ) {
 				
-				OnScrollContainerChange( $scrollTarget );
+				//OnScrollContainerChange( $scrollTarget );
 				
 				var parameters = {
 						scrollElement: _$navi,
 						offset: $scrollTarget.offset().top,
 						easing: 'easeInOutCubic',
-						speed: _s.scrollDuration
+						speed: _s.scrollDuration,
+						afterScroll: function () { _$navi.off( '.user' ); }
 				};
 				
 				if ( _s.lowPerformance === true ) parameters.speed = 0;
+				
+				_$navi.off( '.user' ).on( "scroll.user tap.user dragstart.user DOMMouseScroll.user mousewheel.user", UserScroll );
 				
 				$.smoothScroll( parameters );
 				
@@ -761,7 +764,17 @@ function ( $, _s, _utils ) {
 		
 	}
 	
-	function FindUserScrollContainer () {
+	function UserScroll ( e ) {
+		
+		if ( e.which > 0 || e.type === "mousedown" || e.type === "mousewheel") {
+				
+				_$navi.off( '.user' ).stop();
+
+        }
+		
+	}
+	
+	function FindTargetScrollContainer () {
 		
 		var $scrollContainer;
 		
