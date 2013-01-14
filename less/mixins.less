@@ -467,14 +467,14 @@
     filter: e("progid:DXImageTransform.Microsoft.gradient(startColorstr='@color1', endColorstr='@color4', GradientType=0)"); // IE9 and down, gets no color-stop at all for proper fallback
     background-repeat: no-repeat;
   }
-  .radial(@innerColor: #555, @outerColor: #333, @shape: circle, @size: contain)  {
+  .radial(@innerColor: #555, @outerColor: #333, @shape: ellipse, @size: contain)  {
     background-color: @outerColor;
 	background-image: -moz-radial-gradient(center, @shape @size, @innerColor 0%, @outerColor 100%); /* FF3.6+ */
 	background-image: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,@innerColor), color-stop(100%,@outerColor)); /* Chrome,Safari4+ */
 	background-image: -webkit-radial-gradient(center, @shape @size, @innerColor 0%,@outerColor 100%); /* Chrome10+,Safari5.1+ */
 	background-image: -o-radial-gradient(center, @shape @size, @innerColor 0%,@outerColor 100%); /* Opera 12+ */
 	background-image: -ms-radial-gradient(center, @shape @size, @innerColor 0%,@outerColor 100%); /* IE10+ */
-	background-image: radial-gradient(@shape at center, @innerColor 0%,@outerColor 100%); /* W3C */
+	background-image: radial-gradient(center, @shape @size, @innerColor 0%,@outerColor 100%); /* W3C */
     background-repeat: no-repeat;
   }
   .striped(@color: #555, @angle: 45deg) {

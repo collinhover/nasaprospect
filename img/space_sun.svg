@@ -6,13 +6,13 @@
 	 xml:space="preserve">
 <g id="Sun">
 	<defs>
-		<path id="SVGID_69_" d="M1716.248,1711.868c-390.521,391.604-1023.702,391.604-1414.233-0.018
+		<path id="SVGID_33_" d="M1716.248,1711.868c-390.521,391.604-1023.702,391.604-1414.233-0.018
 			c-390.521-391.607-390.521-1026.521,0-1418.155c390.531-391.602,1023.681-391.602,1414.233,0.049
 			C2106.742,685.3,2106.777,1320.243,1716.248,1711.868z"/>
 	</defs>
-	<use xlink:href="#SVGID_69_"  overflow="visible" fill="#F5B81C"/>
+	<use xlink:href="#SVGID_33_"  overflow="visible" fill="#F5B81C"/>
 	<clipPath id="SVGID_2_">
-		<use xlink:href="#SVGID_69_"  overflow="visible"/>
+		<use xlink:href="#SVGID_33_"  overflow="visible"/>
 	</clipPath>
 	<polygon clip-path="url(#SVGID_2_)" fill="#904920" points="1784.238,1804.481 1992.713,1332.397 1913.055,1220.829 	"/>
 	<polygon clip-path="url(#SVGID_2_)" fill="#FBCE2C" points="1367.207,-22.314 1160.541,319.253 553.033,620.746 261.161,225.796 	

@@ -5183,120 +5183,6 @@ a.badge:hover {
 .affix {
   position: fixed;
 }
-/*
- * CSS Styles that are needed by jScrollPane for it to operate correctly.
- *
- * Include this stylesheet in your site or copy and paste the styles below into your stylesheet - jScrollPane
- * may not operate correctly without them.
- */
-.jspContainer {
-  overflow: hidden;
-  position: relative;
-}
-.jspPane {
-  position: absolute;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  height: 100%;
-}
-.jspCap {
-  display: block;
-  background: transparent;
-}
-.jspTrack {
-  background: #dde;
-  position: relative;
-}
-.jspDrag {
-  position: relative;
-  top: 0;
-  left: 0;
-  cursor: pointer;
-  background: gray;
-  background: rgba(255, 255, 255, 0.4);
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
-  -webkit-border-radius: 7px;
-  -moz-border-radius: 7px;
-  border-radius: 7px;
-}
-.jspArrow {
-  background: #50506d;
-  text-indent: -20000px;
-  display: block;
-  cursor: pointer;
-}
-.jspArrow.jspDisabled {
-  cursor: default;
-  background: #80808d;
-}
-.jspHorizontalBar,
-.jspVerticalBar,
-.jspTrack {
-  background-color: transparent;
-  z-index: 9997;
-}
-.jspVerticalBar {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 20px;
-  height: 100%;
-}
-.jspVerticalBar .jspDrag {
-  width: 10px;
-  left: 5px;
-}
-.jspVerticalBar .jspCap {
-  height: 10px;
-}
-.jspVerticalBar .jspArrow {
-  height: 20px;
-}
-.jspVerticalBar .jspArrow:focus {
-  outline: none;
-}
-.jspHorizontalBar {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 20px;
-}
-.jspHorizontalBar .jspCap {
-  width: 10px;
-}
-.jspHorizontalBar .jspTrack,
-.jspHorizontalBar .jspDrag,
-.jspHorizontalBar .jspCap {
-  float: left;
-  height: 100%;
-}
-.jspHorizontalBar .jspDrag {
-  height: 10px;
-  top: 5px;
-}
-.jspHorizontalBar .jspArrow {
-  width: 20px;
-  float: left;
-  height: 100%;
-}
-.jspVerticalBar *,
-.jspHorizontalBar * {
-  margin: 0;
-  padding: 0;
-}
-.jspCorner {
-  background: transparent;
-  float: left;
-  height: 100%;
-}
-/* Yuk! CSS Hack for IE6 3 pixel bug :( */
-* html .jspCorner {
-  margin: 0 -3px 0 0;
-}
 /* app
 -------------------------------------------------------------------------------*/
 /* globals
@@ -6500,6 +6386,31 @@ p {
 }
 /* sun
 -------------------------------------------------------------------------------*/
+#sun {
+  background-image: url("../img/space_sun_glow.png");
+  background-image: url("../img/space_sun_glow.svg");
+  background-size: 100%;
+  background-color: rgba(242, 109, 57, 0);
+  background-image: -moz-radial-gradient(center, circle farthest-side, #facc1d 0%, rgba(242, 109, 57, 0) 100%);
+  /* FF3.6+ */
+
+  background-image: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%, #facc1d), color-stop(100%, rgba(242, 109, 57, 0)));
+  /* Chrome,Safari4+ */
+
+  background-image: -webkit-radial-gradient(center, circle farthest-side, #facc1d 0%, rgba(242, 109, 57, 0) 100%);
+  /* Chrome10+,Safari5.1+ */
+
+  background-image: -o-radial-gradient(center, circle farthest-side, #facc1d 0%, rgba(242, 109, 57, 0) 100%);
+  /* Opera 12+ */
+
+  background-image: -ms-radial-gradient(center, circle farthest-side, #facc1d 0%, rgba(242, 109, 57, 0) 100%);
+  /* IE10+ */
+
+  background-image: radial-gradient(center, circle farthest-side, #facc1d 0%, rgba(242, 109, 57, 0) 100%);
+  /* W3C */
+
+  background-repeat: no-repeat;
+}
 #sun #sunGlow {
   width: 100%;
   max-height: 300%;

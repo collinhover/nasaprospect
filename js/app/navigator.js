@@ -54,7 +54,8 @@ function ( $, _s, _utils ) {
 		.removeClass( 'unscrollable' )
 		.on( 'scroll', ThrottledScroll )
 		.stellar( {
-			horizontalScrolling: false
+			horizontalScrolling: false,
+			hideDistantElements: false // necessary or safari doesn't play nice with stellar.js
 		} );
 		
 		_de.$scrollContainer.each( function ( index ) {
@@ -752,7 +753,7 @@ function ( $, _s, _utils ) {
 						speed: _s.scrollDuration
 				};
 				
-				if ( _s.mobile === true || _s.lowPerformance === true ) parameters.speed = 0;
+				if ( _s.lowPerformance === true ) parameters.speed = 0;
 				
 				$.smoothScroll( parameters );
 				

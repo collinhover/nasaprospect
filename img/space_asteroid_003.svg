@@ -31,15 +31,4 @@
 	<polygon fill="#3F374A" points="202.412,108.102 74.734,163.393 137.338,164.564 170.634,165.054 	"/>
 	<polygon fill="#817188" points="202.412,108.102 178.174,38.806 145.185,57.747 	"/>
 </g>
-<g>
-	<g enable-background="new    ">
-		<defs>
-			<polygon id="SVGID_24_" enable-background="new    " points="197.276,174.964 321.589,63.726 752.237,63.726 876.55,174.964 			
-				"/>
-		</defs>
-		<clipPath id="SVGID_2_">
-			<use xlink:href="#SVGID_24_"  overflow="visible"/>
-		</clipPath>
-	</g>
-</g>
 </svg>

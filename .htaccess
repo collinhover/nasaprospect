@@ -225,13 +225,13 @@ AddType text/vtt                            vtt
   ExpiresByType image/x-icon              "access plus 1 week"
 
 # Media: images, video, audio
-  ExpiresByType image/gif                 "access plus 1 month"
-  ExpiresByType image/png                 "access plus 1 month"
-  ExpiresByType image/jpeg                "access plus 1 month"
-  ExpiresByType video/ogg                 "access plus 1 month"
-  ExpiresByType audio/ogg                 "access plus 1 month"
-  ExpiresByType video/mp4                 "access plus 1 month"
-  ExpiresByType video/webm                "access plus 1 month"
+  ExpiresByType image/gif                 "access plus 1 week"
+  ExpiresByType image/png                 "access plus 1 week"
+  ExpiresByType image/jpeg                "access plus 1 week"
+  ExpiresByType video/ogg                 "access plus 1 week"
+  ExpiresByType audio/ogg                 "access plus 1 week"
+  ExpiresByType video/mp4                 "access plus 1 week"
+  ExpiresByType video/webm                "access plus 1 week"
 
 # HTC files  (css3pie)
   ExpiresByType text/x-component          "access plus 1 month"
@@ -244,8 +244,8 @@ AddType text/vtt                            vtt
   ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
 
 # CSS and JavaScript
-  ExpiresByType text/css                  "access plus 1 year"
-  ExpiresByType application/javascript    "access plus 1 year"
+  ExpiresByType text/css                  "access plus 1 week"
+  ExpiresByType application/javascript    "access plus 1 week"
 
 </IfModule>
 
