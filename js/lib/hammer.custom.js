@@ -62,6 +62,7 @@ var HAMMER = ( function ( main ) {
 		_prev_tap_end_time,
 		_touch_start_time,
 		_hold_timer,
+		_dragCount = 0,
 		_offset = {},
 		_gestures = {
 			// hold gesture
@@ -342,7 +343,7 @@ var HAMMER = ( function ( main ) {
 	 */
 	function allowTextSelect ( state ) {
 		
-		$( document )[ state ? "off" : "on" ]( "selectstart", killEvent )
+		$( document )[ state ? "off" : "on" ]( "selectstart", killEvent );
 		$( 'html' )[ state ? "removeClass" : "addClass" ]( "unselectable" );
 		document.unselectable = state ? "off" : "on";
 		
@@ -586,10 +587,32 @@ var HAMMER = ( function ( main ) {
 		for ( i = 0, il = _hammer_instances.length; i < il; i++ ) {
 			
 			hammerInstance = _hammer_instances[ i ];
+			
+			if ( eventName === 'dragend' && hammerInstance.dragging === true ) {
+				
+				hammerInstance.dragging = false;
+				_dragCount = Math.max( 0, _dragCount - 1 );
+				
+				if ( _dragCount <= 0 ) {
+					
+					allowTextSelect( true );
+					
+				}
+				
+			}
 
 			// trigger callback
 			
 			if( typeof hammerInstance["on"+ eventName] === 'function' ) {
+				
+				if ( eventName === 'dragstart' && hammerInstance.dragging !== true ) {
+					
+					hammerInstance.dragging = true;
+					_dragCount++;
+					
+					allowTextSelect( false );
+					
+				}
 				
 				// update event object
 				
@@ -653,10 +676,6 @@ var HAMMER = ( function ( main ) {
 			element = hammerInstance.element;
 			$element = $( element );
 			_offset = $element.offset();
-			
-			// disable text selection
-			
-			allowTextSelect( false );
 			
 			// add global listeners to properly handle move and end
 			
@@ -732,7 +751,7 @@ var HAMMER = ( function ( main ) {
 				
 				// store if dragging
 				
-				dragging = _gesture == 'drag';
+				dragging = _gesture === 'drag';
 				
 				// calculate swipe
 				
@@ -740,7 +759,7 @@ var HAMMER = ( function ( main ) {
 				
 				// drag gesture
 				// dragstart is triggered, so dragend is possible
-				if(dragging) {
+				if( dragging ) {
 					
 					triggerEvent( 'dragend', {
 						originalEvent   : event,
@@ -748,10 +767,6 @@ var HAMMER = ( function ( main ) {
 						distance        : _distance,
 						angle           : _angle
 					} );
-					
-					// enable text selection
-					
-					allowTextSelect( true );
 					
 				}
 				// transform
