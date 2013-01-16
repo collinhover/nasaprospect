@@ -35,7 +35,7 @@ function ( $, _s, _snd, _section, Signal ) {
 		
 	} );
 	
-	_sectionsById[ 'sun' ].$element.find( _de.$logo ).removeClass( 'hidden' );
+	if( _sectionsById[ 'sun' ] ) _sectionsById[ 'sun' ].$element.find( _de.$logo ).removeClass( 'hidden' );
 	
 	// state change signals
 	

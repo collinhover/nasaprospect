@@ -1,5 +1,5 @@
 /*
- * Hammer.JS
+ * Hammer.JS (+jQuery)
  * version 0.6.1
  * author: Eight Media
  * https://github.com/EightMedia/hammer.js
@@ -9,7 +9,7 @@
  * This solves issues where a HAMMERed child of a HAMMERed element was causing broken behavior or no event bubbling
  *
  */
-var HAMMER = ( function ( main ) {
+var HAMMER = ( function ( $, main ) {
 	
 	var options = {
 			// prevent the default event or not... might be buggy when false
@@ -44,11 +44,25 @@ var HAMMER = ( function ( main ) {
 		_event_name_start = _has_touch ? 'touchstart' : 'mousedown',
 		_event_name_move = _has_touch ? 'touchmove' : 'mousemove',
 		_event_name_end = _has_touch ? 'touchend' : 'mouseup',
-		_event_name_cancel = _has_touch ? 'touchcancel' : '',
+		_event_name_cancel = ( _has_touch ? 'touchcancel' : '' ) + 'contextmenu',
 		_mousedown = false,
 		_hammer_count = 0,
 		_hammering = false,
 		_hammer_instances = [],
+		_hammer_events = [
+			'hold',
+			'tap',
+			'doubletap',
+			'transformstart',
+			'transform',
+			'transformend',
+			'dragstart',
+			'drag',
+			'dragend',
+			'swipe',
+			'press',
+			'release'
+		],
 		_event_start,
 		_pos = {},
 		_distance = 0,// holds the distance that has been moved
@@ -143,6 +157,10 @@ var HAMMER = ( function ( main ) {
 			drag : function( event )
 			{
 				
+				if ( !_pos.last ) {
+					return;
+				}
+				
 				var _distance_x = _pos.move[0].x - _pos.start[0].x,
 					_distance_y = _pos.move[0].y - _pos.start[0].y,
 					is_vertical;
@@ -165,18 +183,23 @@ var HAMMER = ( function ( main ) {
 
 					_gesture = 'drag';
 					
+					var dragEventObject = {
+						originalEvent   : event,
+						position: _pos.start,
+						positionLast: _pos.last,
+						deltaX: _pos.move[0].x - _pos.last[0].x,
+						deltaY: _pos.move[0].y - _pos.last[0].y,
+						direction       : _direction,
+						distance        : _distance,
+						distanceX       : _distance_x,
+						distanceY       : _distance_y,
+						angle           : _angle
+					};
+					
 					// on the first time trigger the start event
 					if( _first ) {
 						
-						triggerEvent( 'dragstart', {
-							originalEvent   : event,
-							position: _pos.start,
-							direction       : _direction,
-							distance        : _distance,
-							distanceX       : _distance_x,
-							distanceY       : _distance_y,
-							angle           : _angle
-						} );
+						triggerEvent( 'dragstart', dragEventObject );
 
 						_first = false;
 						
@@ -184,14 +207,7 @@ var HAMMER = ( function ( main ) {
 					
 					// drag
 					
-					triggerEvent( 'drag', {
-						originalEvent   : event,
-						direction       : _direction,
-						distance        : _distance,
-						distanceX       : _distance_x,
-						distanceY       : _distance_y,
-						angle           : _angle
-					} );
+					triggerEvent( 'drag', dragEventObject );
 					
 				}
 			},
@@ -575,18 +591,20 @@ var HAMMER = ( function ( main ) {
 	 * @param string eventName
 	 * @param object eventObject
 	 */
-	function triggerEvent( eventName, eventObject )
+	function triggerEvent( eventName, eventObject, hammerInstances )
 	{
 		
 		var i, il,
 			hammerInstance,
 			triggered = false;
 		
+		hammerInstances = hammerInstances || _hammer_instances;
+		
 		// for each hammer instance in gesture
 		
-		for ( i = 0, il = _hammer_instances.length; i < il; i++ ) {
+		for ( i = 0, il = hammerInstances.length; i < il; i++ ) {
 			
-			hammerInstance = _hammer_instances[ i ];
+			hammerInstance = hammerInstances[ i ];
 			
 			if ( eventName === 'dragend' && hammerInstance.dragging === true ) {
 				
@@ -616,8 +634,8 @@ var HAMMER = ( function ( main ) {
 				
 				// update event object
 				
-				eventObject.touches = getXYfromEvent( eventObject.originalEvent || eventObject );
-				eventObject.position = eventObject.touches || eventObject.position;
+				eventObject.touches = eventObject.position || getXYfromEvent( eventObject.originalEvent || eventObject );
+				eventObject.position = eventObject.position || eventObject.touches;
 				eventObject.type = eventName;
 				
 				// if event does not yet have a target
@@ -666,6 +684,7 @@ var HAMMER = ( function ( main ) {
 			_fingers = countFingers( event );
 			_touch_start_time = new Date().getTime();
 			_pos.start = getXYfromEvent( event.originalEvent || event );
+			_pos.move = _pos.last = undefined;
 			_first = true;
 			_mousedown = true;
 			_distance = 0;
@@ -690,6 +709,13 @@ var HAMMER = ( function ( main ) {
 		// add this instance to hammer instances
 		
 		_hammer_instances.push( hammerInstance );
+	
+		// pressed event
+		
+		triggerEvent( 'press', {
+			originalEvent   : event,
+			gesture         : _gesture
+		}, [ hammerInstance ] );
 		
 	}
 	
@@ -710,6 +736,7 @@ var HAMMER = ( function ( main ) {
 				
 				// event properties
 				
+				_pos.last = _pos.move || _pos.start;
 				_pos.move = getXYfromEvent( event.originalEvent || event );
 				
 				// gestures
@@ -832,29 +859,18 @@ var HAMMER = ( function ( main ) {
 		
 	}
 	
-	return main;
+	/*
+	* add jQuery to Hammer.JS
+	*/
 	
-} ( HAMMER || {} ) );
-
-/*
- * adds jQuery to Hammer.JS
- * version 0.9
- * author: Damien Antipa
- * https://github.com/dantipa/hammer.js
- *
- * Reworked by Collin Hover / collinhover.com
- */
-(function ($) {
-    var hammerEvents = ['hold','tap','doubletap','transformstart','transform','transformend','dragstart','drag','dragend','swipe','release'];
-
-    $.each(hammerEvents, function(i, eventName) {
-
+    $.each( _hammer_events, function(i, eventName) {
+		
         $.event.special[eventName] = {
 			
 			setup: function(data, namespaces, eventHandle) {
                 var $target = $(this),
                     hammer;
-
+				
                 if (!$target.data('hammerjs')) {
                     $target.data('hammerjs', new HAMMER.Instance(this));
                 }
@@ -879,4 +895,7 @@ var HAMMER = ( function ( main ) {
             }
         };
     });
-}(jQuery));
+	
+	return main;
+	
+} ( jQuery, HAMMER || {} ) );

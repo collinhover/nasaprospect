@@ -31,8 +31,15 @@ function ( $, _s, _utils ) {
 	var _scrollPosition = { x: 0, y: 0 };
 	var _scrollCenterPosition = { x: 0, y: 0 };
 	var _scrollDirection = { x: 0, y: 0 };
+	var _dragVelocity = { x: 0, y: 0 };
+	var _dragVelocityMax = 200;
+	var _dragVelocityMin = 0.25;
+	var _dragDecay = 0.9;
+	var _dragging = false;
+	var _dragEnding = false;
 	var _triggerCheckPosition = { x: 0, y: 0 };
 	var _$scrollContainer;
+	var _scrolling = false;
 	var _triggerScrollContainer;
 	var _triggerScrollContainerNext;
 	var _triggerScrollContainerPrev;
@@ -49,12 +56,18 @@ function ( $, _s, _utils ) {
 	_de.$backgrounds.attr( "data-stellar-ratio", _s.parallaxBackground );
 	
 	var ThrottledScroll = $.throttle( _s.throttleTimeShort, Scroll );
+	var ThrottledDrag = $.throttle( _s.throttleTimeShort, Drag );
 	
 	_$navi
 		.removeClass( 'unscrollable' )
+		.on( "scroll press DOMMouseScroll mousewheel", ScrollDragStopByUser )
+		.on( 'dragstart', DragStart )
+		.on( 'drag', ThrottledDrag )
+		.on( 'dragend', DragEnd )
 		.on( 'scroll', ThrottledScroll )
 		.stellar( {
 			horizontalScrolling: false,
+			parallaxBackgrounds: false,
 			hideDistantElements: false // necessary or safari doesn't play nice with stellar.js
 		} );
 		
@@ -744,19 +757,26 @@ function ( $, _s, _utils ) {
 		
 		if ( $scrollTarget instanceof $ ) {
 				
-				//OnScrollContainerChange( $scrollTarget );
+				ScrollDragStop();
 				
 				var parameters = {
 						scrollElement: _$navi,
 						offset: $scrollTarget.offset().top,
-						easing: 'easeInOutCubic',
-						speed: _s.scrollDuration,
-						afterScroll: function () { _$navi.off( '.user' ); }
+						speed: _s.scrollDuration
 				};
 				
-				if ( _s.lowPerformance === true ) parameters.speed = 0;
-				
-				_$navi.off( '.user' ).on( "scroll.user tap.user dragstart.user DOMMouseScroll.user mousewheel.user", UserScroll );
+				if ( _s.lowPerformance === true ) {
+						
+						parameters.speed = 0;
+						
+				}
+				else {
+						
+						_scrolling = true;
+						parameters.easing = 'easeInOutCubic';
+						parameters.afterScroll = function () { ScrollDragStop(); };
+						
+				}
 				
 				$.smoothScroll( parameters );
 				
@@ -764,13 +784,27 @@ function ( $, _s, _utils ) {
 		
 	}
 	
-	function UserScroll ( e ) {
+	function ScrollDragStopByUser ( e ) {
 		
-		if ( e.which > 0 || e.type === "mousedown" || e.type === "mousewheel") {
+		if ( e && ( e.type === 'press' || e.which > 0 || e.type === "mousedown" || e.type === "mousewheel" ) ) {
 				
-				_$navi.off( '.user' ).stop();
-
-        }
+				ScrollDragStop();
+				
+		}
+		
+	}
+	
+	function ScrollDragStop () {
+		
+		if ( _scrolling === true || _dragging === true ) {
+				
+				_$navi.stop();
+				_s.signals.onUpdated.remove( DragUpdate );
+				_s.signals.onUpdated.remove( DragEndUpdate );
+				_dragVelocity.x = _dragVelocity.y = 0;
+				_scrolling = _dragging = _dragEnding = false;
+				
+		}
 		
 	}
 	
@@ -895,6 +929,125 @@ function ( $, _s, _utils ) {
 						}
 						
 				}
+				
+		}
+		
+	}
+	
+	/*===================================================
+	
+	drag
+	
+	=====================================================*/
+	
+	function Drag ( e ) {
+		
+		if ( _dragging === true && e ) {
+				
+				var dx = e.deltaX;
+				var dy = -e.deltaY;
+				
+				if ( dx !== 0 ) {
+						
+						if ( ( _dragVelocity.x < 0 && dx > 0 ) || ( _dragVelocity.x > 0 && dx < 0 ) ) {
+								
+								_dragVelocity.x = 0;
+								
+						}
+						
+						_$navi.scrollLeft( _$navi.scrollLeft() + dx );
+						_dragVelocity.x = _utils.Clamp( ( _dragVelocity.x + dx ) * 0.5, -_dragVelocityMax, _dragVelocityMax );
+						
+				}
+				
+				if ( dy !== 0 ) {
+						
+						if ( ( _dragVelocity.y < 0 && dy > 0 ) || ( _dragVelocity.y > 0 && dy < 0 ) ) {
+								
+								_dragVelocity.y = 0;
+								
+						}
+						
+						_$navi.scrollTop( _$navi.scrollTop() + dy );
+						_dragVelocity.y = _utils.Clamp( ( _dragVelocity.y + dy ) * 0.5, -_dragVelocityMax, _dragVelocityMax );
+						
+				}
+				
+		}
+		
+	}
+	
+	function DragStart () {
+		
+		if ( _dragging !== true ) {
+				
+				_dragging = true;
+				_s.signals.onUpdated.add( DragUpdate );
+		
+		}
+		
+	}
+	
+	function DragEnd () {
+		
+		if ( _dragging === true && _dragEnding !== true ) {
+				
+				_dragEnding = true;
+				_s.signals.onUpdated.add( DragEndUpdate );
+				
+		}
+		
+	}
+	
+	function DragUpdate () {
+		
+		if ( _dragVelocity.x !== 0 ) {
+				
+				_dragVelocity.x *= _dragDecay;
+				
+				if ( _dragVelocity.x < _dragVelocityMin && _dragVelocity.x > -_dragVelocityMin ) {
+						
+						_dragVelocity.x = 0;
+						
+				}
+				
+		}
+		
+		if ( _dragVelocity.y !== 0 ) {
+				
+				_dragVelocity.y *= _dragDecay;
+				
+				if ( _dragVelocity.y < _dragVelocityMin && _dragVelocity.y > -_dragVelocityMin ) {
+						
+						_dragVelocity.y = 0;
+						
+				}
+				
+		}
+		
+	}
+	
+	function DragEndUpdate () {
+		
+		var moved;
+		
+		if ( _dragVelocity.x !== 0 ) {
+				
+				moved = true;
+				_$navi.scrollLeft( _$navi.scrollLeft() + _dragVelocity.x );
+				
+		}
+		
+		if ( _dragVelocity.y !== 0 ) {
+				
+				moved = true;
+				_$navi.scrollTop( _$navi.scrollTop() + _dragVelocity.y );
+				
+		}
+		
+		if ( moved !== true ) {
+				
+				ScrollDragStop();
 				
 		}
 		

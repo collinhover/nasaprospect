@@ -242,12 +242,6 @@ button.dim:hover,
 .unscrollable {
   overflow: hidden;
 }
-.clickable {
-  cursor: pointer;
-}
-.unclickable {
-  cursor: auto;
-}
 .mirror-vertical {
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
@@ -6310,7 +6304,6 @@ p {
   left: 0;
   right: 0;
   top: 0;
-  cursor: pointer;
 }
 /* orbit
 -------------------------------------------------------------------------------*/
@@ -6358,8 +6351,8 @@ p {
 /* sun
 -------------------------------------------------------------------------------*/
 #sun {
-  background-image: url("../img/space_sun_glow.png");
-  background-image: url("../img/space_sun_glow.svg");
+  background-image: url("./img/space_sun_glow.png");
+  background-image: url("./img/space_sun_glow.svg");
   background-size: 100%;
   background-color: rgba(242, 109, 57, 0);
   background-image: -moz-radial-gradient(center, circle farthest-side, #facc1d 0%, rgba(242, 109, 57, 0) 100%);
