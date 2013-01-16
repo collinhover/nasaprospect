@@ -67,7 +67,7 @@ function ( $, _s, _utils ) {
 	var stellarParameters = {
 		horizontalScrolling: false,
 		parallaxBackgrounds: false,
-		//hideDistantElements: false // necessary or safari doesn't play nice with stellar.js
+		hideDistantElements: false // necessary or safari doesn't play nice with stellar.js
 	};
 	
 		if ( _s.mobile === true ) {

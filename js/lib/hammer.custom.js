@@ -221,7 +221,7 @@ var HAMMER = ( function ( $, main ) {
 					scale;
 				
 				if(options.transform) {
-					if(countFingers(event) != 2) {
+					if( countFingers( event ) != 2 ) {
 						return false;
 					}
 
@@ -399,7 +399,14 @@ var HAMMER = ( function ( $, main ) {
 	{
 		// there is a bug on android (until v4?) that touches is always 1,
 		// so no multitouch is supported, e.g. no, zoom and rotation...
-		return event.touches ? event.touches.length : 1;
+		if (!_has_touch ) {
+			return 1;
+		}
+		else {
+			while ( event.originalEvent ) { event = event.originalEvent; }
+			return event.touches ? event.touches.length : 1;
+		}
+		
 	}
 	
 	/**
@@ -423,6 +430,8 @@ var HAMMER = ( function ( $, main ) {
 		}
 		// multitouch, return array with positions
 		else {
+			
+			while ( event.originalEvent ) { event = event.originalEvent; }
 			
 			var pos = [], src, touches = event.touches.length > 0 ? event.touches : event.changedTouches;
 			for(var t=0, len=touches.length; t<len; t++) {
@@ -634,7 +643,7 @@ var HAMMER = ( function ( $, main ) {
 				
 				// update event object
 				
-				eventObject.touches = eventObject.position || getXYfromEvent( eventObject.originalEvent || eventObject );
+				eventObject.touches = eventObject.position || getXYfromEvent( eventObject );
 				eventObject.position = eventObject.position || eventObject.touches;
 				eventObject.type = eventName;
 				
@@ -683,7 +692,7 @@ var HAMMER = ( function ( $, main ) {
 			_event_start = event;
 			_fingers = countFingers( event );
 			_touch_start_time = new Date().getTime();
-			_pos.start = getXYfromEvent( event.originalEvent || event );
+			_pos.start = getXYfromEvent( event );
 			_pos.move = _pos.last = undefined;
 			_first = true;
 			_mousedown = true;
@@ -737,7 +746,7 @@ var HAMMER = ( function ( $, main ) {
 				// event properties
 				
 				_pos.last = _pos.move || _pos.start;
-				_pos.move = getXYfromEvent( event.originalEvent || event );
+				_pos.move = getXYfromEvent( event );
 				
 				// gestures
 

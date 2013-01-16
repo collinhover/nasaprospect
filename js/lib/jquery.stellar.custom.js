@@ -5,9 +5,16 @@
  * Copyright 2012, Mark Dalgleish
  * This content is released under the MIT license
  * http://markdalgleish.mit-license.org
+ *
+ * Modified by Collin Hover @ collinhover.com
+ * Made modular and hooks into app's main update loop
  */
 
-;(function($, window, document, undefined){
+define( [ 
+	"jquery",
+	"app/shared"
+],
+function ( $, _s ) {
 
 	var pluginName = 'stellar',
 		pluginCount = 0,
@@ -163,9 +170,9 @@
 			this._defineSetters();
 
 			this.refresh();
-
-			this._startViewportDetectionLoop();
-			this._startAnimationLoop();
+			
+			_s.signals.onUpdated.add( this._repositionElements, this );
+			
 		},
 		_defineElements: function() {
 			if (this.element === document.body) this.element = window;
@@ -233,6 +240,7 @@
 			this._setScrollTop(oldTop);
 			
 			this._repositionElements( true );
+			this._detectViewport();
 			
 		},
 		_findParticles: function(){
@@ -453,9 +461,9 @@
 				background = this.backgrounds[i];
 				setBackgroundPosition(background.$element, background.startingValueLeft, background.startingValueTop);
 			}
-
-			this._animationLoop = $.noop;
-			clearInterval(this._viewportDetectionInterval);
+			
+			_s.signals.onUpdated.remove( this._repositionElements, this );
+			
 		},
 		_setOffsets: function() {
 			var self = this;
@@ -507,7 +515,7 @@
 				this.currentWidth = this.viewportWidth;
 				this.currentHeight = this.viewportHeight;
 			}
-
+			
 			//Reposition elements
 			for (i = this.particles.length - 1; i >= 0; i--) {
 				particle = this.particles[i];
@@ -529,7 +537,7 @@
 					isVisibleHorizontal = !this.options.horizontalScrolling || newOffsetLeft + particle.width > (particle.isFixed ? 0 : scrollLeft) && newOffsetLeft < (particle.isFixed ? 0 : scrollLeft) + this.viewportWidth + this.viewportOffsetLeft;
 					isVisibleVertical = !this.options.verticalScrolling || newOffsetTop + particle.height > (particle.isFixed ? 0 : scrollTop) && newOffsetTop < (particle.isFixed ? 0 : scrollTop) + this.viewportHeight + this.viewportOffsetTop;
 				}
-
+				
 				if (isVisibleHorizontal && isVisibleVertical) {
 					if (particle.isHidden) {
 						this.options.showElement(particle.$element);
@@ -562,40 +570,15 @@
 				setBackgroundPosition(background.$element, bgLeft, bgTop);
 			}
 		},
-		_startViewportDetectionLoop: function() {
-			var self = this,
-				detect = function() {
-					var viewportOffsets = self.$viewportElement.offset(),
-						hasOffsets = viewportOffsets !== null && viewportOffsets !== undefined;
+		_detectViewport: function () {
+			var viewportOffsets = this.$viewportElement.offset(),
+				hasOffsets = viewportOffsets !== null && viewportOffsets !== undefined;
 
-					self.viewportWidth = self.$viewportElement.width();
-					self.viewportHeight = self.$viewportElement.height();
+			this.viewportWidth = this.$viewportElement.width();
+			this.viewportHeight = this.$viewportElement.height();
 
-					self.viewportOffsetTop = hasOffsets ? viewportOffsets.top : 0;
-					self.viewportOffsetLeft = hasOffsets ? viewportOffsets.left : 0;
-				};
-
-			detect();
-			this._viewportDetectionInterval = setInterval(detect, this.options.viewportDetectionInterval);
-		},
-		_startAnimationLoop: function() {
-			var self = this,
-				requestAnimFrame = (function(){
-					return window.requestAnimationFrame    ||
-						window.webkitRequestAnimationFrame ||
-						window.mozRequestAnimationFrame    ||
-						window.oRequestAnimationFrame      ||
-						window.msRequestAnimationFrame     ||
-						function(callback, element){
-							window.setTimeout(callback, 1000 / 60);
-						};
-				}());
-
-			this._animationLoop = function(){
-				requestAnimFrame(self._animationLoop);
-				self._repositionElements();
-			};
-			this._animationLoop();
+			this.viewportOffsetTop = hasOffsets ? viewportOffsets.top : 0;
+			this.viewportOffsetLeft = hasOffsets ? viewportOffsets.left : 0;
 		}
 	};
 
@@ -671,10 +654,13 @@
 		return $window.stellar.apply($window, Array.prototype.slice.call(arguments, 0));
 	};
 
-	//Expose the scroll and position property function hashes so they can be extended
+	// expose the scroll and position property function hashes so they can be extended
+	
 	$[pluginName].scrollProperty = scrollProperty;
 	$[pluginName].positionProperty = positionProperty;
 
-	//Expose the plugin class so it can be modified
-	window.Stellar = Plugin;
-}(jQuery, window, document));
+	// return stellar plugin
+	
+	return Plugin;
+	
+} );
