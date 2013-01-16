@@ -4,15 +4,20 @@ define( [
 	"app/utilities",
 	"hammer.custom",
 	"jquery.throttle-debounce.custom",
-	"jquery.stellar.custom",
-	"jquery.smooth-scroll"
+	"jquery.stellar.custom"
 ],
 function ( $, _s, _utils ) {
 	
 	var _de = _s.domElements;
 	var _navi = {};
 	var _$navi = _de.$main;
-	var _naviWidth, _naviHeight;
+	var _naviWidth = 0;
+	var _naviHeight = 0;
+	var _$solarSystem = _de.$solarSystem;
+	var _solarSystemWidth = 0;
+	var _solarSystemHeight = 0;
+	var _solarSystemLessNaviWidth = 0;
+	var _solarSystemLessNaviHeight = 0;
 	var _triggers = [];
 	var _triggersChanged = [];
 	var _triggersSorted = {
@@ -32,9 +37,10 @@ function ( $, _s, _utils ) {
 	var _scrollCenterPosition = { x: 0, y: 0 };
 	var _scrollDirection = { x: 0, y: 0 };
 	var _dragVelocity = { x: 0, y: 0 };
-	var _dragVelocityMax = 200;
+	var _dragVelocityMax = 400;
 	var _dragVelocityMin = 0.25;
-	var _dragDecay = 0.9;
+	var _dragSpeed = 2;
+	var _dragDecay = 0.8;
 	var _dragging = false;
 	var _dragEnding = false;
 	var _triggerCheckPosition = { x: 0, y: 0 };
@@ -55,21 +61,38 @@ function ( $, _s, _utils ) {
 	_de.$middlegrounds.attr( "data-stellar-ratio", _s.parallaxMiddleground );
 	_de.$backgrounds.attr( "data-stellar-ratio", _s.parallaxBackground );
 	
-	var ThrottledScroll = $.throttle( _s.throttleTimeShort, Scroll );
+	var ThrottledScroll = $.throttle( _s.throttleTimeMedium, Scroll );
+	var ThrottledCheckTriggers = $.throttle( _s.throttleTimeMedium, CheckTriggers );
 	var ThrottledDrag = $.throttle( _s.throttleTimeShort, Drag );
+	var stellarParameters = {
+		horizontalScrolling: false,
+		parallaxBackgrounds: false,
+		//hideDistantElements: false // necessary or safari doesn't play nice with stellar.js
+	};
 	
-	_$navi
-		.removeClass( 'unscrollable' )
-		.on( "scroll press DOMMouseScroll mousewheel", ScrollDragStopByUser )
-		.on( 'dragstart', DragStart )
-		.on( 'drag', ThrottledDrag )
-		.on( 'dragend', DragEnd )
-		.on( 'scroll', ThrottledScroll )
-		.stellar( {
-			horizontalScrolling: false,
-			parallaxBackgrounds: false,
-			hideDistantElements: false // necessary or safari doesn't play nice with stellar.js
-		} );
+		if ( _s.mobile === true ) {
+				
+				stellarParameters.scrollProperty = 'position';
+				
+				_$navi
+						.on( "scroll press DOMMouseScroll mousewheel", ScrollDragStopByUser )
+						.on( 'dragstart', DragStart )
+						.on( 'drag', ThrottledDrag )
+						.on( 'dragend', DragEnd );
+				
+				_$solarSystem.stellar( stellarParameters );
+
+		}
+		else {
+				
+				_$navi
+						.removeClass( 'unscrollable' )
+						.addClass( 'scrollable' )
+						.on( "scroll press DOMMouseScroll mousewheel", ScrollDragStopByUser )
+						.on( 'scroll', ThrottledScroll )
+						.stellar( stellarParameters );
+				
+		}
 		
 		_de.$scrollContainer.each( function ( index ) {
 				
@@ -719,13 +742,31 @@ function ( $, _s, _utils ) {
 		_naviWidth = _$navi.width();
 		_naviHeight = _$navi.height();
 		
+		if ( _s.mobile === true ) {
+				
+				_solarSystemWidth = _$solarSystem.width();
+				_solarSystemHeight = _$solarSystem.height();
+				_solarSystemLessNaviWidth = _solarSystemWidth - _naviWidth;
+				_solarSystemLessNaviHeight = _solarSystemHeight - _naviHeight;
+				
+		}
+		
 		// rebound triggers
 		
 		RepositionTriggers();
 		
 		// update parallax
 		
-		_$navi.stellar( 'refresh' );
+		if ( _s.mobile === true ) {
+				
+				_$solarSystem.stellar( 'refresh' );
+				
+		}
+		else {
+				
+				_$navi.stellar( 'refresh' );
+				
+		}
 		
 		// refind user scroll container
 		
@@ -741,13 +782,24 @@ function ( $, _s, _utils ) {
 	
 	function Scroll () {
 		
-		_scrollPosition.x = _$navi.scrollLeft();
-		_scrollPosition.y = _$navi.scrollTop();
+		if ( _s.mobile === true ) {
+				
+				var position = _$solarSystem.position();
+				_scrollPosition.x = -position.left;
+				_scrollPosition.y = -position.top;
+				
+		}
+		else {
+				
+				_scrollPosition.x = _$navi.scrollLeft();
+				_scrollPosition.y = _$navi.scrollTop();
+				
+		}
 		
 		_scrollCenterPosition.x = _scrollPosition.x + _naviWidth * 0.5;
 		_scrollCenterPosition.y = _scrollPosition.y + _naviHeight * 0.5;
 		
-		CheckTriggers();
+		ThrottledCheckTriggers();
 		
 		_s.signals.onScrolled.dispatch();
 		
@@ -759,26 +811,52 @@ function ( $, _s, _utils ) {
 				
 				ScrollDragStop();
 				
-				var parameters = {
-						scrollElement: _$navi,
-						offset: $scrollTarget.offset().top,
-						speed: _s.scrollDuration
-				};
+				var offset = $scrollTarget.offset().top;
+				
+				// shift offet by 1 pixel to ensure triggers are triggered
+				
+				if ( offset > 0 ) offset -= 1;
+				else offset += 1;
 				
 				if ( _s.lowPerformance === true ) {
 						
-						parameters.speed = 0;
+						if ( _s.mobile === true ) {
+								
+								_$solarSystem.css( 'top', _utils.Clamp( -_scrollPosition.y - offset, -_solarSystemLessNaviHeight, 0 ) );
+								Scroll();
+								
+						}
+						else {
+								
+								_$navi.scrollTop( _scrollPosition.y + offset );
+								
+						}
 						
 				}
 				else {
 						
 						_scrolling = true;
-						parameters.easing = 'easeInOutCubic';
-						parameters.afterScroll = function () { ScrollDragStop(); };
+						
+						var parameters = {
+								duration: _s.scrollDuration,
+								easing: 'easeInOutCubic',
+								complete: ScrollDragStop
+						};
+						
+						if ( _s.mobile === true ) {
+								
+								parameters.step = ThrottledScroll;
+								
+								_$solarSystem.animate( { 'top': _utils.Clamp( -_scrollPosition.y - offset, -_solarSystemLessNaviHeight, 0 ) }, parameters );
+								
+						}
+						else {
+								
+								_$navi.animate( { 'scrollTop': _scrollPosition.y + offset }, parameters );
+								
+						}
 						
 				}
-				
-				$.smoothScroll( parameters );
 				
 		}
 		
@@ -944,8 +1022,9 @@ function ( $, _s, _utils ) {
 		
 		if ( _dragging === true && e ) {
 				
-				var dx = e.deltaX;
-				var dy = -e.deltaY;
+				var moved;
+				var dx = e.deltaX * _dragSpeed;
+				var dy = -e.deltaY * _dragSpeed;
 				
 				if ( dx !== 0 ) {
 						
@@ -955,7 +1034,8 @@ function ( $, _s, _utils ) {
 								
 						}
 						
-						_$navi.scrollLeft( _$navi.scrollLeft() + dx );
+						moved = true;
+						_$solarSystem.css( 'left', _utils.Clamp( -_scrollPosition.x - dx, -_solarSystemLessNaviWidth, 0 ) );
 						_dragVelocity.x = _utils.Clamp( ( _dragVelocity.x + dx ) * 0.5, -_dragVelocityMax, _dragVelocityMax );
 						
 				}
@@ -968,8 +1048,15 @@ function ( $, _s, _utils ) {
 								
 						}
 						
-						_$navi.scrollTop( _$navi.scrollTop() + dy );
+						moved = true;
+						_$solarSystem.css( 'top', _utils.Clamp( -_scrollPosition.y - dy, -_solarSystemLessNaviHeight, 0 ) );
 						_dragVelocity.y = _utils.Clamp( ( _dragVelocity.y + dy ) * 0.5, -_dragVelocityMax, _dragVelocityMax );
+						
+				}
+				
+				if ( moved === true ) {
+						
+						Scroll();
 						
 				}
 				
@@ -1034,18 +1121,23 @@ function ( $, _s, _utils ) {
 		if ( _dragVelocity.x !== 0 ) {
 				
 				moved = true;
-				_$navi.scrollLeft( _$navi.scrollLeft() + _dragVelocity.x );
+				_$solarSystem.css( 'left', _utils.Clamp( -_scrollPosition.x - _dragVelocity.x, -_solarSystemLessNaviWidth, 0 ) );
 				
 		}
 		
 		if ( _dragVelocity.y !== 0 ) {
 				
 				moved = true;
-				_$navi.scrollTop( _$navi.scrollTop() + _dragVelocity.y );
+				_$solarSystem.css( 'top', _utils.Clamp( -_scrollPosition.y - _dragVelocity.y, -_solarSystemLessNaviHeight, 0 ) );
 				
 		}
 		
-		if ( moved !== true ) {
+		if ( moved === true ) {
+				
+				Scroll();
+				
+		}
+		else {
 				
 				ScrollDragStop();
 				
