@@ -18,6 +18,7 @@ function ( $, _s, _utils ) {
 	var _solarSystemHeight = 0;
 	var _solarSystemLessNaviWidth = 0;
 	var _solarSystemLessNaviHeight = 0;
+	var _$parallaxContainer;
 	var _triggers = [];
 	var _triggersChanged = [];
 	var _triggersSorted = {
@@ -72,15 +73,14 @@ function ( $, _s, _utils ) {
 	
 		if ( _s.mobile === true ) {
 				
-				stellarParameters.scrollProperty = 'position';
-				
 				_$navi
 						.on( "scroll press DOMMouseScroll mousewheel", ScrollDragStopByUser )
 						.on( 'dragstart', DragStart )
 						.on( 'drag', ThrottledDrag )
 						.on( 'dragend', DragEnd );
 				
-				_$solarSystem.stellar( stellarParameters );
+				stellarParameters.scrollProperty = 'position';
+				_$parallaxContainer = _$solarSystem;
 
 		}
 		else {
@@ -89,10 +89,29 @@ function ( $, _s, _utils ) {
 						.removeClass( 'unscrollable' )
 						.addClass( 'scrollable' )
 						.on( "scroll press DOMMouseScroll mousewheel", ScrollDragStopByUser )
-						.on( 'scroll', ThrottledScroll )
-						.stellar( stellarParameters );
+						.on( 'scroll', ThrottledScroll );
+				
+				_$parallaxContainer = _$navi;
 				
 		}
+		
+		if ( _s.lowPerformance !== true ) {
+				
+				_$parallaxContainer.stellar( stellarParameters );
+				
+				_s.signals.onLowPerformanceMode.addOnce( function () {
+						
+						_$parallaxContainer.stellar( 'destroy' );
+						
+				} );
+				
+		}
+		
+		_s.signals.onForceHighPerformance.addOnce( function () {
+				
+				_$parallaxContainer.stellar( stellarParameters );
+				
+		} );
 		
 		_de.$scrollContainer.each( function ( index ) {
 				
@@ -757,14 +776,9 @@ function ( $, _s, _utils ) {
 		
 		// update parallax
 		
-		if ( _s.mobile === true ) {
+		if ( _s.lowPerformance !== true ) {
 				
-				_$solarSystem.stellar( 'refresh' );
-				
-		}
-		else {
-				
-				_$navi.stellar( 'refresh' );
+				_$parallaxContainer.stellar( 'refresh' );
 				
 		}
 		

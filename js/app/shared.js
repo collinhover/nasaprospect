@@ -28,7 +28,9 @@ function ( $, Signal ) {
 		onScrolled: new Signal(),
 		onUpdated: new Signal(),
 		onResized: new Signal(),
-		onContentRefreshed: new Signal()
+		onContentRefreshed: new Signal(),
+		onLowPerformanceMode: new Signal(),
+		onForceHighPerformance: new Signal()
 	};
 	
 	/*===================================================
@@ -91,7 +93,6 @@ function ( $, Signal ) {
 	
 	_s.lowPerformance = false;
 	_s.testLowPerformance = false;
-	_s.timeDeltaMax = 1000 / 5;
 	_s.timeDeltaLowPerformance = 1000 / 20;
 	_s.timeTestPerformance = 0;
 	_s.timeTestPerformanceThreshold = 1000;

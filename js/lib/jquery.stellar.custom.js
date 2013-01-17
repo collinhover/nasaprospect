@@ -443,7 +443,7 @@ function ( $, _s ) {
 				startingPositionTop,
 				background,
 				i;
-
+			
 			for (i = this.particles.length - 1; i >= 0; i--) {
 				particle = this.particles[i];
 				startingPositionLeft = particle.$element.data('stellar-startingLeft');
@@ -595,7 +595,7 @@ function ( $, _s ) {
 			
 			return this.each(function () {
 				
-				var instance = $.data(this, 'plugin_' + pluginName);
+				var instance = $.data( this, 'plugin_' + pluginName );
 				
 				// init as needed
 				
@@ -617,7 +617,7 @@ function ( $, _s ) {
 				
 				if ( options === 'destroy' ) {
 					
-					$.data( this, 'plugin_' + pluginName, undefined );
+					$.data( this, 'plugin_' + pluginName, false );
 					
 				}
 				

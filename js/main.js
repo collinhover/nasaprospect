@@ -172,6 +172,7 @@
 										
 										_s.lowPerformance = true;
 										_s.testPerformance = false;
+										_s.signals.onLowPerformanceMode.dispatch();
 										
 										// let user know of low performance
 										
@@ -187,7 +188,9 @@
 											_utils.FadeDOM( {
 												element: _de.$userLowPerformance
 											} );
+											
 											_s.lowPerformance = false;
+											_s.signals.onForceHighPerformance.dispatch();
 											
 										} );
 										
