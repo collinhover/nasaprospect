@@ -5,8 +5,7 @@ define( [
 	"app/navigator",
 	"hammer.custom",
 	"bootstrap",
-	"jquery.throttle-debounce.custom",
-	"jquery.multi-sticky"
+	"jquery.throttle-debounce.custom"
 ],
 function ( $, _s, _utils, _navi ) {
 	
@@ -18,35 +17,6 @@ function ( $, _s, _utils, _navi ) {
 	init
 	
 	=====================================================*/
-	
-	// sticky
-	
-	_de.$stickable.each( function () {
-		
-		var $element = $( this );
-		var $target = $( $element.data( "target" ) );
-		var stickyParameters = {
-			handlePosition: false
-		};
-		
-		// if target empty, assume main
-		
-		if ( $target.length === 0 ) {
-			
-			$target = _de.$main;
-			stickyParameters.scrollTop = function () {
-				
-				return _navi.GetScrollPosition().y;
-				
-			};
-			
-		}
-		
-		stickyParameters.scrollTarget = $target;
-		
-		$element.removeClass( 'is-sticky' ).sticky( stickyParameters );
-		
-	} );
 	
 	// resize
 	

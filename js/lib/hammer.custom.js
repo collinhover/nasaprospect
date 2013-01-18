@@ -170,6 +170,7 @@ var HAMMER = ( function ( $, main ) {
 				// drag
 				// minimal movement required
 				if(options.drag && (_distance > options.drag_min_distance) || _gesture == 'drag') {
+					
 					// calculate the angle
 					_angle = getAngle(_pos.start[0], _pos.move[0]);
 					_direction = getDirectionFromAngle(_angle);
@@ -220,50 +221,46 @@ var HAMMER = ( function ( $, main ) {
 				var rotation,
 					scale;
 				
-				if(options.transform) {
-					if( countFingers( event ) != 2 ) {
-						return false;
-					}
-
+				if( options.transform === true && countFingers( event ) === 2 ) {
+					
 					rotation = calculateRotation(_pos.start, _pos.move);
 					scale = calculateScale(_pos.start, _pos.move);
 
-					if(_gesture != 'drag' &&
-						(_gesture == 'transform' || Math.abs(1-scale) > options.scale_treshold || Math.abs(rotation) > options.rotation_treshold)) {
+					if( _gesture !== 'drag' && ( _gesture === 'transform' || Math.abs(1-scale) > options.scale_treshold || Math.abs(rotation) > options.rotation_treshold ) ) {
+						
 						_gesture = 'transform';
-
+						
 						_pos.center = {  x: ((_pos.move[0].x + _pos.move[1].x) / 2) - _offset.left,
 							y: ((_pos.move[0].y + _pos.move[1].y) / 2) - _offset.top };
-
+						
+						var transformEventObject = {
+							originalEvent   : event,
+							position: _pos.start,
+							center			: _pos.center,
+							scale           : scale,
+							rotation        : rotation
+						};
+						
 						// on the first time trigger the start event
 						if( _first ) {
 							
 							_first = false;
-							
-							triggerEvent( 'transformstart', {
-								originalEvent   : event,
-								position: _pos.start,
-								center			: _pos.center,
-								scale           : scale,
-								rotation        : rotation
-							} );
+							triggerEvent( 'transformstart', transformEventObject );
 							
 						}
 						
 						// trigger transform
 						
-						triggerEvent( 'transform', {
-							originalEvent   : event,
-							center			: _pos.center,
-							scale           : scale,
-							rotation        : rotation
-						} );
-
-						return true;
+						triggerEvent( 'transform', transformEventObject );
+						
 					}
+					
+					return true;
+					
 				}
 
 				return false;
+				
 			},
 			
 			// tap and double tap gesture
@@ -657,10 +654,11 @@ var HAMMER = ( function ( $, main ) {
 				
 				hammerInstance["on"+ eventName].call( hammerInstance, eventObject );
 				
-				// only trigger hammer vent once from first hammer instance that is listening for it
+				// only trigger hammer event once from first hammer instance that is listening for it
 				// hammer event will propagate similar to a native event
 				
 				triggered = true;
+				
 				break;
 				
 			}
@@ -749,16 +747,18 @@ var HAMMER = ( function ( $, main ) {
 				_pos.move = getXYfromEvent( event );
 				
 				// gestures
-
-				if(!_gestures.transform( event )) {
+				
+				if( !_gestures.transform( event ) ) {
+					
 					_gestures.drag( event );
+					
+					// don't allow mobile to drag window
+					
+					event.preventDefault();
+					
 				}
 				
 			}
-			
-			// don't allow mobile to drag window
-			
-			event.preventDefault();
 			
 		}
 		// end
@@ -807,7 +807,7 @@ var HAMMER = ( function ( $, main ) {
 				}
 				// transform
 				// transformstart is triggered, so transformed is possible
-				else if(_gesture == 'transform') {
+				else if( _gesture === 'transform' ) {
 					
 					triggerEvent( 'transformend', {
 						originalEvent   : event,

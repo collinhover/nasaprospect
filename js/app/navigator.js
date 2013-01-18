@@ -832,43 +832,24 @@ function ( $, _s, _utils ) {
 				if ( offset > 0 ) offset -= 1;
 				else offset += 1;
 				
-				if ( _s.lowPerformance === true ) {
+				_scrolling = true;
+				
+				var parameters = {
+						duration: _s.scrollDuration,
+						easing: 'easeInOutCubic',
+						complete: ScrollDragStop
+				};
+				
+				if ( _s.mobile === true ) {
 						
-						if ( _s.mobile === true ) {
-								
-								_$solarSystem.css( 'top', _utils.Clamp( -_scrollPosition.y - offset, -_solarSystemLessNaviHeight, 0 ) );
-								Scroll();
-								
-						}
-						else {
-								
-								_$navi.scrollTop( _scrollPosition.y + offset );
-								
-						}
+						parameters.step = ThrottledScroll;
+						
+						_$solarSystem.animate( { 'top': _utils.Clamp( -_scrollPosition.y - offset, -_solarSystemLessNaviHeight, 0 ) }, parameters );
 						
 				}
 				else {
 						
-						_scrolling = true;
-						
-						var parameters = {
-								duration: _s.scrollDuration,
-								easing: 'easeInOutCubic',
-								complete: ScrollDragStop
-						};
-						
-						if ( _s.mobile === true ) {
-								
-								parameters.step = ThrottledScroll;
-								
-								_$solarSystem.animate( { 'top': _utils.Clamp( -_scrollPosition.y - offset, -_solarSystemLessNaviHeight, 0 ) }, parameters );
-								
-						}
-						else {
-								
-								_$navi.animate( { 'scrollTop': _scrollPosition.y + offset }, parameters );
-								
-						}
+						_$navi.animate( { 'scrollTop': _scrollPosition.y + offset }, parameters );
 						
 				}
 				

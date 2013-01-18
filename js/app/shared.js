@@ -57,7 +57,6 @@ function ( $, Signal ) {
 	_de.$userLowPerformance = $( "#userLowPerformance" );
 	
 	_de.$scrollable = $( ".scrollable" );
-	_de.$stickable = $( ".stickyme, .is-sticky" );
 	_de.$toggleSound = $( ".toggle-sound" );
 	_de.$playSound = $( ".play-sound" );
 	_de.$findable = $( "[data-findable]" );
