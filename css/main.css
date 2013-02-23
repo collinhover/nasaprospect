@@ -6711,3 +6711,34 @@ p {
 #about .description {
   padding: 20px 0;
 }
+/* --- Awwwards Ribbons --- */
+
+.awards {
+	position:absolute;
+	z-index:9999;
+	top:40px;
+	left:0;
+}
+
+.awards a {
+	display: block;
+	margin-top: 20px;
+}
+
+.awards a:first-child {
+	margin-top: 0;
+}
+
+.awards a img {
+	height: 10%;
+	max-width: 70px;
+	max-height: 105px;
+}
+
+@media (max-width: 767px) {
+
+	.awards {
+		display: none;
+	}
+
+}

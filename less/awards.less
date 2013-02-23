@@ -1,0 +1,34 @@
+/* awards
+-------------------------------------------------------------------------------*/
+
+.awards {
+	position:absolute;
+	z-index:9999;
+	top:40px;
+	left:0;
+	
+	a {
+		display: block;
+		margin-top: 20px;
+		
+		&:first-child {
+			margin-top: 0;
+		}
+		
+		img {
+			height: 10%;
+			max-width: 70px;
+			max-height: 105px;
+		}
+		
+	}
+	
+}
+
+@media (max-width: 767px) {
+	
+	.awards {
+		display: none;
+	}
+
+}
